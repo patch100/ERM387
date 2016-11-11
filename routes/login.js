@@ -5,10 +5,10 @@ module.exports = function (app, router) {
       if(true){
         //place redirect page here
         // res.redirect("/admin");
-        res.json({ message: 'Logged in' });
+        res.json({status: true, body: 'Logged in' });
       }
       else{
-        res.json({ message: 'Invalid login' });
+        res.json({status: false, body: 'Invalid login' });
       }
 
     });
