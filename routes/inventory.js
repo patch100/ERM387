@@ -5,7 +5,17 @@ module.exports = function (app, router, db, models) {
   router.route('/inventory')
     .get(function(req, res) {
       //return all inventory items
-      res.json({ status: true, body: 'Return JSON object instead of this string' });
+      try {
+        models.sequelize.sync().then(() => {
+          db.getResources()
+            .then(aa => res.json({
+              status: true, body: JSON.stringify(aa)})
+            )
+          });
+      } catch (e) {
+        console.log(e);
+        res.json({status: false, body: {error: "message"}})
+      }
     });
 
   router.route('/inventory/:resource_type')
@@ -18,19 +28,28 @@ module.exports = function (app, router, db, models) {
         });
       } catch (e) {
         console.log(e);
-        res.json({ status: false, body: "error" });
+        res.json({ status: false, body: {error: "message"}});
       }
-    })
+    });
 
   router.route('/inventory/:resource_type/:resource_id')
     .get(function(req, res) {
       //return item with req.params.resource_type and req.params.resource_id
+      try {
+        models.sequelize.sync().then( () => {
+          db.getResourcesById(req.params.resource_id)
+            .then(aa => res.json({status: true, body: JSON.stringify(aa)}))
+        });
+      } catch (e) {
+        console.log(e);
+        res.json({status: false, body: {error: "message"}});
+      }
     })
     .post(function(req, res) {
       //add item to DB with req.params.resource_type and req.params.resource_id
     })
     .delete(function(req, res) {
       //Delete item from DB req.params.resource_type and req.params.resource_id
-    })
+    });
 
 }

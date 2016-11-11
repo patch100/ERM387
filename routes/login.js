@@ -5,10 +5,10 @@ module.exports = function (app, router, db, models) {
       if(true){
         //place redirect page here
         // res.redirect("/admin");
-        res.json({status: true, body: 'Logged in' });
+        res.json({status: true, body: {message: "Successful Login!"} });
       }
       else{
-        res.json({status: false, body: 'Invalid login' });
+        res.json({status: false, body: {error: "Failed Login.."} });
       }
 
     });
@@ -22,7 +22,7 @@ module.exports = function (app, router, db, models) {
         });
       } catch (e) {
         console.log(e);
-        res.json({ status: false, body: "error" });
+        res.json({ status: false, body: {error: "message"} });
       }
 
     });

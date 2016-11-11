@@ -2,14 +2,55 @@ const models = require('../models/index');
 //DB CALLS HERE
 //I WOULD CREATE A SINGLE ENDPOINT FILE FOR THEM TO use
 module.exports = {
-    getResourcesByType: getResourcesByType,
+    getRooms: getRooms,
     getRoomTypes: getRoomTypes,
     getRoomsByType: getRoomsByType,
     getRoomByTypeAndId: getRoomByTypeAndId,
     getUsers: getUsers,
     getUserByTypeAndId: getUserByTypeAndId,
     getResourceTypes: getResourceTypes,
+    getResourcesByType: getResourcesByType,
+    getResources: getResources,
+    getResourceById: getResourceById,
     getRoomItems: getRoomItems
+}
+
+function getRooms(){
+  return models.Room.findAll({
+    include: [{
+      model: models.Equipment,
+      required: true,
+      include: [
+        {model: models.Computer, required: false},
+        {model: models.Projector, required: false},
+        {model: models.WhiteBoard, required: false}]
+    }]
+  }).then(rooms => {
+    var mappedRooms = {};
+    if(rooms){
+      mappedRooms = rooms.map(room => {
+        var items = [];
+        for( var i = 0; i < room.Equipment.length; i++ ) {
+          var equipment = room.Equipment[i];
+          if(equipment.Computer) {
+            items.push({type:"Computer", id: equipment.equipmentId, RAM: equipment.Computer.RAM, storage: equipment.Computer.storage, operatingSystem: equipment.Computer.operatingSystem });
+          } else if (equipment.Projector) {
+            items.push({type: "Projector", id: equipment.equipmentId,});
+          } else if (equipment.WhiteBoard) {
+            items.push({type: "WhiteBoard", id: equipment.equipmentId, isPrintable: equipment.WhiteBoard.isPrintable});
+          }
+        }
+        return {
+          roomId: room.roomId,
+          roomType: room.roomType,
+          roomNumber: room.roomNumber,
+          capacity: room.capacity,
+          items = items,
+        }
+      });
+      return mappedRooms;
+    }
+  })
 }
 
 function getRoomItems(roomId){
@@ -174,7 +215,7 @@ function getRoomsByType(type){
 function getRoomTypes(){
   return models.Room.findAll({attributes: ['roomType'], group:['roomType']}).then(rooms => {
     var mappedRooms = [];
-    if(mappedRooms){
+    if(mappedRooms){  // BUG: isnt it supposed to be if rooms?
       mappedRooms = rooms.map(room => room.roomType).sort()
     }
     return mappedRooms;
@@ -209,6 +250,25 @@ function getResourcesByType(type){
   });
 }
 
+function getResources() {
+  return models.Resource.findAll({
+    include: [{
+      all: true
+    }]
+  }).then( resources => {
+      return resources;
+    })
+}
+
+function getResourceById(id){
+  return models.Resource.findById(id).then( resource => {
+    if(resource){
+      return resource;
+    } else {
+      return {};
+    }
+  })
+}
 
 function addPropertiesByType(type, res, resource){
   switch(type){
