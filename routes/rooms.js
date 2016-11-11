@@ -5,22 +5,19 @@ module.exports = function (app, router, db) {
   router.route('/rooms')
     .get(function(req, res) {
       //return all rooms
-      try {
-        var responseBody = db.getRoomsByType("conference");
-        res.json({ status: true, body: responseBody });
-
-      } catch (e) {
-        console.log(e);
-        res.json({ status: false, body: "error" });
-
-      }
 
     });
 
   router.route('/rooms/:room_type')
     .get(function(req, res) {
       //return room with req.params.room_type and req.params.room_id
-      res.json({ status: true, body: 'Return JSON object instead of this string' });
+      try {
+        var responseBody = db.getRoomsByType(req.params.room_type);
+        res.json({ status: true, body: responseBody });
+      } catch (e) {
+        console.log(e);
+        res.json({ status: false, body: "error" });
+      }
     })
 
   router.route('/rooms/:room_type/:room_id')
