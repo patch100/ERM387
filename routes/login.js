@@ -1,4 +1,4 @@
-module.exports = function (app, router) {
+module.exports = function (app, router, db, models) {
 
   router.route('/login')
     .get(function(req, res) {
@@ -13,5 +13,18 @@ module.exports = function (app, router) {
 
     });
 
+  router.route('/test')
+    .get(function(req, res) {
+      try {
+        models.sequelize.sync(/*{force:true}*/).then(() => {
+          db.getRoomItems(1)
+            .then(aa => res.json({ status: true, body: aa }))
+        });
+      } catch (e) {
+        console.log(e);
+        res.json({ status: false, body: "error" });
+      }
+
+    });
 
 }

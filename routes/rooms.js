@@ -5,7 +5,6 @@ module.exports = function (app, router, db, models) {
   router.route('/rooms')
     .get(function(req, res) {
       //return all rooms
-
     });
 
   router.route('/rooms/:room_type')
@@ -27,7 +26,6 @@ module.exports = function (app, router, db, models) {
   router.route('/rooms/:room_type/:room_id')
     .get(function(req, res) {
       //return room with req.params.room_type and req.params.room_id
-
       try {
         models.sequelize.sync(/*{force:true}*/).then(() => {
           db.getRoomByTypeAndId(req.params.room_type, req.params.room_id)
@@ -37,7 +35,6 @@ module.exports = function (app, router, db, models) {
         console.log(e);
         res.json({ status: false, body: "error" });
       }
-
     })
     .post(function(req, res) {
       //add item to DB with req.params.room_type and req.params.room_id
@@ -46,7 +43,7 @@ module.exports = function (app, router, db, models) {
       //Delete item from DB with req.params.room_type and req.params.room_id
     });
 
-  router.route('/rooms/:room_type/:room_id/items')
+  router.route('/rooms/:room_id/items')
     .get(function(req, res) {
       //return room with req.params.room_type and req.params.room_id
       try {
@@ -58,6 +55,14 @@ module.exports = function (app, router, db, models) {
         console.log(e);
         res.json({ status: false, body: "error" });
       }
+
+    })
+
+  router.route('/rooms/:room_id/:resource_type/:resource_id')
+    .post(function(req, res) {
+
+    })
+    .delete(function(req, res) {
 
     })
 

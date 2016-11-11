@@ -1,4 +1,4 @@
-module.exports = function (app, router) {
+module.exports = function (app, router, db, models) {
 
   // /inventory/:resource_type/:resource_id' // resource_id is optional (changes the behaviour of HTTP verbs)
 
@@ -25,7 +25,6 @@ module.exports = function (app, router) {
   router.route('/inventory/:resource_type/:resource_id')
     .get(function(req, res) {
       //return item with req.params.resource_type and req.params.resource_id
-      res.json({ status: true, body: 'Return JSON object instead of this string' });
     })
     .post(function(req, res) {
       //add item to DB with req.params.resource_type and req.params.resource_id
