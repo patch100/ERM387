@@ -1,4 +1,4 @@
-module.exports = function (app, router, db) {
+module.exports = function (app, router, db, models) {
 
   // /rooms/:room_type/:room_id' room_id is optional (changes behaviour of HTTP verbs)
 
@@ -12,13 +12,17 @@ module.exports = function (app, router, db) {
     .get(function(req, res) {
       //return room with req.params.room_type and req.params.room_id
       try {
-        var responseBody = db.getRoomsByType(req.params.room_type);
-        res.json({ status: true, body: responseBody });
+        models.sequelize.sync(/*{force:true}*/).then(() => {
+          db.getRoomItems(1)
+            .then(aa => res.json({ status: true, body: aa }))
+        });
       } catch (e) {
         console.log(e);
         res.json({ status: false, body: "error" });
       }
     })
+
+
 
   router.route('/rooms/:room_type/:room_id')
     .get(function(req, res) {
