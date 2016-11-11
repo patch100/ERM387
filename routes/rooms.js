@@ -1,11 +1,20 @@
-module.exports = function (app, router) {
+module.exports = function (app, router, db) {
 
   // /rooms/:room_type/:room_id' room_id is optional (changes behaviour of HTTP verbs)
 
   router.route('/rooms')
     .get(function(req, res) {
       //return all rooms
-      res.json({ status: true, body: 'Return JSON object instead of this string' });
+      try {
+        var responseBody = db.getRoomsByType("conference");
+        res.json({ status: true, body: responseBody });
+
+      } catch (e) {
+        console.log(e);
+        res.json({ status: false, body: "error" });
+
+      }
+
     });
 
   router.route('/rooms/:room_type')

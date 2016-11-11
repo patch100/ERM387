@@ -9,13 +9,15 @@ var bodyParser = require('body-parser');
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-var port = process.env.PORT || 8080;        // set our port
+var port = process.env.PORT || 3306;        // set our port
 
 var router = express.Router();
 
 // Where you call other files such as controllers and routings. next to "app" add any other packages you import that are required in the controllers
+var db = require('./db-master/endpoint');
 require('./controllers')(app);
-require('./routes')(app, router);
+require('./routes')(app, router, db);
+
 
 
 // ROUTES FOR OUR API
