@@ -33,11 +33,20 @@ module.exports = function (app, router, db, models) {
       // }
     })
     .post(function(req, res) {
+      //ID is autoincrement here. Therefore, not the right route
+      db.addUser(req.params.user_type, req.body.user).then(result => {
+        /*HERE Check if return is true or false*/
+        res.json({ status: true, body: "some message" });
+      });
       //add user to DB with req.params.user_type and req.params.user_id
       // Might not implement this from the perspective of a users route.. Maybe /signup or /register route
       // or do both (IT employee/manager wants to create a user without going through signup/register...?)
     })
     .delete(function(req, res) {
+      db.removeUser(req.params.user_id).then(result => {
+        /*HERE Check if return is true or false*/
+        res.json({ status: true, body: "some message" });
+      });
       //Delete user from DB with req.params.user_type and req.params.user_id
     })
 

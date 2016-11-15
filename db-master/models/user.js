@@ -5,11 +5,10 @@ module.exports = function(sequelize, DataTypes) {
     userId: {type: DataTypes.INTEGER(), allowNull: false, autoIncrement: true, primaryKey: true},
     firstName : {type: DataTypes.STRING(), allowNull: false, validate: {isAlpha: true}},
     lastName : {type: DataTypes.STRING(), allowNull: false, validate: {isAlpha: true}},
-    phoneNumber: {type: DataTypes.STRING(), allowNull: true, validate: {isNumeric: true, is: ["^[0-9]{10}$"]}},
+    phoneNumber: {type: DataTypes.STRING(), allowNull: true},
     email: {type: DataTypes.STRING(), allowNull: false, validate: {isEmail: true}},
     isAdmin: {type: DataTypes.BOOLEAN(), defaultValue: false, allowNull: false},
     passwordHash: {type: DataTypes.STRING(64), allowNull: false},
-    salt: {type: DataTypes.STRING(64), allowNull: false},
     typeId: {type: DataTypes.INTEGER(), allowNull: true}
   },{
     tableName: 'User',
