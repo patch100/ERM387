@@ -4,15 +4,7 @@ module.exports = function (app, router, db, models) {
 
   router.route('/rooms')
     .get(function(req, res) {
-      //return all rooms
-      try {
-        models.sequelize.sync(/*{orce:true}*/).then(() => {
-          db.getRooms().then(aa => res.json({status: true, body: aa}))
-        });
-      } catch (e) {
-        console.log(e);
-        res.json({ status: false, body: {error: "message"} });
-      }
+      db.getRooms().then(rooms => res.json({status: true, body: rooms}));
     });
 
   router.route('/rooms/:room_type')

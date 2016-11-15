@@ -1,3 +1,5 @@
+//N.B.: THIS FILE IS JUST FOR TESTING FUNCTIONALITIES IN THE DB
+
 'use strict';
 const models = require('./models/index');
 const endpoint = require('./endpoint/index');

@@ -41,11 +41,14 @@ function getRooms(){
           }
         }
         return {
-          roomId: room.roomId,
-          roomType: room.roomType,
-          roomNumber: room.roomNumber,
+          id: room.roomId,
+          type: room.roomType,
+          room_number: room.roomNumber,
           capacity: room.capacity,
-          items = items,
+          length: room.length,
+          width: room.width,
+          height: room.height,
+          equipments: items,
         }
       });
       return mappedRooms;
