@@ -14,7 +14,21 @@ module.exports = function (app, router, db, models) {
         .then(aa => res.json({ status: true, body: aa }))
     })
 
+  router.route('/rooms/items/:room_id')  // REFACTOR: we want consistency, :room_id should come after items
+      .get(function(req, res) {
+        //return room with req.params.room_type and req.params.room_id
+        db.getRoomItems(req.params.room_id)
+          .then(items => res.json({ status: true, body: items }));
+        // try {
+        //   models.sequelize.sync(/*{force:true}*/).then(() => {
+        //
+        //   });
+        // } catch (e) {
+        //   console.log(e);
+        //   res.json({ status: false, body: {error: "message"} });
+        // }
 
+    })
 
   router.route('/rooms/:room_type/:room_id')
     .get(function(req, res) {
@@ -31,21 +45,6 @@ module.exports = function (app, router, db, models) {
     .delete(function(req, res) {
       //Delete item from DB with req.params.room_type and req.params.room_id
     });
-
-  router.route('/rooms/:room_id/items')  // REFACTOR: we want consistency, :room_id should come after items
-    .get(function(req, res) {
-      //return room with req.params.room_type and req.params.room_id
-      try {
-        models.sequelize.sync(/*{force:true}*/).then(() => {
-          db.getRoomItems(req.params.room_id)
-            .then(aa => res.json({ status: true, body: aa }))
-        });
-      } catch (e) {
-        console.log(e);
-        res.json({ status: false, body: {error: "message"} });
-      }
-
-    })
 
   router.route('/rooms/:room_id/:resource_type/:resource_id')
     .post(function(req, res) {

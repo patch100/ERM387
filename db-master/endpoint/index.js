@@ -57,6 +57,7 @@ function getRooms(){
 }
 
 function getRoomItems(roomId){
+  console.log(roomId);
   return models.Room.findOne({
     where:{
       roomId: roomId
@@ -70,19 +71,19 @@ function getRoomItems(roomId){
         {model: models.WhiteBoard, required: false}]
     }]
   }).then(room => {
+    console.log(room);
     var mappedRoomItems = {};
     if(room){
-      mappedRoomItems.roomId = room.roomId;
-      mappedRoomItems.roomNumber = room.roomNumber;
-      mappedRoomItems.items = [];
+      mappedRoomItems.id = room.roomId;
+      mappedRoomItems.equipments = [];
       for(var i = 0; i < room.Equipment.length; i++){
         var equipment = room.Equipment[i];
         if(equipment.Computer){
-          mappedRoomItems.items.push({type:"Computer", id: equipment.equipmentId, RAM: equipment.Computer.RAM, storage: equipment.Computer.storage, operatingSystem: equipment.Computer.operatingSystem });
+          mappedRoomItems.equipments.push({type:"Computer", id: equipment.equipmentId, RAM: equipment.Computer.RAM, storage: equipment.Computer.storage, operatingSystem: equipment.Computer.operatingSystem });
         }else if(equipment.Projector){
-          mappedRoomItems.items.push({type: "Projector", id: equipment.equipmentId,});
+          mappedRoomItems.equipments.push({type: "Projector", id: equipment.equipmentId,});
         }else if(equipment.WhiteBoard){
-          mappedRoomItems.items.push({type: "WhiteBoard", id: equipment.equipmentId, isPrintable: equipment.WhiteBoard.isPrintable});
+          mappedRoomItems.equipments.push({type: "WhiteBoard", id: equipment.equipmentId, isPrintable: equipment.WhiteBoard.isPrintable});
         }
       }
     }
