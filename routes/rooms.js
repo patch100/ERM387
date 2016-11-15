@@ -10,15 +10,8 @@ module.exports = function (app, router, db, models) {
   router.route('/rooms/:room_type')
     .get(function(req, res) {
       //return room with req.params.room_type
-      try {
-        models.sequelize.sync(/*{force:true}*/).then(() => {
-          db.getRoomsByType(req.params.room_type)
-            .then(aa => res.json({ status: true, body: aa }))
-        });
-      } catch (e) {
-        console.log(e);
-        res.json({ status: false, body: {error: "message"} });
-      }
+      db.getRoomsByType(req.params.room_type)
+        .then(aa => res.json({ status: true, body: aa }))
     })
 
 
@@ -27,15 +20,8 @@ module.exports = function (app, router, db, models) {
     .get(function(req, res) {
       //return room with req.params.room_type and req.params.room_id
       // REFACTOR: technically an ID should be unique, the room type should not be needed to retrieve by id
-      try {
-        models.sequelize.sync(/*{force:true}*/).then(() => {
-          db.getRoomByTypeAndId(req.params.room_type, req.params.room_id)
-            .then(aa => res.json({ status: true, body: aa }))
-        });
-      } catch (e) {
-        console.log(e);
-        res.json({ status: false, body: {error: "message"} });
-      }
+      db.getRoomById(req.params.room_id)
+        .then(room => res.json({ status: true, body: room }));
     })
     .post(function(req, res) {
       //add item to DB with req.params.room_type and req.params.room_id

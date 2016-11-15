@@ -5,7 +5,7 @@ module.exports = {
     getRooms: getRooms,
     getRoomTypes: getRoomTypes,
     getRoomsByType: getRoomsByType,
-    getRoomByTypeAndId: getRoomByTypeAndId,
+    getRoomById: getRoomById,
     getUsers: getUsers,
     getUserByTypeAndId: getUserByTypeAndId,
     getResourceTypes: getResourceTypes,
@@ -148,7 +148,7 @@ function getUsers(){
 }
 
 //type: meeting, conference; id: roomId
-function getRoomByTypeAndId(type, id){
+function getRoomById(id){
   return models.Resource.findOne({
     where: {
       resourceType: 'Room'
@@ -156,24 +156,43 @@ function getRoomByTypeAndId(type, id){
     include: [{
       model: models.Room,
       where: {
-        roomType: type,
         roomId: id
       },
-      required: true
+      required: true,
+      include: [{
+        model: models.Equipment,
+        required: true,
+        include: [
+          {model: models.Computer, required: false},
+          {model: models.Projector, required: false},
+          {model: models.WhiteBoard, required: false}]
+      }]
     }]
   }).then(resource => {
     var mappedRoom = {};
     if(resource){
+      var items = [];
+      for( var i = 0; i < resource.Room.Equipment.length; i++ ) {
+        var equipment = resource.Room.Equipment[i];
+        if(equipment.Computer) {
+          items.push({type:"Computer", id: equipment.equipmentId, RAM: equipment.Computer.RAM, storage: equipment.Computer.storage, operatingSystem: equipment.Computer.operatingSystem });
+        } else if (equipment.Projector) {
+          items.push({type: "Projector", id: equipment.equipmentId,});
+        } else if (equipment.WhiteBoard) {
+          items.push({type: "WhiteBoard", id: equipment.equipmentId, isPrintable: equipment.WhiteBoard.isPrintable});
+        }
+      }
+
       mappedRoom = {
-        roomType: resource.Room.roomType,
-        roomId: resource.Room.roomId,
-        resourceId: resource.Room.resourceId,
+        type: resource.Room.roomType,
+        id: resource.Room.roomId,
         height: resource.Room.height,
         width: resource.Room.width,
         length: resource.Room.length,
         capacity: resource.Room.capacity,
-        roomNumber: resource.Room.roomNumber,
-        availability: resource.available
+        room_number: resource.Room.roomNumber,
+        availability: resource.available,
+        equipments: items
       }
     }
     return mappedRoom;
