@@ -36,7 +36,6 @@ function getRooms(type){
         if(room.Equipment){
           for( var i = 0; i < room.Equipment.length; i++ ) {
             var equipment = room.Equipment[i];
-            console.log(equipment);
             if(equipment.Computer) {
               items.push({type:"Computer", id: equipment.resourceId, RAM: equipment.Computer.RAM, storage: equipment.Computer.storage, operatingSystem: equipment.Computer.operatingSystem });
             } else if (equipment.Projector) {
