@@ -1,5 +1,6 @@
 const models = require('../models/index');
 const rooms = require('./rooms');
+const users = require('./users');
 //DB CALLS HERE
 //I WOULD CREATE A SINGLE ENDPOINT FILE FOR THEM TO use
 module.exports = {
@@ -8,8 +9,8 @@ module.exports = {
     getRoomById: rooms.getRoomById,
     getRoomItems: rooms.getRoomItems,
     getRoomTypes: rooms.getRoomTypes,
-    getUsers: getUsers,
-    getUserByTypeAndId: getUserByTypeAndId,
+    getUsers: users.getUsers,
+    getUserById: users.getUserById,
     getResourceTypes: getResourceTypes,
     getResourcesByType: getResourcesByType,
     getResources: getResources,
@@ -26,52 +27,9 @@ function getResourceTypes(){
   })
 }
 
-function getUserByTypeAndId(type, id){
-  return models.User.findOne({
-    where: {
-      userId: id
-    },
-    include: [{
-      model: models.UserType,
-      where: {
-        typeName: type
-      },
-      required: true
-    }]
-  }).then(user => {
-    var mappedUser = {};
-    if(user){
-      mappedUser = {
-        firstName: user.firstName,
-        lastName: user.lastName,
-        email: user.email,
-        phoneNumber: user.phoneNumber,
-        isAdmin: user.isAdmin,
-        userType: user.UserType.typeName,
-      }
-    }
-    return mappedUser;
-  })
-}
 
-function getUsers(){
-  return models.User.findAll({include: [{model: models.UserType, required:true}]}).then(users => {
-    var mappedUsers = {};
-    if(users){
-      mappedUsers = users.map(user => {
-        return {
-          firstName: user.firstName,
-          lastName: user.lastName,
-          email: user.email,
-          phoneNumber: user.phoneNumber,
-          isAdmin: user.isAdmin,
-          userType: user.UserType.typeName,
-        }
-      });
-      return mappedUsers;
-    }
-  });
-}
+
+
 
 //Type: computer, projector, etc.
 function getResourcesByType(type){
