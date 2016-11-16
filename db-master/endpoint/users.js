@@ -1,6 +1,8 @@
 const models = require('../models/index');
 const crypto = require('crypto');
 
+//algorithm = 'aes-256-ctr',
+//password = 'd6F3Efeq';
 
 
 module.exports = {
