@@ -4,7 +4,9 @@ module.exports = {
   getResourceTypes: getResourceTypes,
   getResourcesByType: getResourcesByType,
   getResources: getResources,
-  getResourceById: getResourceById
+  getResourceById: getResourceById,
+  addResource: addResource,
+  removeResource: removeResource
 }
 
 function getResourceTypes(){
@@ -63,6 +65,54 @@ function getResourceById(id){
     }
     return mappedResource;
   })
+}
+
+function addResource(resource){
+  var resourceType = resource.type.charAt(0) + resource.type.slice(1);
+  var includeObj = getIncludeByType(resourceType);
+  var resourceObj = createResourceObj(resourceType, resource);
+  return models.Resource.create({
+    resourceType: resourceType,
+    isIt: resource.is_it || false,
+    available: true,
+    Equipment: resourceObj
+  }, {include: [{
+      model: models.Equipment,
+      include: includeObj
+    }]
+  }).then(resource => {
+    return resource != null;
+  });
+}
+
+function removeResource(id){
+  return models.Resource.destroy({
+    where: {
+      resourceId: id
+    }
+  }).then(affectedRows => {
+    return true;
+  });
+}
+
+function createResourceObj(type, resource){
+  var resourceObj = {};
+  resourceObj[type] = {};
+  switch(type){
+    case "Computer":
+      resourceObj[type].operatingSystem = resource.operating_system;
+      resourceObj[type].RAM = resource.ram;
+      resourceObj[type].storage = resource.storage;
+      break;
+    case "Projector":
+      break;
+    case "WhiteBoard":
+      resourceObj[type].isPrintable = resource.isPrintable;
+      break;
+    default:
+      break;
+  }
+  return resourceObj;
 }
 
 function addPropertiesByType(resource){

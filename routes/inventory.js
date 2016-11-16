@@ -50,9 +50,13 @@ module.exports = function (app, router, db, models) {
       // }
     })
     .post(function(req, res) {
+      db.addResource(req.body.resource)
+        .then(resp => res.json({status: true, body: resp}));
       //add item to DB with req.params.resource_type and req.params.resource_id
     })
     .delete(function(req, res) {
+      db.removeResource(req.params.resource_id)
+        .then(resp => res.json({status: true, body: resp}));
       //Delete item from DB req.params.resource_type and req.params.resource_id
     });
 
