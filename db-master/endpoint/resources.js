@@ -85,6 +85,24 @@ function addResource(resource){
   });
 }
 
+function addRoom(resource){
+  var resourceType = resource.type.charAt(0) + resource.type.slice(1);
+  var includeObj = getIncludeByType(resourceType);
+  var resourceObj = createResourceObj(resourceType, resource);
+  return models.Resource.create({
+    resourceType: resourceType,
+    isIt: false,
+    available: true,
+    Equipment: resourceObj
+  }, {include: [{
+      model: models.Room,
+      include: includeObj
+    }]
+  }).then(resource => {
+    return resource != null;
+  });
+}
+
 function removeResource(id){
   return models.Resource.destroy({
     where: {
@@ -109,10 +127,26 @@ function createResourceObj(type, resource){
     case "WhiteBoard":
       resourceObj[type].isPrintable = resource.isPrintable;
       break;
+    case "Room":
+      resourceObj[type].height = resource.height;
+      resourceObj[type].length = resource.length;
+      resourceObj[type].width = resource.width;
+      resourceObj[type].capacity = resource.capacity;
+      resourceObj[type].roomNumber = resource.roomNumber;
     default:
       break;
   }
   return resourceObj;
+}
+
+function removeResource(id){
+  return models.Resource.destroy({
+    where: {
+      resourceId: id
+    }
+  }).then(affectedRows => {
+    return true;
+  });
 }
 
 function addPropertiesByType(resource){
@@ -148,10 +182,14 @@ function getIncludeByType(type){
     case "WhiteBoard":
       includeObj.push({model: models.WhiteBoard, required: true});
       break;
+    case "Room":
+      includeObj.push({model: models.Room, required: true});
+      break;
     default:
       includeObj.push({model: models.Computer, required: false});
       includeObj.push({model: models.Projector, required: false});
       includeObj.push({model: models.WhiteBoard, required: false});
+      includeObj.push({model: models.Room, required: false});
       break;
   }
   return includeObj;

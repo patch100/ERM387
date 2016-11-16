@@ -134,3 +134,33 @@ function getRoomTypes(){
 function getRoomsByType(type){
   return getRooms(type);
 }
+
+function removeRoom(id){
+  return models.Room.destroy({
+    where: {
+      roomId: id
+    }
+  }).then(affectedRows => {
+    return true;
+  })
+}
+
+function addRoomItem(roomId, resourceId){
+  return models.RoomEquipment.create({
+    roomId: roomId,
+    equipmentId: resourceId
+  }).then(roomItem => {
+    return roomItem != null
+  })
+}
+
+function removeRoomItem(resourceId, roomId){
+  return models.RoomEquipment.destroy({
+    where: {
+      equipmentId: resourceId,
+      roomId: roomId
+    }
+  }).then(affectedRows => {
+    return true;
+  })
+}
