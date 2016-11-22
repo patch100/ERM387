@@ -15,6 +15,14 @@ search: true
 
 Welcome to our documentation! You can use our API to access ERM endpoints, which can get information on various Resources, Rooms and Users in our database.
 
+<aside class="notice">
+  Notice:
+  <BR>
+  Assume {"status": true, "body": { } } is wrapping all JSON Responses
+  <BR>
+  (If it is missing from the Response JSON)
+</aside>
+
 # Login
 > `POST /login`
 
@@ -157,17 +165,50 @@ param | default | desc
 
 ## Create a User
 
-> 
+> `POST /users`
 
 ```json
+{
+  "user": {
+    "first_name": "string",
+    "last_name": "string",
+    "email": "string@email.com",
+    "phone": "int",
+    "is_admin": true,
+    "type": "string"
+  }
+}
 ```
 
-> 
+> Response JSON:
 
 ```json
+{
+  "status": true,
+  "body": {
+    "message": "Successfully created user!"
+  }
+}
 ```
 
 This endpoint creates a user.
+
+<aside class="success">
+  On success, we could also return the newly created User? (with new ID etc.)
+</aside>
+<aside class="warning">
+  On failure, returns a generic error.
+</aside>
+
+<aside class="notice">
+  We should have a registration page/flow.
+  <BR>
+  When successful, a confirmation link should be sent via email.
+  <BR>
+  To activate the account, the user should follow the link.
+  <BR>
+  This will be done if time permits.
+</aside>
 
 ### Query Parameters
 
@@ -177,14 +218,29 @@ param | default | desc
 
 ## Modify a User
 
-> 
+> `POST /users/:id`
 
 ```json
+{
+  "user": {
+    //...
+  }
+}
 ```
 
-> 
+The body of the POST should only contain fields to be modified.
+<BR>
+You cannot modify reservations in this way.
+
+> Response JSON:
 
 ```json
+{
+  "status": true,
+  "body": {
+    "message": "Successfully modified the User."
+  }
+}
 ```
 
 This endpoint modifies a user.
@@ -203,14 +259,17 @@ param | default | desc
 
 ## Delete a User
 
-> 
+> `DELETE /users/:id`
+
+> Response JSON:
 
 ```json
-```
-
-> 
-
-```json
+{
+  "status": true,
+  "body": {
+    "message": "Successfully deleted the User."
+  }
+}
 ```
 
 This endpoint deletes a user.
@@ -225,17 +284,46 @@ id | The id of the user to delete
 
 ## Get all Resources
 
-> 
+> `GET /inventory`
+
+> Response JSON: 
 
 ```json
+{
+  "resources": [
+      {
+        "type": "string",
+        "id": "int",
+        "operating_system": "string",
+        "ram": "decimal",
+        "storage": "decimal",
+        "printable": true,
+        "available": false,
+        "it_resource": false,
+        "reservations": [
+          {
+            "reservation_id": "int",
+            "user_id": "int",
+            "date_start": "date_string",
+            "date_end": "date_string"
+          },
+          //...
+        ]
+      },
+      //...
+  ]
+}
 ```
-
-> 
-
-```json
-```
+<aside class="notice">
+  Note:<BR>
+  Assume {"status": true, "body": { } } is wrapping all future JSON Responses
+</aside>
 
 This endpoint retrieves all resources.
+
+<aside class="warning">
+  operating_system, ram, storage, printable, available, it_resource: all optional fields based on the `type`
+</aside>
 
 ### Query Parameters
 
@@ -245,17 +333,42 @@ param | default | desc
 
 ## Get all Resources of one type
 
-> 
+> `GET /inventory/:type`
+
+> Response JSON:
 
 ```json
-```
-
-> 
-
-```json
+{
+  "resources": [
+      {
+        "type": "string",
+        "id": "int",
+        "operating_system": "string",
+        "ram": "decimal",
+        "storage": "decimal",
+        "printable": true,
+        "available": false,
+        "it_resource": false,
+        "reservations": [
+          {
+            "reservation_id": "int",
+            "user_id": "int",
+            "date_start": "date_string",
+            "date_end": "date_string"
+          },
+          //...
+        ]
+      },
+      //...
+  ]
+}
 ```
 
 This endpoint retrieves all resources of a specified type.
+
+<aside class="warning">
+  operating_system, ram, storage, printable, available, it_resource: all optional fields based on the `type`
+</aside>
 
 ### URL Parameters
 
@@ -271,17 +384,40 @@ param | default | desc
 
 ## Get a Specific Resource
 
-> 
+> `GET /inventory/:id`
+> `GET /inventory/:type/:id`
+
+> Response JSON:
 
 ```json
-```
-
-> 
-
-```json
+{
+  "resource": {
+    "type": "string",
+    "id": "int",
+    "operating_system": "string",
+    "ram": "decimal",
+    "storage": "decimal",
+    "printable": true,
+    "available": false,
+    "it_resource": false,
+    "reservations": [
+      {
+        "reservation_id": "int",
+        "user_id": "int",
+        "date_start": "date_string",
+        "date_end": "date_string"
+      },
+      //...
+    ]
+  }
+}
 ```
 
 This endpoint retrieves a resource.
+
+<aside class="warning">
+  `available` is only displayed when filtering on dates/availability.
+</aside>
 
 ### URL Parameters
 
@@ -297,17 +433,34 @@ param | default | desc
 
 ## Create a Resource
 
-> 
+> `POST /inventory`
+> `POST /inventory/:type`
 
 ```json
+{
+  "resource": {
+    "type": "string",
+    "ram": "decimal",
+    "storage": "decimal",
+    "operating_system": "string",
+    "it_resource": true
+  }
+}
 ```
 
-> 
+> Response JSON:
 
 ```json
+{
+  "message": "Successfully created a new Resource."
+}
 ```
 
 This endpoint creates a resource.
+
+<aside class="success">
+  We could perhaps return the newly created resource's informations in the response.
+</aside>
 
 ### Query Parameters
 
@@ -317,17 +470,32 @@ param | default | desc
 
 ## Modify a Resource
 
-> 
+> `POST /inventory/:id`
+> `POST /inventory/:type/:id`
 
 ```json
+{
+  "resource": {
+    //...
+  }
+}
 ```
 
-> 
+> Response JSON:
 
 ```json
+{
+  "message": "Successfully modified the Resource."
+}
 ```
 
 This endpoint modifies a resource.
+<BR>
+Reservation information cannot be modified via this endpoint.
+
+<aside class="notice">
+  Only POST the fields of the resource to be modified.
+</aside>
 
 ### URL Parameters
 
@@ -343,14 +511,15 @@ param | default | desc
 
 ## Delete a Resource
 
-> 
+> `DELETE /inventory/:id`
+> `DELETE /inventory/:type/:id`
+
+> Response JSON:
 
 ```json
-```
-
-> 
-
-```json
+{
+  "message": "Successfully deleted the Resouce."
+}
 ```
 
 This endpoint deletes a resource.
@@ -363,14 +532,24 @@ id | The id of the resource to delete
 
 ## Reserve a Resource
 
-> 
+> `POST /inventory/reserve`
 
 ```json
+{
+  "resource_id": "int",
+  "date_start": "date_string",
+  "date_end": "date_string",
+  "room_id": "int",
+  "user_id": "int"
+}
 ```
 
-> 
+> Response JSON:
 
 ```json
+{
+  "message": "Successfully reserved the resource."
+}
 ```
 
 This endpoint reserves a resource.
@@ -391,19 +570,34 @@ param | default | desc
 
 ## Cancel Reservation of a Resource
 
-> 
+> `POST /inventory/cancel`
 
 ```json
+{
+  "reservation_id": "int"
+}
 ```
 
-> 
+Pass a list of reservation ids to cancel or a single one.
+
+> Response JSON:
 
 ```json
+{
+  "message": "Successfully cancelled the reservation(s).",
+  "failed": [ ]
+}
 ```
 
 This endpoint cancels a reservation for a resource.
 <BR>
 Deletes the entry of the reservation in the table.
+
+<aside class="warning">
+  In the response, you have a list of reservations that failed to cancel.
+  <BR>
+  If it is empty, then they were all successful.
+</aside>
 
 ### URL Parameters
 
@@ -415,43 +609,63 @@ id | The id of the reservation to cancel
 
 ## Get all Rooms
 
-> 
+> `GET /rooms`
+> `GET /rooms/:type`
+
+> Response JSON:
 
 ```json
-```
-
-> 
-
-```json
+{
+  "rooms": [
+    {
+      "id": "int",
+      "type": "string",
+      "height": "decimal",
+      "width": "decimal",
+      "length": "decimal",
+      "capacity": "int",
+      "room_number": "int",
+      "reservations": [
+        {
+          "reservation_id": "int",
+          "user_id": "int",
+          "room_id": "int",
+          "date_start": "date_string",
+          "date_end": "date_string",
+          "equipments": [
+            {
+              "type": "string",
+              "resource_id": "int",
+              "operating_system": "string",
+              "ram": "decimal",
+              "storage": "decimal",
+              "printable": true,
+              "available": false,
+              "it_resource": false,
+            },
+            //...
+          ]
+        },
+        //...
+      ],
+      "available": true
+    },
+    //...
+  ]
+}
 ```
 
 This endpoint retrieves all rooms.
 
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-param | default | desc
-
-## Get all Rooms of one type
-
-> 
-
-```json
-```
-
-> 
-
-```json
-```
-
-This endpoint retrieves all rooms of a type.
+<aside class="notice">
+  The `available` field is only present when a filter is applied.
+</aside>
 
 ### URL Parameters
 
 Parameter | Description
 --------- | -----------
-type | The type of the rooms to retrieve
+type | The type of the rooms to retrieve (optional)
 
 ### Query Parameters
 
@@ -461,17 +675,52 @@ param | default | desc
 
 ## Get a Specific Room
 
-> 
+> `GET /rooms/:id`
+> `GET /rooms/:type/:id`
+
+> Response JSON:
 
 ```json
-```
-
-> 
-
-```json
+{
+  "id": "int",
+  "type": "string",
+  "height": "decimal",
+  "width": "decimal",
+  "length": "decimal",
+  "capacity": "int",
+  "room_number": "int",
+  "reservations": [
+    {
+      "reservation_id": "int",
+      "user_id": "int",
+      "room_id": "int",
+      "date_start": "date_string",
+      "date_end": "date_string",
+      "equipments": [
+        {
+          "type": "string",
+          "resource_id": "int",
+          "operating_system": "string",
+          "ram": "decimal",
+          "storage": "decimal",
+          "printable": true,
+          "available": false,
+          "it_resource": false,
+        },
+        //...
+      ]
+    },
+    //...
+  ],
+  "available": true
+}
 ```
 
 This endpoint retrieves a room.
+
+<aside class="notice">
+  The `available` field is only present when a filter is applied.
+</aside>
 
 ### URL Parameters
 
@@ -487,14 +736,28 @@ param | default | desc
 
 ## Create a Room
 
-> 
+> `POST /rooms`
+> `POST /rooms/:type`
 
 ```json
+{
+  "room": {
+    "type": "string",
+    "height": "decimal",
+    "width": "decimal",
+    "length": "decimal",
+    "capacity": "int",
+    "room_number": "int"
+  }
+}
 ```
 
-> 
+> Response JSON:
 
 ```json
+{
+  "message": "Successfully created a room."
+}
 ```
 
 This endpoint creates a room.
@@ -507,17 +770,32 @@ param | default | desc
 
 ## Modify a Room
 
-> 
+> `POST /rooms/:id`
+> `POST /rooms/:type/:id`
 
 ```json
+{
+  "room": {
+    //...
+  }
+}
 ```
 
-> 
+> Response JSON:
 
 ```json
+{
+  "message": "Successfully modified Room."
+}
 ```
 
 This endpoint modifies a room.
+
+<aside class="notice">
+  Only POST fields to modify.
+  <BR>
+  This endpoint cannot modify reservations.
+</aside>
 
 ### URL Parameters
 
@@ -533,14 +811,14 @@ param | default | desc
 
 ## Delete a Room
 
-> 
+> `DELETE /rooms/:id`
+
+> Response JSON:
 
 ```json
-```
-
-> 
-
-```json
+{
+  "message": "Successfully deleted a room."
+}
 ```
 
 This endpoint deletes a room.
@@ -553,14 +831,30 @@ id | The id of the room to delete
 
 ## Reserve a Room
 
-> 
+> `POST /rooms/reserve`
 
 ```json
+{
+  "date_start": "date_string",
+  "date_end": "date_string",
+  "room_id": "int",
+  "user_id": "int",
+  "equipments": [
+    {
+      "resource_id": "int"
+    },
+    //...
+  ]
+}
 ```
 
-> 
+> Response JSON:
 
 ```json
+{
+  "message": "Successfully reserved the room.",
+  "failed": ["int", ]
+}
 ```
 
 This endpoint reserves a room.
@@ -573,6 +867,10 @@ The reservation can be made up to a year in advance.
 <BR>
 The reservation can be up to 7 days long.
 
+<aside class="warning">
+  If the reservation fails for some equipment in the room, their id's will be returned in the `failed` field (list).
+</aside>
+
 ### Query Parameters
 
 Parameter | Default | Description
@@ -581,19 +879,34 @@ param | default | desc
 
 ## Cancel Reservation of a Room
 
-> 
+> `POST /rooms/cancel`
 
 ```json
+{
+  "reservation_id": "int"
+}
 ```
 
-> 
+Pass a reservation id (or list) to cancel.
+
+> Response JSON: 
 
 ```json
+{
+  "message": "Successfully reserved the room.",
+  "failed": ["int", ]
+}
 ```
 
 This endpoint cancels a room reservation.
 <BR>
 The reservation entry is removed from the Reservations table.
+
+<aside class="warning">
+  In the response, you have a list of reservations that failed to cancel.
+  <BR>
+  If it is empty, then they were all successful.
+</aside>
 
 ### URL Parameters
 
