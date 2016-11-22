@@ -24,7 +24,7 @@ module.exports = function (app, router, db, models) {
     })
 
 
-  router.route('/users/:user_type/:user_id')
+  router.route('/users/:user_id')
     .get(function(req, res) {
       //return user with req.params.user_type and req.params.user_id *** not sure if needed
       db.getUserById(req.params.user_id)
