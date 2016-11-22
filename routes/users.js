@@ -39,9 +39,11 @@ module.exports = function (app, router, db, models) {
       // }
     })
     .post(function(req, res) {
+      //TODO this is for modification
       //ID is autoincrement here. Therefore, not the right route
+      // TODO Refactor, the type is taken from the body
       db.addUser(req.params.user_type, req.body.user).then(result => {
-        /*HERE Check if return is true or false*/
+        /*TODO HERE Check if return is true or false*/
         res.json({ status: true, body: "some message" });
       });
       //add user to DB with req.params.user_type and req.params.user_id
