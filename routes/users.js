@@ -16,6 +16,12 @@ module.exports = function (app, router, db, models) {
   //       res.json({ status: false, body: {error: "message"}});
   //     }
     })
+    .post(function(req, res) {
+      // TODO: create a new user
+      // Check if user creation is from an unregistered user or an admin
+      // Assume Admin creation initially, implement registration later
+
+    })
 
 
   router.route('/users/:user_type/:user_id')
