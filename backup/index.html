@@ -1,0 +1,744 @@
+<!DOCTYPE html>
+<html>
+
+  <head>
+    <meta charset='utf-8'>
+    <meta http-equiv="X-UA-Compatible" content="chrome=1">
+    <meta name="description" content="Enterprise Resource Management : SOEN 387">
+
+    <link rel="stylesheet" type="text/css" media="screen" href="stylesheets/stylesheet.css">
+
+    <title>Enterprise Resource Management</title>
+  </head>
+
+  <body>
+
+    <!-- HEADER -->
+    <div id="header_wrap" class="outer">
+        <header class="inner">
+          <a id="forkme_banner" href="https://github.com/sorryeh/ERM387">View on GitHub</a>
+
+          <h1 id="project_title">Welcome to our documentation!</h1>
+          <h2 id="project_tagline">Our ERM system is fully documented below.</h2>
+        </header>
+    </div>
+
+    <!-- MAIN CONTENT -->
+    <div id="main_content_wrap" class="outer">
+      <section id="main_content" class="inner">
+        <h1>
+<a id="enterprise-resource-management-system" class="anchor" href="#entreprise-resource-management-system" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><strong>Enterprise Resource Management system</strong>
+</h1>
+
+<p>SOEN 387 - Final Project</p>
+
+<h2>
+<a id="api-documentation" class="anchor" href="#api-documentation" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a><strong>API Documentation</strong>
+</h2>
+
+<p>Reference for using the ERM endpoints.</p>
+
+<h2>
+<a id="login" class="anchor" href="#login" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Login</h2>
+
+<h3>
+<a id="login-1" class="anchor" href="#login-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Login</h3>
+
+<h5>
+<a id="request" class="anchor" href="#request" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>POST /login
+{
+    "username": "usr",
+    "password": "pwd"
+}
+</code></pre>
+
+<h5>
+<a id="response" class="anchor" href="#response" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Response</h5>
+
+<pre><code>HTTP/1.1 200 OK
+{
+    "status": true,
+    "body": {
+        "message": "some_message"  // Ex: Successful login to 'usr'
+    }
+}
+</code></pre>
+
+<p><em>Note</em>: </p>
+
+<ul>
+<li>Failure: redirect to home page/login page</li>
+<li>Success: redirect to account page/resources/calendar (maybe add a preference)</li>
+</ul>
+
+<h2>
+<a id="users" class="anchor" href="#users" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Users</h2>
+
+<h3>
+<a id="list-of-all-users" class="anchor" href="#list-of-all-users" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>List of all Users</h3>
+
+<h5>
+<a id="request-1" class="anchor" href="#request-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>GET /users
+</code></pre>
+
+<h5>
+<a id="response-1" class="anchor" href="#response-1" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Response</h5>
+
+<pre><code>HTTP/1.1 200 OK
+{
+    "status": true,
+    "body": {
+        "users": [
+            {
+                "id": "2143210",
+                "first_name": "Name",
+                "email": "an_email@email.com",
+                "last_name": "LastName",
+                "phone_number": "11111111",
+                "is_admin": true,
+                "type": "type"
+            },
+            {
+                "id": "432124123",
+                "first_name": "Name",
+                "last_name": "LastName",
+                "email": "another_email@gmail.com",
+                "phone_number": "19992222",
+                "is_admin": false,
+                "type": "another_type"
+            }
+        ]
+    }
+}
+</code></pre>
+
+<h3>
+<a id="get-one-users-details" class="anchor" href="#get-one-users-details" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Get one User's details</h3>
+
+<h4>
+<a id="request-2" class="anchor" href="#request-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request</h4>
+
+<p>Filter users on <em>id</em></p>
+
+<pre><code>GET /users/:id
+</code></pre>
+
+<h4>
+<a id="response-2" class="anchor" href="#response-2" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Response</h4>
+
+<pre><code>HTTP/1.1 200 OK
+{
+    "status": true,
+    "body": {
+        "user": {
+            "id": "31230123",
+            "first_name": "Name",
+            "last_name": "LastName",
+            "email": "an_email@email.com",
+            "phone": "13334444",
+            "is_admin": true,
+            "type": "type"
+        }
+    }
+}
+</code></pre>
+
+<h3>
+<a id="create-a-user" class="anchor" href="#create-a-user" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Create a User</h3>
+
+<h5>
+<a id="request-3" class="anchor" href="#request-3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>POST /users
+body:
+{
+    "user": {
+        "first_name": "Name",
+        "last_name": "LastName",
+        "email": "an_email@email.com",
+        "phone": "13334444",
+        "is_admin": true        // This only works if logged in as an admin
+    }
+}
+</code></pre>
+
+<h5>
+<a id="response-3" class="anchor" href="#response-3" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Response</h5>
+
+<pre><code>HTTP/1.1 200 OK
+{
+    "status": true,
+    "body": {
+        "message": "some_message"  // Example: Successfully created account
+    }
+}
+</code></pre>
+
+<p><em>Note</em>: This should technically send a confirmation link via e-mail and then activate the account by following the link or pasting a code on the ERM website. We might not have time to complete this part.</p>
+
+<h3>
+<a id="modify-a-user" class="anchor" href="#modify-a-user" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Modify a User</h3>
+
+<h5>
+<a id="request-4" class="anchor" href="#request-4" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>POST /users/:id
+
+{
+    "user": {
+        "first_name": "Name",
+        "last_name": "LastName",
+        "email": "an_email@email.com",
+        "phone": "13334444",
+        "is_admin": true        // This only works if logged in as an admin
+    }
+}
+</code></pre>
+
+<p><em>Note</em>: Only put the fields to modify.</p>
+
+<h5>
+<a id="response-4" class="anchor" href="#response-4" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Response</h5>
+
+<pre><code>HTTP/1.1 200 OK
+{
+    "status": true,
+    "body": {
+        "message": "some_message"  // Example: Successfully modified account id #
+    }
+}
+</code></pre>
+
+<h3>
+<a id="delete-a-user" class="anchor" href="#delete-a-user" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Delete a User</h3>
+
+<h5>
+<a id="request-5" class="anchor" href="#request-5" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>DELETE /users/:id
+</code></pre>
+
+<h5>
+<a id="response-5" class="anchor" href="#response-5" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Response</h5>
+
+<pre><code>HTTP/1.1 200 OK
+{
+    "status": true,
+    "body": {
+        "message": "some_message"  // Example: Successfully deleted account
+    }
+}
+</code></pre>
+
+<h2>
+<a id="inventory" class="anchor" href="#inventory" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Inventory</h2>
+
+<h3>
+<a id="list-inventory-all-resources" class="anchor" href="#list-inventory-all-resources" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>List Inventory (all Resources)</h3>
+
+<h5>
+<a id="request-6" class="anchor" href="#request-6" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>GET /inventory
+</code></pre>
+
+<h5>
+<a id="response-6" class="anchor" href="#response-6" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Response</h5>
+
+<pre><code>HTTP/1.1 200 OK
+{
+    "status": true,
+    "body": {
+        "resources": [
+            {
+                "type": "",
+                "id": "2351",
+                // Optional
+                "operating_system": "some_os",
+                "ram": decimal,
+                "storage": decimal,
+                "is_printable": true,
+                "available": true,
+                "is_it": true
+            },
+            {
+                "type": "",
+                "id": "23122431",
+                // Optional
+                "operating_system": "some_os",
+                "ram": decimal,
+                "storage": decimal,
+                "is_printable": true,
+                "available": true,
+                "is_it": true
+            }
+        ]
+    }
+}
+</code></pre>
+
+<h3>
+<a id="list-all-resources-of-a-type" class="anchor" href="#list-all-resources-of-a-type" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>List all Resources of a type</h3>
+
+<h5>
+<a id="request-7" class="anchor" href="#request-7" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>GET /inventory/:type
+</code></pre>
+
+<h5>
+<a id="response-7" class="anchor" href="#response-7" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Response</h5>
+
+<pre><code>HTTP/1.1 200 OK
+{
+    "status": true,
+    "body": {
+        "resources": [
+            {
+                "type": "",
+                "id": "2351",
+                // Optional
+                "operating_system": "some_os",
+                "ram": decimal,
+                "storage": decimal,
+                "is_printable": true,
+                "available": true,
+                "is_it": true
+            },
+            {
+                "type": "",
+                "id": "23122431",
+                // Optional
+                "operating_system": "some_os",
+                "ram": decimal,
+                "storage": decimal,
+                "is_printable": true,
+                "available": true,
+                "is_it": true
+            }
+        ]
+    }
+}
+</code></pre>
+
+<h3>
+<a id="show-a-resources-details" class="anchor" href="#show-a-resources-details" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Show a resource's details</h3>
+
+<h5>
+<a id="request-8" class="anchor" href="#request-8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>GET /inventory/:type/:id
+GET /inventory/:id
+</code></pre>
+
+<h5>
+<a id="response-8" class="anchor" href="#response-8" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Response</h5>
+
+<pre><code>HTTP/1.1 200 OK
+{
+    "status": true,
+    "body": {
+        "resource": {
+            "type": "some_type",  // computer | projector | whiteboard
+            "id": "23511",
+            // Optional
+            "operating_system": "some_os",
+            "ram": decimal,
+            "storage": decimal,
+            "is_printable": true,
+            "available": true,
+            "is_it": true
+        }
+    }
+}
+</code></pre>
+
+<h3>
+<a id="create-a-resource" class="anchor" href="#create-a-resource" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Create a Resource</h3>
+
+<h5>
+<a id="request-9" class="anchor" href="#request-9" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>POST /inventory
+POST /inventory/:type
+{
+    "resource": {
+        "type": "some_type",  // computer | projector | whiteboard
+        // Optional
+        "ram": decimal,
+        "storage": decimal,
+        "operating_system": "some_os",
+        "is_it": true
+    }
+}
+</code></pre>
+
+<h5>
+<a id="response-9" class="anchor" href="#response-9" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Response</h5>
+
+<pre><code>HTTP/1.1 200 OK
+{
+    "status": true,
+    "body": {
+            "message": "some_message"  // Ex: Successfully created a new Resource
+    }
+}
+</code></pre>
+
+<h3>
+<a id="modify-a-resource" class="anchor" href="#modify-a-resource" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Modify a Resource</h3>
+
+<h5>
+<a id="request-10" class="anchor" href="#request-10" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>POST /inventory/:id
+POST /inventory/:type/:id
+{
+    "resource": {
+        "type": "",
+        // Optional (modify wanted fields here)
+        "ram": decimal,
+        "storage": decimal,
+        "operating_system": "some_os",
+        "is_it": true
+    }
+}
+</code></pre>
+
+<h5>
+<a id="response-10" class="anchor" href="#response-10" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Response</h5>
+
+<pre><code>HTTP/1.1 200 OK
+{
+    "status": true,
+    "body": {
+        "message": "some_message"  // Ex: Successfully modified Resource
+    }
+}
+</code></pre>
+
+<h3>
+<a id="delete-a-resource" class="anchor" href="#delete-a-resource" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Delete a Resource</h3>
+
+<h5>
+<a id="request-11" class="anchor" href="#request-11" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>DELETE /inventory/:id
+DELETE /inventory/:type/:id
+</code></pre>
+
+<h5>
+<a id="response-11" class="anchor" href="#response-11" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Response</h5>
+
+<pre><code>HTTP/1.1 200 OK
+{
+    "status": true,
+    "body": {
+        "message": "some_message"  // Ex: Successfully deleted a Resource
+    }
+}
+</code></pre>
+
+<h2>
+<a id="rooms" class="anchor" href="#rooms" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Rooms</h2>
+
+<h3>
+<a id="list-all-rooms-or-all-rooms-of-a-type" class="anchor" href="#list-all-rooms-or-all-rooms-of-a-type" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>List all Rooms (or All Rooms of a Type)</h3>
+
+<h5>
+<a id="request-12" class="anchor" href="#request-12" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>GET /rooms
+GET /rooms/:type
+</code></pre>
+
+<h5>
+<a id="response-12" class="anchor" href="#response-12" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Response</h5>
+
+<pre><code>HTTP/1.1 200 OK
+{
+    "status": true,
+    "body": {
+        "rooms": [
+            {
+                "id": "7227",
+                "type": "type",
+                "height": decimal,
+                "width": decimal,
+                "length": decimal,
+                "capacity": integer,
+                "room_number": "number",
+                "equipments": [
+                    {
+                        "id": "8",
+                        "type": "",
+                        "is_printable": true,
+                        "ram": decimal,
+                        "storage": decimal,
+                        "operating_system": "some_os"
+                    },
+                    {
+                        "id": "2",
+                        "type": "",
+                        "is_printable": true,
+                        "ram": decimal,
+                        "storage": decimal,
+                        "operating_system": "some_os"
+                    }
+                ]
+            },
+            {
+                "id": "7135227",
+                "type": "type",
+                "height": decimal,
+                "width": decimal,
+                "length": decimal,
+                "capacity": integer,
+                "room_number": "number",
+                "equipments": [
+                    {
+                        "id": "0098",
+                        "type": "",
+                        "is_printable": true,
+                        "ram": decimal,
+                        "storage": decimal,
+                        "operating_system": "some_os"
+                    },
+                    {
+                        "id": "21340",
+                        "type": "",
+                        "is_printable": true,
+                        "ram": decimal,
+                        "storage": decimal,
+                        "operating_system": "some_os"
+                    }
+                ]
+            }
+        ]
+    }
+}
+</code></pre>
+
+<h3>
+<a id="show-a-rooms-details" class="anchor" href="#show-a-rooms-details" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Show a Room's details</h3>
+
+<h5>
+<a id="request-13" class="anchor" href="#request-13" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>GET /rooms/:id
+GET /rooms/:type/:id
+</code></pre>
+
+<h5>
+<a id="response-13" class="anchor" href="#response-13" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Response</h5>
+
+<pre><code>HTTP/1.1 200 OK
+{
+    "status": true,
+    "body": {
+        "room": {
+            "id": "7135227",
+            "type": "type",
+            "height": decimal,
+            "width": decimal,
+            "length": decimal,
+            "capacity": integer,
+            "room_number": "number",
+            "equipments": [
+                {
+                    "id": "0098",
+                    "type": "",
+                    "is_printable": true,
+                    "ram": decimal,
+                    "storage": decimal,
+                    "operating_system": "some_os"
+                },
+                {
+                    "id": "21340",
+                    "type": "",
+                    "is_printable": true,
+                    "ram": decimal,
+                    "storage": decimal,
+                    "operating_system": "some_os"
+                }
+            ]
+        }
+    }
+}
+</code></pre>
+
+<h3>
+<a id="create-a-room" class="anchor" href="#create-a-room" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Create a Room</h3>
+
+<h5>
+<a id="request-14" class="anchor" href="#request-14" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>POST /rooms
+POST /rooms/:type
+{
+    "room": {
+        "type": "type",
+        "height": decimal,
+        "width": decimal,
+        "length": decimal,
+        "capacity": integer,
+        "room_number": "number",
+        "equipments": [
+            {
+                // Assign an already existing equipment
+                "id": "0098",
+            },
+            {
+                // Create a new equipment
+                "type": "",
+                "is_printable": true,
+                "ram": decimal,
+                "storage": decimal,
+                "operating_system": "some_os"
+            }
+        ]
+    }
+}
+</code></pre>
+
+<p><em>Note</em>: Some of these are optional</p>
+
+<h5>
+<a id="response-14" class="anchor" href="#response-14" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Response</h5>
+
+<pre><code>HTTP/1.1 200 OK
+{
+    "status": true,
+    "body": {
+        "message": "some_message"  // Ex: Successfully created a Room
+    }
+}
+</code></pre>
+
+<h3>
+<a id="modify-a-rooms-details" class="anchor" href="#modify-a-rooms-details" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Modify a Room's details</h3>
+
+<h5>
+<a id="request-15" class="anchor" href="#request-15" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>POST /rooms/:id
+POST /rooms/:type/:id
+{
+    "room": {
+        "type": "type",
+        "height": decimal,
+        "width": decimal,
+        "length": decimal,
+        "capacity": integer,
+        "room_number": "number",
+        "equipments": [
+            {
+                "id": "0098",
+                "type": "",
+                "is_printable": true,
+                "ram": decimal,
+                "storage": decimal,
+                "operating_system": "some_os"
+            },
+            {
+                "id": "1230",
+                "type": "",
+                "is_printable": true,
+                "ram": decimal,
+                "storage": decimal,
+                "operating_system": "some_os"
+            }
+        ]
+    }
+}
+</code></pre>
+
+<p><em>Note</em>: Only POST details to modify and Equipments to modify</p>
+
+<h5>
+<a id="response-15" class="anchor" href="#response-15" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Response</h5>
+
+<pre><code>HTTP/1.1 200 OK
+{
+    "status": true,
+    "body": {
+        "message": "some_message"  // Ex: Successfully modified Room
+    }
+}
+</code></pre>
+
+<h3>
+<a id="delete-a-room" class="anchor" href="#delete-a-room" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Delete a Room</h3>
+
+<h5>
+<a id="request-16" class="anchor" href="#request-16" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>DELETE /rooms/:id
+DELETE /rooms/:type/:id
+</code></pre>
+
+<h5>
+<a id="response-16" class="anchor" href="#response-16" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Response</h5>
+
+<pre><code>HTTP/1.1 200 OK
+{
+    "status": true,
+    "body": {
+        "message": "some_message"  // Ex: Successfully deleted a Room
+    }
+}
+</code></pre>
+
+<h3>
+<a id="delete-a-room-equipment" class="anchor" href="#delete-a-room-equipment" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Delete a Room Equipment</h3>
+
+<h5>
+<a id="request-17" class="anchor" href="#request-17" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Request</h5>
+
+<pre><code>DELETE /equipments/:id
+</code></pre>
+
+<h5>
+<a id="response-17" class="anchor" href="#response-17" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Response</h5>
+
+<pre><code>HTTP/1.1 200 OK
+{
+    "status": true,
+    "body": {
+        "message": "some_msg"  // Ex: Successfully deleted the Equipment
+    }
+}
+</code></pre>
+
+<h2>
+<a id="errors" class="anchor" href="#errors" aria-hidden="true"><span aria-hidden="true" class="octicon octicon-link"></span></a>Errors</h2>
+
+<p>All errors will return the following:</p>
+
+<pre><code>HTTP/1.1 200 OK
+{
+    "status": false,
+    "body": {
+        "error": "some_message"
+    }
+}
+</code></pre>
+      </section>
+    </div>
+
+    <!-- FOOTER  -->
+    <div id="footer_wrap" class="outer">
+      <footer class="inner">
+        <p class="copyright">Enterprise Resource Management maintained by <a href="https://github.com/sorryeh">sorryeh</a></p>
+        <p>Published with <a href="https://pages.github.com">GitHub Pages</a></p>
+      </footer>
+    </div>
+
+
+
+  </body>
+</html>
