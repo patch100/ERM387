@@ -16,9 +16,9 @@ var router = express.Router();
 
 // Where you call other files such as controllers and routings. next to "app" add any other packages you import that are required in the controllers
 // // DB testing
-const models = require('./db-master/models/index');
+const endpoint = require('./db-master/endpoint/index');
 const db = require('./db-master/endpoint/index');
-require('./routes')(app, router, db, models);
+require('./routes')(app, router, db);
 
 
 
