@@ -16,6 +16,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Room.belongsTo(models.Resource, {foreignKey: 'resourceId'});
+        Room.hasMany(models.Reservation, {foreignKey: 'roomId'});
         }
     }
    });
