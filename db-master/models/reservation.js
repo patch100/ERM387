@@ -12,8 +12,9 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'Reservation',
     classMethods: {
       associate: function(models) {
-        Reservation.belongsTo(models.Resource, {foreignKey: 'resourceId'});
         Reservation.belongsTo(models.Room, {foreignKey: 'roomId'});
+        Reservation.belongsTo(models.Resource, {foreignKey: 'resourceId'});
+        Reservation.belongsTo(models.User, {foreignKey: 'userId'});
       }
     } 
   });

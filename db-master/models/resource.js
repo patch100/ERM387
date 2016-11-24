@@ -10,7 +10,7 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Resource.hasOne(models.Room, {foreignKey: "resourceId"});
-        Resource.belongsToMany(models.User, {through: models.Reservation, foreignKey: 'resourceId'});
+        Resource.hasMany(models.Reservation, {foreignKey: 'resourceId'});
         Resource.hasOne(models.Computer, {foreignKey: 'resourceId'});
         Resource.hasOne(models.Projector, {foreignKey: 'resourceId'});
         Resource.hasOne(models.WhiteBoard, {foreignKey: 'resourceId'});

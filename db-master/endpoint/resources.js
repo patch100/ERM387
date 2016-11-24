@@ -50,18 +50,16 @@ function getResources(type) {
 
 function getResourceById(id){
   return models.Resource.findById(id, {
-    include: [{
-      model: models.Equipment,
-      required: true,
       include: [
         {model: models.Computer, required: false},
         {model: models.Projector, required: false},
-        {model: models.WhiteBoard, required: false}]
-    }]
-  }).then( resource => {
+        {model: models.WhiteBoard, required: false},
+        {model: models.Reservation, required: false}
+        ]}).then( resource => {
     var mappedResource = {};
     if(resource){
       mappedResource = addPropertiesByType(resource);
+      mappedResource.Reservation = resource.Reservations;
     }
     return mappedResource;
   })
@@ -151,14 +149,14 @@ function addPropertiesByType(resource){
   res.id = resource.resourceId;
   switch(resource.resourceType){
     case "Computer":
-      res.operatingSystem = resource.Equipment.Computer.operatingSystem;
-      res.RAM = resource.Equipment.Computer.RAM;
-      res.storage = resource.Equipment.Computer.storage;
+      res.operatingSystem = resource.Computer.operatingSystem;
+      res.RAM = resource.Computer.RAM;
+      res.storage = resource.Computer.storage;
       break;
     case "Projector":
       break;
     case "WhiteBoard":
-      res.isPrintable = resource.Equipment.WhiteBoard.isPrintable;
+      res.isPrintable = resource.WhiteBoard.isPrintable;
       break;
   }
   return res;

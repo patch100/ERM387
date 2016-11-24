@@ -6,14 +6,15 @@ const endpoint = require('./endpoint/index');
 
 // App
 
-models.sequelize.sync({force:true}).then(() => {
+models.sequelize.sync().then(() => {
   //endpoint testing
   //endpoint.getRoomItems(1).then(aa => console.log(aa));
-  endpoint.addResource({
-    type:"Computer",
-    is_it: true,
-    ram : 1,
-    operating_system: "Windows",
-    storage: 2.0
-  }).then(aa => console.log(aa))
+  // endpoint.addResource({
+  //   type:"Computer",
+  //   is_it: true,
+  //   ram : 1,
+  //   operating_system: "Windows",
+  //   storage: 2.0
+  // }).then(aa => console.log(aa))
+  endpoint.getResourceById(2).then(aa => console.log(aa))
 });
