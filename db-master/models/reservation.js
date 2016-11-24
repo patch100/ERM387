@@ -6,10 +6,17 @@ module.exports = function(sequelize, DataTypes) {
     resourceId: {type: DataTypes.INTEGER(), allowNull: false},
     userId: {type: DataTypes.INTEGER(), allowNull: false},
     startTime: {type: DataTypes.DATE(), allowNull: false},
-    endTime: {type: DataTypes.DATE(), allowNull: false}
+    endTime: {type: DataTypes.DATE(), allowNull: false},
+    roomId:{type:DataTypes.INTEGER(), allowNull:false}
   },{
-    tableName: 'Reservation'
-   });
+    tableName: 'Reservation',
+    classMethods: {
+      associate: function(models) {
+        Reservation.belongsTo(models.Resource, {foreignKey: 'resourceId'});
+        Reservation.belongsTo(models.Room, {foreignKey: 'roomId'});
+      }
+    } 
+  });
 
   return Reservation;
 };

@@ -11,7 +11,7 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'Computer',
     classMethods: {
       associate: function(models) {
-        Computer.belongsTo(models.Equipment, {foreignKey: 'equipmentId'});
+        Computer.belongsTo(models.Resource, {foreignKey: 'resourceId'});
       }
     }
   });
