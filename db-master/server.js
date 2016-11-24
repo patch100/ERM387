@@ -9,4 +9,11 @@ const endpoint = require('./endpoint/index');
 models.sequelize.sync({force:true}).then(() => {
   //endpoint testing
   //endpoint.getRoomItems(1).then(aa => console.log(aa));
+  endpoint.addResource({
+    type:"Computer",
+    is_it: true,
+    ram : 1,
+    operating_system: "Windows",
+    storage: 2.0
+  }).then(aa => console.log(aa))
 });

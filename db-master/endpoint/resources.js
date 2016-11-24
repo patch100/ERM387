@@ -68,19 +68,11 @@ function getResourceById(id){
 }
 
 function addResource(resource){
-  var resourceType = resource.type.charAt(0) + resource.type.slice(1);
+  var resourceType = resource.type.charAt(0).toUpperCase() + resource.type.slice(1);
   var includeObj = getIncludeByType(resourceType);
   var resourceObj = createResourceObj(resourceType, resource);
-  return models.Resource.create({
-    resourceType: resourceType,
-    isIt: resource.is_it || false,
-    available: true,
-    Equipment: resourceObj
-  }, {include: [{
-      model: models.Equipment,
-      include: includeObj
-    }]
-  }).then(resource => {
+  return models.Resource.create(resourceObj, {include: includeObj})
+    .then(resource => {
     return resource != null;
   });
 }
@@ -116,6 +108,8 @@ function removeResource(id){
 function createResourceObj(type, resource){
   var resourceObj = {};
   resourceObj[type] = {};
+  resourceObj.resourceType = type;
+  resourceObj.isIt= resource.is_it || false;
   switch(type){
     case "Computer":
       resourceObj[type].operatingSystem = resource.operating_system;
