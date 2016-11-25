@@ -17,22 +17,13 @@ module.exports = function (app, router, db, models) {
 					var userToken = jwt.sign(user, app.get('superSecret'), {
 						expiresInMinutes: 1440 // expires in 24 hours
 					});
-					// add token to response ? (or redirect)
+
 					res.json({ 
 						status: true,
 						body: {message: "Successful Login!"},
-						token: userToken // do we need this?
+						token: userToken
 					});
 					
-					// redirect to page corresponding to user type	
-						// example:
-					res.redirect('/resources');
-					
-					// redirect the user to the appropriate page (depending on type of user)
-			// If failure (User exists, password does not match OR User does not exist)
-					// add error to response
-					// redirect to login page
-					res.redirect('/');
 				}
             )
           });
