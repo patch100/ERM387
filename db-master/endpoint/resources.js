@@ -28,25 +28,24 @@ function getResources(type) {
   var includeObj = getIncludeByType(type);
   return models.Resource.findAll({
     where: typeFilter,
-    include: [{
-      model: models.Equipment,
-      required: true,
-      include: includeObj
-    }]
-  }).then(resources => {
+    include:includeObj}).then(resources => {
     var mappedResources = {resources : []};
     if(resources){
       var items = [];
       for(var i = 0; i < resources.length; i++){
+        var element = {}
         var resource = resources[i];
-        var equipment = resource.Equipment;
-        items.push(addPropertiesByType(resource));
+
+        element = addPropertiesByType(resource);
+        element.Reservation = getReservation(resource);
+        items.push(element);    
       }
       mappedResources.resources = items;
     }
     return mappedResources;
   });
 }
+
 
 function getResourceById(id){
   return models.Resource.findById(id, {
@@ -56,14 +55,37 @@ function getResourceById(id){
         {model: models.WhiteBoard, required: false},
         {model: models.Reservation, required: false}
         ]}).then( resource => {
-    var mappedResource = {};
+    var mappedResource = {resource : []};
     if(resource){
       mappedResource = addPropertiesByType(resource);
-      mappedResource.Reservation = resource.Reservations;
+      mappedResource.Reservation = getReservation(resource);
     }
     return mappedResource;
   })
 }
+
+function getReservation(resource){
+      var reservations = resource.Reservations;
+      var items = [];
+      for(var i = 0; i < reservations.length; i++){
+          var reservation = reservations[i];
+          items.push(getReservationDetail(reservation));
+      }
+     return items;
+}
+
+function getReservationDetail(reservation){
+  var res = {};
+    res.id = reservation.reservationId;
+    res.resourceid = reservation.resourceId;
+    res.userid = reservation.userId;
+    res.startTime = reservation.startTime;
+    res.endTime = reservation.endTime;
+    res.room = reservation.roomId;
+
+  return res;
+}
+
 
 function addResource(resource){
   var resourceType = resource.type.charAt(0).toUpperCase() + resource.type.slice(1);
@@ -143,7 +165,6 @@ function removeResource(id){
 
 function addPropertiesByType(resource){
   var res = {};
-  res.available = resource.available;
   res.type = resource.resourceType;
   res.is_it = resource.isIt;
   res.id = resource.resourceId;
@@ -162,25 +183,31 @@ function addPropertiesByType(resource){
   return res;
 }
 
+
 function getIncludeByType(type){
   var includeObj = [];
   switch(type){
     case "Computer":
       includeObj.push({model: models.Computer, required: true});
+      includeObj.push( {model: models.Reservation, required: false});     
       break;
     case "Projector":
       includeObj.push({model: models.Projector, required: true});
+      includeObj.push( {model: models.Reservation, required: false});
       break;
     case "WhiteBoard":
       includeObj.push({model: models.WhiteBoard, required: true});
+      includeObj.push( {model: models.Reservation, required: false});
       break;
     case "Room":
       includeObj.push({model: models.Room, required: true});
+      includeObj.push( {model: models.Reservation, required: false});
       break;
     default:
       includeObj.push({model: models.Computer, required: false});
       includeObj.push({model: models.Projector, required: false});
       includeObj.push({model: models.WhiteBoard, required: false});
+      includeObj.push( {model: models.Reservation, required: false});
       includeObj.push({model: models.Room, required: false});
       break;
   }
