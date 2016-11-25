@@ -15,7 +15,8 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         User.belongsTo(models.UserType, {foreignKey: 'typeId'});
-        User.belongsToMany(models.Resource, {through: models.Reservation, foreignKey: 'userId'});
+        User.hasMany(models.Reservation, {foreignKey: 'userId'});
+        //User.belongsToMany(models.Resource, {through: models.Reservation, foreignKey: 'userId'});
       }
     }
   });
