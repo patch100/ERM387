@@ -37,7 +37,7 @@ function getResources(type) {
         var resource = resources[i];
 
         element = addPropertiesByType(resource);
-        element.Reservation = getReservation(resource);
+        element.Reservation = JSON.stringify(getReservation(resource));
         items.push(element);    
       }
       mappedResources.resources = items;
