@@ -7,7 +7,7 @@ module.exports = function(sequelize, DataTypes) {
     userId: {type: DataTypes.INTEGER(), allowNull: false},
     startTime: {type: DataTypes.DATE(), allowNull: false},
     endTime: {type: DataTypes.DATE(), allowNull: false},
-    roomId:{type:DataTypes.INTEGER(), allowNull:false}
+    roomId:{type:DataTypes.INTEGER(), allowNull: true}
   },{
     tableName: 'Reservation',
     classMethods: {

@@ -6,7 +6,7 @@ const endpoint = require('./endpoint/index');
 
 // App
 
-models.sequelize.sync().then(() => {
+models.sequelize.sync({force: true}).then(() => {
   //endpoint testing
   //endpoint.getRoomItems(1).then(aa => console.log(aa));
    //endpoint.addResource({
@@ -17,5 +17,5 @@ models.sequelize.sync().then(() => {
     // storage: 2.0
    //}).then(aa => console.log(aa))
   //endpoint.getResourceById(1).then(aa => console.log(aa))
-  endpoint.getResourcesByType("Room").then(aa => console.log(aa))
+  //endpoint.getResourcesByType("Room").then(aa => console.log(aa))
 });
