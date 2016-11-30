@@ -16,7 +16,6 @@ module.exports = function(sequelize, DataTypes) {
     classMethods: {
       associate: function(models) {
         Room.belongsTo(models.Resource, {foreignKey: 'resourceId', onDelete: "CASCADE", onUpdate: "CASCADE"});
-        Room.hasMany(models.Reservation, {foreignKey: 'roomId', onDelete: "SET NULL", onUpdate: "CASCADE"});
         }
     }
    });

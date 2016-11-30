@@ -51,7 +51,12 @@ SELECT "meeting", resourceId, 8, 40, 40, 120, 'H890'
 FROM Resource WHERE resourceType = 'Room' ORDER BY resourceId ASC LIMIT 1;
  
 #Reservations
-INSERT INTO Reservation (userId, resourceId, roomId, startTime, endTime, createdAt, updatedAt)
+INSERT INTO Reservation (userId, resourceId, startTime, endTime, createdAt, updatedAt)
 SELECT
-  (SELECT userId FROM User WHERE firstName = 'ABC' LIMIT 1), resourceId, null, NOW(), NOW() + INTERVAL 1 DAY, NOW(), NOW()
+  (SELECT userId FROM User WHERE firstName = 'ABC' LIMIT 1), resourceId, NOW(), NOW() + INTERVAL 1 DAY, NOW(), NOW()
 FROM Resource WHERE Resource.resourceType = 'Room' ORDER BY resourceId ASC LIMIT 1;
+
+#ReservationResources
+INSERT INTO ReservationResource (reservationId, resourceId, createdAt, updatedAt)
+SELECT reservationId, (SELECT resourceId FROM Resource WHERE resourceType = 'Computer' ORDER BY resourceId ASC LIMIT 1), NOW(), NOW()
+FROM Reservation ORDER BY reservationId ASC LIMIT 1;

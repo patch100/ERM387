@@ -14,6 +14,7 @@ module.exports = function(sequelize, DataTypes) {
         Resource.hasOne(models.Computer, {foreignKey: 'resourceId', onDelete: "CASCADE", onUpdate: "CASCADE"});
         Resource.hasOne(models.Projector, {foreignKey: 'resourceId', onDelete: "CASCADE", onUpdate: "CASCADE"});
         Resource.hasOne(models.WhiteBoard, {foreignKey: 'resourceId', onDelete: "CASCADE", onUpdate: "CASCADE"});
+        Resource.hasMany(models.ReservationResource, {foreignKey: 'resourceId', onDelete: "CASCADE", onUpdate: "CASCADE"});
       }
     }
   });
