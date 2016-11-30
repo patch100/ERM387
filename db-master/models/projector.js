@@ -8,7 +8,7 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'Projector',
     classMethods: {
       associate: function(models) {
-        Projector.belongsTo(models.Resource, {foreignKey: 'resourceId'});
+        Projector.belongsTo(models.Resource, {foreignKey: 'resourceId', onDelete: "CASCADE", onUpdate: "CASCADE"});
       }
     }
   });

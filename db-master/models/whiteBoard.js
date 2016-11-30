@@ -9,7 +9,7 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'WhiteBoard',
     classMethods: {
       associate: function(models) {
-        WhiteBoard.belongsTo(models.Resource, {foreignKey: 'resourceId'});
+        WhiteBoard.belongsTo(models.Resource, {foreignKey: 'resourceId', onDelete: "CASCADE", onUpdate: "CASCADE"});
       }
     }
   });

@@ -11,7 +11,7 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'Computer',
     classMethods: {
       associate: function(models) {
-        Computer.belongsTo(models.Resource, {foreignKey: 'resourceId'});
+        Computer.belongsTo(models.Resource, {foreignKey: 'resourceId', onDelete: "CASCADE", onUpdate: "CASCADE"});
       }
     }
   });
