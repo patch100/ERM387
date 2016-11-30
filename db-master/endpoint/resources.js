@@ -58,9 +58,11 @@ function getResourceById(id){
         {model: models.Computer, required: false},
         {model: models.Projector, required: false},
         {model: models.WhiteBoard, required: false},
-        {model: models.Reservation, required: false}
+        {model: models.Reservation, required: false},
+        {model: models.ReservationResource, required: false, include:[{model: models.Reservation, required: false}]}
         ]}).then( resource => {
     if(resource){
+      //console.log(JSON.stringify(resource));
       var mappedResource = {};
       mappedResource = addPropertiesByType(resource);
       mappedResource.Reservation = getReservation(resource);
@@ -78,6 +80,11 @@ function getReservation(resource){
       for(var i = 0; i < reservations.length; i++){
           var reservation = reservations[i];
           items.push(getReservationDetail(reservation));
+      }
+
+      for(var i = 0; i < resource.ReservationResources.length; i++){
+        var reservation = resource.ReservationResources[i].Reservation;
+        items.push(getReservationDetail(reservation));
       }
      return items;
 }
@@ -178,10 +185,10 @@ function addPropertiesByType(resource){
   return res;
 }
 
-
 function getIncludeByType(type){
   var includeObj = [];
-  includeObj.push( {model: models.Reservation, where: { endDate: {$gte: new Date()}}, required: false});
+  includeObj.push( {model: models.Reservation, where: { endTime: {$gte: new Date()}}, required: false});
+  includeObj.push( {model: models.ReservationResource, required: false, include: [{model: models.Reservation, where: { endTime: {$gte: new Date()}}, required: false}]});
   switch(type){
     case "Computer":
       includeObj.push({model: models.Computer, required: true});   
