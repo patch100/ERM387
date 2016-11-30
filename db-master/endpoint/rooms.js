@@ -46,28 +46,22 @@ function getRooms(type) {
 
 function mapResource(resource) {
   return new Promise((resolve, reject) => {
-    if (resource.Reservations) {
+    if (resource.Reservations && resource.Reservations.length > 0) {
       getRoomResources(resource.Room.roomId).then(function (roomItems) {
-        //HERE 1
-        console.log(roomItems.length);
-        for( var i = 0; i < resource.Reservations.length; i++){
-          //HERE 0 ???????
-          console.log(roomItems.length);
-        }
-
-        //  var reservations = resource.Reservations.map(roomRes => {
-        //   if (roomItemssss && roomItemssss.length > 0) {
-        //     items = roomItemssss.filter(res => res.reservationId === roomRes.reservationId).map(resourceEndpoint.addPropertiesByType);
-        //   }
-        //   return {
-        //     reservation_id: roomRes.reservationId,
-        //     user_id: roomRes.userId,
-        //     start_time: roomRes.startTime,
-        //     end_time: roomRes.endTime,
-        //     items: items || []
-        //   }
-        // });
-        resolve(addRoomProperties(resource, []));
+        var reservations = resource.Reservations.map(function (roomRes) {
+          var items = [];
+          if (roomItems && roomItems.length > 0) {
+            items = roomItems.filter(res => res.reservationId === roomRes.reservationId).map(res => resourceEndpoint.addPropertiesByType(res.Resource));
+          }
+          return {
+            reservation_id: roomRes.reservationId,
+            user_id: roomRes.userId,
+            start_time: roomRes.startTime,
+            end_time: roomRes.endTime,
+            items: items
+          }
+        });
+        resolve(addRoomProperties(resource, reservations));
       });
     } else {
       resolve(addRoomProperties(resource, []));
