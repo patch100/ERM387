@@ -6,7 +6,7 @@ module.exports = {
   getRooms: getRooms,
   getRoomsByType: getRoomsByType,
   getRoomById: getRoomById,
-  getRoomItems: getRoomItems,
+  //getRoomItems: getRoomItems,
   getRoomTypes: getRoomTypes
 }
 
@@ -87,9 +87,9 @@ function getRoomResources(roomId) {
   return models.Reservation.findAll({
     where: {
       roomId: roomId,
-      // endTime: {
-      //   $gte: new Date()
-      // }
+      endTime: {
+        $gte: new Date()
+      }
     },
     include: [{
       model: models.Resource,
@@ -103,61 +103,36 @@ function getRoomResources(roomId) {
   });
 }
 
-function getRoomItems(id) {
-  return getRoomById(id).then(room => {
-    return {
-      id: room.id,
-      equipments: room.equipments
-    }
-  });
-}
+// function getRoomItems(id) {
+//   return getRoomById(id).then(room => {
+//     return {
+//       id: room.id,
+//       equipments: room.equipments
+//     }
+//   });
+// }
 
 function getRoomById(id) {
-  console.log(id);
   return models.Resource.findOne({
     where: {
       resourceId: id
     },
-    include: [{
-      model: models.Room,
-      required: true,
-      include: [{
-        model: models.Equipment,
-        required: false,
-        include: [
-          { model: models.Computer, required: false },
-          { model: models.Projector, required: false },
-          { model: models.WhiteBoard, required: false }]
+    include: [
+      {
+        model: models.Room,
+        required: true
+      },
+      {
+        model: models.Reservation,
+        where: {
+          endtime: {
+            $gte: new Date()
+          }
+        },
+        required: false
       }]
-    }]
   }).then(resource => {
-    var mappedRoom = {};
-    if (resource) {
-      var items = [];
-      for (var i = 0; i < resource.Room.Equipment.length; i++) {
-        var equipment = resource.Room.Equipment[i];
-        if (equipment.Computer) {
-          items.push({ type: "Computer", id: equipment.resourceId, RAM: equipment.Computer.RAM, storage: equipment.Computer.storage, operatingSystem: equipment.Computer.operatingSystem });
-        } else if (equipment.Projector) {
-          items.push({ type: "Projector", id: equipment.resourceId, });
-        } else if (equipment.WhiteBoard) {
-          items.push({ type: "WhiteBoard", id: equipment.resourceId, isPrintable: equipment.WhiteBoard.isPrintable });
-        }
-      }
-
-      mappedRoom = {
-        type: resource.Room.roomType,
-        id: resource.resourceId,
-        height: resource.Room.height,
-        width: resource.Room.width,
-        length: resource.Room.length,
-        capacity: resource.Room.capacity,
-        room_number: resource.Room.roomNumber,
-        availability: resource.available,
-        equipments: items
-      }
-    }
-    return mappedRoom;
+    return mapResource(resource);
   })
 }
 
@@ -175,22 +150,22 @@ function getRoomsByType(type) {
   return getRooms(type);
 }
 
-function addRoomItem(roomId, resourceId) {
-  return models.RoomEquipment.create({
-    roomId: roomId,
-    equipmentId: resourceId
-  }).then(roomItem => {
-    return roomItem != null
-  })
-}
+// function addRoomItem(roomId, resourceId) {
+//   return models.RoomEquipment.create({
+//     roomId: roomId,
+//     equipmentId: resourceId
+//   }).then(roomItem => {
+//     return roomItem != null
+//   })
+// }
 
-function removeRoomItem(resourceId, roomId) {
-  return models.RoomEquipment.destroy({
-    where: {
-      equipmentId: resourceId,
-      roomId: roomId
-    }
-  }).then(affectedRows => {
-    return true;
-  })
-}
+// function removeRoomItem(resourceId, roomId) {
+//   return models.RoomEquipment.destroy({
+//     where: {
+//       equipmentId: resourceId,
+//       roomId: roomId
+//     }
+//   }).then(affectedRows => {
+//     return true;
+//   })
+// }

@@ -7,7 +7,7 @@ module.exports = {
     getRooms: rooms.getRooms,
     getRoomsByType: rooms.getRoomsByType,
     getRoomById: rooms.getRoomById,
-    getRoomItems: rooms.getRoomItems,
+    //getRoomItems: rooms.getRoomItems,
     getRoomTypes: rooms.getRoomTypes,
     getUsers: users.getUsers,
     getUserById: users.getUserById,
