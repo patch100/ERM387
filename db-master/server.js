@@ -7,7 +7,8 @@ const endpoint = require('./endpoint/index');
 // App
 
 models.sequelize.sync().then(() => {
-  endpoint.getRooms().then(aa => {
+  var room={roomId:1,startTime:"2016-11-30 13:36:48",endTime:"2016-12-30 13:36:48"}
+  endpoint.addRoomReservation(room).then(aa => {
     console.log(JSON.stringify(aa));
   })
 });

@@ -7,7 +7,8 @@ module.exports = {
   getRoomsByType: getRoomsByType,
   getRoomById: getRoomById,
   //getRoomItems: getRoomItems,
-  getRoomTypes: getRoomTypes
+  getRoomTypes: getRoomTypes,
+  addRoomReservation:addReservation
 }
 
 function getRooms(type) {
@@ -169,3 +170,22 @@ function getRoomsByType(type) {
 //     return true;
 //   })
 // }
+
+//Expected (Object: roomId,startTime,endTime,user)
+//Return reservationId, status
+
+function addReservation(room){
+  return models.Reservation.create({
+      resourceId:room.roomId,
+      startTime:room.startTime,
+      endTime:room.endTime,
+      userId:room.user
+  }).then(function(reserve){
+    var reserveRoom = {reserveId:reserve.reservationId,status:"pass"}
+    return reserveRoom;  
+  }).catch(function(){
+    var reserveRoom = {reserveId:null,status:"failed"}
+    return reserveRoom;  
+  });
+}
+ 

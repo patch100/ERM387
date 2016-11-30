@@ -18,5 +18,6 @@ module.exports = {
     addUser: users.addUser,
     removeUser: users.removeUser,
     addResource: resources.addResource,
-    removeResource: resources.removeResource
+    removeResource: resources.removeResource,
+    addRoomReservation:rooms.addRoomReservation
 }

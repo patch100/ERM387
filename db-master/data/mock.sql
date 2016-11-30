@@ -4,6 +4,7 @@ VALUES ('End-User'),('IT');
 
 #User
 INSERT INTO User (typeId, firstName, lastName, phoneNumber, email, isAdmin, passwordHash, createdAt, updatedAt)
+
 SELECT typeId, 'ABC', 'DEF', '3334445555', 'abc@def.com', 0, '123', NOW(), NOW()
 FROM UserType WHERE typeName = 'IT';
 
@@ -13,6 +14,7 @@ FROM UserType WHERE typeName = 'End-User';
 
 INSERT INTO User (typeId, firstName, lastName, phoneNumber, email, isAdmin, passwordHash, createdAt, updatedAt)
 SELECT typeId, 'MNO', 'PQR', '3334445555', 'mno@pqr.com', 1, '123', NOW(), NOW()
+
 FROM UserType WHERE typeName = 'End-User';
 
 #Resource
