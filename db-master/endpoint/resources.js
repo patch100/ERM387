@@ -8,7 +8,8 @@ module.exports = {
   addResource: addResource,
   removeResource: removeResource,
   addPropertiesByType: addPropertiesByType,
-  cancelReservation: cancelReservation
+  cancelReservation: cancelReservation,
+  updateResource: update
 }
 
 function getResourceTypes(){
@@ -224,6 +225,54 @@ function cancelReservation(reservation){
     }).catch((err) => {
       return {reservationId: reservation.reservationId, resourceId: reservation.resourceId, status:"failed"};  
     });
+}
+
+
+function update(resourceId, modifyProperties) {
+  return models.Resource.findById(resourceId)
+    .then(resource => {
+      if (resource) {
+        var updatedModel = {};
+        for (var property in modifyProperties) {
+          if (modifyProperties.hasOwnProperty(property)) {
+            updatedModel[toCamelCase(property)] = modifyProperties[property];
+          }
+        }
+        console.log(updatedModel);
+        return updateModelByType(resource.resourceType, resource.resourceId, updatedModel);
+      }else{
+        return {status: "fail"};
+      }
+    });
+}
+
+function updateModelByType(type, resourceId, updatedModel){
+  return new Promise((resolve, reject) => {
+    switch(type) {
+      case "Computer":
+        resolve(models.Computer.update(updatedModel, {where: {resourceId: resourceId}, logging: true}));
+        break;
+      case "WhiteBoard":
+        resolve(models.WhiteBoard.update(updatedModel, {where: {resourceId: resourceId}, logging: true}));
+        break;
+      case "Projector":
+        resolve(models.Projector.update(updatedModel, {where: {resourceId: resourceId}, logging: true}));
+        break;
+      case "Room":
+        resolve(models.Room.update(updatedModel, {where: {resourceId: resourceId}}))
+      default:
+        reject("Type not found");
+        break;
+    }
+  })
+  .then(updatedRows => {console.log("HERE :) "); return {status: "success"};})
+  .catch((err) => { console.log(err); return {status: "fail"};});
+}
+
+function toCamelCase(str){
+  return str.replace(/_([a-z])/g, function (m, w) {
+    return w.toUpperCase();
+  });
 }
 
 
