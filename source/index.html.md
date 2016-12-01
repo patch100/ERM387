@@ -913,3 +913,53 @@ The reservation entry is removed from the Reservations table.
 Parameter | Description
 --------- | -----------
 id | The id of the reservation to cancel
+
+# Reservations
+
+## Get all Reservations
+
+> `GET /reservations`
+
+> Response JSON:
+
+```json
+{
+  "reservations": [
+    {
+
+    },
+    //...
+  ]
+}
+```
+
+This endpoint retrieves all reservations.
+
+### Query Parameters
+
+Parameter | Default | Description
+--------- | ------- | -----------
+param | default | desc
+
+## Get a specific Reservation
+
+> `GET /reservations/:id`
+
+> Response JSON:
+
+````json
+{
+  "reservation": {
+
+  }
+}
+````
+
+This endpoint retrieves a specific reservation.
+
+### URL Parameters
+
+Parameter | Description
+--------- | -----------
+id | The id of the reservation to retrieve
+
