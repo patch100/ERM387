@@ -222,9 +222,29 @@ A generic error will be returned.
 </tr>
 </thead><tbody>
 <tr>
-<td>param</td>
-<td>default</td>
-<td>desc</td>
+<td>first_name</td>
+<td>null</td>
+<td>A string that must be in the first name</td>
+</tr>
+<tr>
+<td>last_name</td>
+<td>null</td>
+<td>A string that must be in the last name</td>
+</tr>
+<tr>
+<td>email</td>
+<td>null</td>
+<td>The email address (i.e. example or example.com &ndash;&gt; @example.com)</td>
+</tr>
+<tr>
+<td>is_admin</td>
+<td>null</td>
+<td>True or False for type of account</td>
+</tr>
+<tr>
+<td>phone</td>
+<td>null</td>
+<td>A part of the phone number</td>
 </tr>
 </tbody></table>
 
@@ -292,9 +312,29 @@ A generic error will be returned.
 </tr>
 </thead><tbody>
 <tr>
-<td>param</td>
-<td>default</td>
-<td>desc</td>
+<td>first_name</td>
+<td>null</td>
+<td>A string that must be in the first name</td>
+</tr>
+<tr>
+<td>last_name</td>
+<td>null</td>
+<td>A string that must be in the last name</td>
+</tr>
+<tr>
+<td>email</td>
+<td>null</td>
+<td>The email address (i.e. example or example.com &ndash;&gt; @example.com)</td>
+</tr>
+<tr>
+<td>is_admin</td>
+<td>null</td>
+<td>True or False for type of account</td>
+</tr>
+<tr>
+<td>phone</td>
+<td>null</td>
+<td>A part of the phone number</td>
 </tr>
 </tbody></table>
 
@@ -346,22 +386,6 @@ A generic error will be returned.
   This will be done if time permits.
 </aside>
 
-<h3 id="query-parameters">Query Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>param</td>
-<td>default</td>
-<td>desc</td>
-</tr>
-</tbody></table>
-
 <h2 id="modify-a-user">Modify a User</h2>
 
 <blockquote>
@@ -402,22 +426,6 @@ You cannot modify reservations in this way.</p>
 <tr>
 <td>id</td>
 <td>The id of the user to modify</td>
-</tr>
-</tbody></table>
-
-<h3 id="query-parameters">Query Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>param</td>
-<td>default</td>
-<td>desc</td>
 </tr>
 </tbody></table>
 
@@ -508,9 +516,44 @@ You cannot modify reservations in this way.</p>
 </tr>
 </thead><tbody>
 <tr>
-<td>param</td>
-<td>default</td>
-<td>desc</td>
+<td>available</td>
+<td>null</td>
+<td>return availability of resources (might include dates) [true or false]</td>
+</tr>
+<tr>
+<td>date_start</td>
+<td>null</td>
+<td>start date to check above availability (requires available flag)</td>
+</tr>
+<tr>
+<td>date_end</td>
+<td>null</td>
+<td>end date to check above availability (requires available flag)</td>
+</tr>
+<tr>
+<td>ram</td>
+<td>null</td>
+<td>ram value</td>
+</tr>
+<tr>
+<td>os</td>
+<td>null</td>
+<td>operating system name</td>
+</tr>
+<tr>
+<td>storage</td>
+<td>null</td>
+<td>storage amount</td>
+</tr>
+<tr>
+<td>printable</td>
+<td>null</td>
+<td>true or false for printable flag</td>
+</tr>
+<tr>
+<td>type</td>
+<td>null</td>
+<td>name of the resource type</td>
 </tr>
 </tbody></table>
 
@@ -577,9 +620,44 @@ You cannot modify reservations in this way.</p>
 </tr>
 </thead><tbody>
 <tr>
-<td>param</td>
-<td>default</td>
-<td>desc</td>
+<td>available</td>
+<td>null</td>
+<td>return availability of resources (might include dates) [true or false]</td>
+</tr>
+<tr>
+<td>date_start</td>
+<td>null</td>
+<td>start date to check above availability (requires available flag)</td>
+</tr>
+<tr>
+<td>date_end</td>
+<td>null</td>
+<td>end date to check above availability (requires available flag)</td>
+</tr>
+<tr>
+<td>ram</td>
+<td>null</td>
+<td>ram value</td>
+</tr>
+<tr>
+<td>os</td>
+<td>null</td>
+<td>operating system name</td>
+</tr>
+<tr>
+<td>storage</td>
+<td>null</td>
+<td>storage amount</td>
+</tr>
+<tr>
+<td>printable</td>
+<td>null</td>
+<td>true or false for printable flag</td>
+</tr>
+<tr>
+<td>type</td>
+<td>null</td>
+<td>name of the resource type</td>
 </tr>
 </tbody></table>
 
@@ -644,9 +722,44 @@ You cannot modify reservations in this way.</p>
 </tr>
 </thead><tbody>
 <tr>
-<td>param</td>
-<td>default</td>
-<td>desc</td>
+<td>available</td>
+<td>null</td>
+<td>return availability of resources (might include dates) [true or false]</td>
+</tr>
+<tr>
+<td>date_start</td>
+<td>null</td>
+<td>start date to check above availability (requires available flag)</td>
+</tr>
+<tr>
+<td>date_end</td>
+<td>null</td>
+<td>end date to check above availability (requires available flag)</td>
+</tr>
+<tr>
+<td>ram</td>
+<td>null</td>
+<td>ram value</td>
+</tr>
+<tr>
+<td>os</td>
+<td>null</td>
+<td>operating system name</td>
+</tr>
+<tr>
+<td>storage</td>
+<td>null</td>
+<td>storage amount</td>
+</tr>
+<tr>
+<td>printable</td>
+<td>null</td>
+<td>true or false for printable flag</td>
+</tr>
+<tr>
+<td>type</td>
+<td>null</td>
+<td>name of the resource type</td>
 </tr>
 </tbody></table>
 
@@ -680,22 +793,6 @@ You cannot modify reservations in this way.</p>
 <aside class="success">
   We could perhaps return the newly created resource&rsquo;s informations in the response.
 </aside>
-
-<h3 id="query-parameters">Query Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>param</td>
-<td>default</td>
-<td>desc</td>
-</tr>
-</tbody></table>
 
 <h2 id="modify-a-resource">Modify a Resource</h2>
 
@@ -737,22 +834,6 @@ Reservation information cannot be modified via this endpoint.</p>
 <tr>
 <td>id</td>
 <td>The id of the resource to modify</td>
-</tr>
-</tbody></table>
-
-<h3 id="query-parameters">Query Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>param</td>
-<td>default</td>
-<td>desc</td>
 </tr>
 </tbody></table>
 
@@ -816,22 +897,6 @@ Optionally, a room is tied to the reserved resource.
 The resource can be reserved up to a year in advance.
 <BR>
 The resource is limited to a 7 day reservation.</p>
-
-<h3 id="query-parameters">Query Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>param</td>
-<td>default</td>
-<td>desc</td>
-</tr>
-</tbody></table>
 
 <h2 id="cancel-reservation-of-a-resource">Cancel Reservation of a Resource</h2>
 
@@ -958,9 +1023,44 @@ Deletes the entry of the reservation in the table.</p>
 </tr>
 </thead><tbody>
 <tr>
-<td>param</td>
-<td>default</td>
-<td>desc</td>
+<td>available</td>
+<td>null</td>
+<td>return availability of resources (might include dates) [true or false]</td>
+</tr>
+<tr>
+<td>date_start</td>
+<td>null</td>
+<td>start date to check above availability (requires available flag)</td>
+</tr>
+<tr>
+<td>date_end</td>
+<td>null</td>
+<td>end date to check above availability (requires available flag)</td>
+</tr>
+<tr>
+<td>capacity</td>
+<td>null</td>
+<td>Capacity of the room</td>
+</tr>
+<tr>
+<td>height</td>
+<td>null</td>
+<td>Height of the room</td>
+</tr>
+<tr>
+<td>width</td>
+<td>null</td>
+<td>Width of the room</td>
+</tr>
+<tr>
+<td>length</td>
+<td>null</td>
+<td>Length of the room</td>
+</tr>
+<tr>
+<td>room_number</td>
+<td>null</td>
+<td>Prefix of the room number</td>
 </tr>
 </tbody></table>
 
@@ -1037,9 +1137,44 @@ Deletes the entry of the reservation in the table.</p>
 </tr>
 </thead><tbody>
 <tr>
-<td>param</td>
-<td>default</td>
-<td>desc</td>
+<td>available</td>
+<td>null</td>
+<td>return availability of resources (might include dates) [true or false]</td>
+</tr>
+<tr>
+<td>date_start</td>
+<td>null</td>
+<td>start date to check above availability (requires available flag)</td>
+</tr>
+<tr>
+<td>date_end</td>
+<td>null</td>
+<td>end date to check above availability (requires available flag)</td>
+</tr>
+<tr>
+<td>capacity</td>
+<td>null</td>
+<td>Capacity of the room</td>
+</tr>
+<tr>
+<td>height</td>
+<td>null</td>
+<td>Height of the room</td>
+</tr>
+<tr>
+<td>width</td>
+<td>null</td>
+<td>Width of the room</td>
+</tr>
+<tr>
+<td>length</td>
+<td>null</td>
+<td>Length of the room</td>
+</tr>
+<tr>
+<td>room_number</td>
+<td>null</td>
+<td>Prefix of the room number</td>
 </tr>
 </tbody></table>
 
@@ -1070,22 +1205,6 @@ Deletes the entry of the reservation in the table.</p>
 </span></code></pre>
 
 <p>This endpoint creates a room.</p>
-
-<h3 id="query-parameters">Query Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>param</td>
-<td>default</td>
-<td>desc</td>
-</tr>
-</tbody></table>
 
 <h2 id="modify-a-room">Modify a Room</h2>
 
@@ -1127,22 +1246,6 @@ Deletes the entry of the reservation in the table.</p>
 <tr>
 <td>id</td>
 <td>The id of the room to modify</td>
-</tr>
-</tbody></table>
-
-<h3 id="query-parameters">Query Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>param</td>
-<td>default</td>
-<td>desc</td>
 </tr>
 </tbody></table>
 
@@ -1216,22 +1319,6 @@ The reservation can be up to 7 days long.</p>
   If the reservation fails for some equipment in the room, their id&rsquo;s will be returned in the `failed` field (list).
 </aside>
 
-<h3 id="query-parameters">Query Parameters</h3>
-
-<table><thead>
-<tr>
-<th>Parameter</th>
-<th>Default</th>
-<th>Description</th>
-</tr>
-</thead><tbody>
-<tr>
-<td>param</td>
-<td>default</td>
-<td>desc</td>
-</tr>
-</tbody></table>
-
 <h2 id="cancel-reservation-of-a-room">Cancel Reservation of a Room</h2>
 
 <blockquote>
@@ -1274,6 +1361,105 @@ The reservation entry is removed from the Reservations table.</p>
 <tr>
 <td>id</td>
 <td>The id of the reservation to cancel</td>
+</tr>
+</tbody></table>
+
+<h1 id="reservations">Reservations</h1>
+
+<h2 id="get-all-reservations">Get all Reservations</h2>
+
+<blockquote>
+<p><code class="prettyprint">GET /reservations</code></p>
+
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"reservations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"start_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datestring"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"end_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datestring"</span><span class="p">,</span><span class="w">
+      </span><span class="err">//</span><span class="w"> </span><span class="err">optional</span><span class="w">
+      </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"resource_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="err">//...</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint retrieves all reservations.</p>
+
+<h3 id="query-parameters">Query Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>date_start</td>
+<td>null</td>
+<td>start date of reservations</td>
+</tr>
+<tr>
+<td>date_end</td>
+<td>null</td>
+<td>end date of reservations</td>
+</tr>
+<tr>
+<td>user_id</td>
+<td>null</td>
+<td>the user id of the reservations to return</td>
+</tr>
+<tr>
+<td>room_id</td>
+<td>null</td>
+<td>the room id of the reservations to return</td>
+</tr>
+<tr>
+<td>resource_id</td>
+<td>null</td>
+<td>the resource id of the reservations to return</td>
+</tr>
+</tbody></table>
+
+<h2 id="get-a-specific-reservation">Get a specific Reservation</h2>
+
+<blockquote>
+<p><code class="prettyprint">GET /reservations/:id</code></p>
+
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"reservation"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"start_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datestring"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"end_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datestring"</span><span class="p">,</span><span class="w">
+    </span><span class="err">//optional</span><span class="w">
+    </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"resource_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint retrieves a specific reservation.</p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>The id of the reservation to retrieve</td>
 </tr>
 </tbody></table>
 
