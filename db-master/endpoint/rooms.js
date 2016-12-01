@@ -56,7 +56,7 @@ function getRooms(type) {
       for (var i = 0; i < resources.length; i++) {
         resPromises.push(mapResource(resources[i]))
       }
-      return Promise.all(resPromises);
+      return resPromises;
     } else {
       return null;
     }

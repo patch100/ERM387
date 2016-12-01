@@ -1,3 +1,4 @@
+"use strict";
 const models = require('../models/index');
 
 module.exports = {
@@ -9,7 +10,9 @@ module.exports = {
   removeResource: removeResource,
   addPropertiesByType: addPropertiesByType,
   cancelReservation: cancelReservation,
-  updateResource: update
+  updateResource: update,
+  getReservations: getReservations,
+  getReservationById: getReservationById
 }
 
 function getResourceTypes(){
@@ -278,4 +281,160 @@ function toCamelCase(str){
   });
 }
 
+function getReservations(){
+  return models.Reservation.findAll({
+    model: models.Reservation,
+    include: [
+      {
+        model: models.ReservationResource,
+        include: [
+          {
+            model: models.Resource,
+            include:[
+              { model: models.Room, required: false },
+              { model: models.Computer, required: false },
+              { model: models.WhiteBoard, required: false },
+              { model: models.Projector, required: false }
+            ], 
+            required: false
+          }
+        ],
+      },
+      {
+        model: models.Resource,
+        include: [
+          {
+            model: models.Room,
+            required: true
+          }
+        ],
+        required: false
+      }
+    ],
+    where: {
+      endtime: {
+        $gte: new Date()
+      }
+    },
+    required: false
+  }).then(reservations => {
+    if (reservations) {
+      var resPromises = [];
+      for (var i = 0; i < reservations.length; i++) {
+        resPromises.push(mapResource(reservations[i]))
+      }
+      return resPromises;
+    } else {
+      return null;
+    }
+  });
+}
 
+function getReservationById(reservationId){
+  return models.Reservation.findOne({
+    model: models.Reservation,
+    include: [
+      {
+        model: models.ReservationResource,
+        include: [
+          {
+            model: models.Resource,
+            include:[
+              { model: models.Room, required: false },
+              { model: models.Computer, required: false },
+              { model: models.WhiteBoard, required: false },
+              { model: models.Projector, required: false }
+            ], 
+            required: false
+          }
+        ],
+      },
+      {
+        model: models.Resource,
+        include: [
+          {
+            model: models.Room,
+            required: true
+          }
+        ],
+        required: false
+      }
+    ],
+    where: {
+      reservationId: reservationId
+    },
+    required: false
+  }).then(reservation => {
+    if (reservation) {
+      return mapResource(reservation);
+    } else {
+      return null;
+    }
+  });
+}
+
+function mapResource(reservation) {
+    let reservationResources = [];
+    let room = {};
+
+    if (reservation.ReservationResources && reservation.ReservationResources.length > 0) {
+
+        reservationResources = reservation.ReservationResources.map(function (reservationResource){
+          let resource = reservationResource.Resource;
+          let type = resource.resourceType;
+          let resourceObj = {};
+          resourceObj[type] = {};
+          resourceObj.resourceType = type;
+          resourceObj.resourceId = resource.resourceId;
+          resourceObj.isIt = resource.isIt;
+
+          switch(type){
+            case "Computer":
+              resourceObj[type].operatingSystem = resource[type].operatingSystem;
+              resourceObj[type].RAM = resource[type].RAM;
+              resourceObj[type].storage = resource[type].storage;
+              break;
+            case "Projector":
+              break;
+            case "WhiteBoard":
+              resourceObj[type].isPrintable = resource[type].isPrintable;
+              break;
+            case "Room":
+              resourceObj[type].height = resource.height;
+              resourceObj[type].length = resource.length;
+              resourceObj[type].width = resource.width;
+              resourceObj[type].capacity = resource.capacity;
+              resourceObj[type].roomNumber = resource.roomNumber;
+              break;
+            default:
+              break;
+          }
+          return resourceObj
+        });
+    }
+    if(reservation.Resource && reservation.Resource.resourceType === 'Room'){
+      room = addRoomProperties(reservation.Resource)
+    }
+    
+    return {
+      reservationId: reservation.reservationId,
+      room: room,
+      userId: reservation.userId,
+      startTime: reservation.startTime,
+      endTime: reservation.endTime,
+      items: reservationResources
+    }
+}
+
+function addRoomProperties(resource) {
+  return {
+    id: resource.resourceId,
+    roomId: resource.Room.roomId,
+    type: resource.Room.roomType,
+    roomNumber: resource.Room.roomNumber,
+    capacity: resource.Room.capacity,
+    length: resource.Room.length,
+    width: resource.Room.width,
+    height: resource.Room.height,
+  }
+}
