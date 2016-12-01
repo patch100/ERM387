@@ -109,7 +109,11 @@ If `users` or `reservations` is empty: [ ]
 
 Parameter | Default | Description
 --------- | ------- | -----------
-param | default | desc
+first_name  | null  | A string that must be in the first name
+last_name   | null  | A string that must be in the last name
+email       | null  | The email address (i.e. example or example.com --> @example.com)
+is_admin    | null  | True or False for type of account
+phone       | null  | A part of the phone number
 
 ## Get a Specific User
 
@@ -161,7 +165,11 @@ id | The id of the user to retrieve
 
 Parameter | Default | Description
 --------- | ------- | -----------
-param | default | desc
+first_name  | null  | A string that must be in the first name
+last_name   | null  | A string that must be in the last name
+email       | null  | The email address (i.e. example or example.com --> @example.com)
+is_admin    | null  | True or False for type of account
+phone       | null  | A part of the phone number
 
 ## Create a User
 
@@ -210,12 +218,6 @@ This endpoint creates a user.
   This will be done if time permits.
 </aside>
 
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-param | default | desc
-
 ## Modify a User
 
 > `POST /users/:id`
@@ -250,12 +252,6 @@ This endpoint modifies a user.
 Parameter | Description
 --------- | -----------
 id | The id of the user to modify
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-param | default | desc
 
 ## Delete a User
 
@@ -329,7 +325,14 @@ This endpoint retrieves all resources.
 
 Parameter | Default | Description
 --------- | ------- | -----------
-param | default | desc
+available | null | return availability of resources (might include dates) [true or false]
+date_start | null | start date to check above availability (requires available flag)
+date_end | null | end date to check above availability (requires available flag)
+ram | null | ram value
+os | null | operating system name
+storage | null | storage amount
+printable | null | true or false for printable flag
+type | null | name of the resource type
 
 ## Get all Resources of one type
 
@@ -380,7 +383,14 @@ type | The type of the resources to retrieves
 
 Parameter | Default | Description
 --------- | ------- | -----------
-param | default | desc
+available | null | return availability of resources (might include dates) [true or false]
+date_start | null | start date to check above availability (requires available flag)
+date_end | null | end date to check above availability (requires available flag)
+ram | null | ram value
+os | null | operating system name
+storage | null | storage amount
+printable | null | true or false for printable flag
+type | null | name of the resource type
 
 ## Get a Specific Resource
 
@@ -429,7 +439,14 @@ id | The id of the resource to retrieve
 
 Parameter | Default | Description
 --------- | ------- | -----------
-param | default | desc
+available | null | return availability of resources (might include dates) [true or false]
+date_start | null | start date to check above availability (requires available flag)
+date_end | null | end date to check above availability (requires available flag)
+ram | null | ram value
+os | null | operating system name
+storage | null | storage amount
+printable | null | true or false for printable flag
+type | null | name of the resource type
 
 ## Create a Resource
 
@@ -461,12 +478,6 @@ This endpoint creates a resource.
 <aside class="success">
   We could perhaps return the newly created resource's informations in the response.
 </aside>
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-param | default | desc
 
 ## Modify a Resource
 
@@ -502,12 +513,6 @@ Reservation information cannot be modified via this endpoint.
 Parameter | Description
 --------- | -----------
 id | The id of the resource to modify
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-param | default | desc
 
 ## Delete a Resource
 
@@ -561,12 +566,6 @@ Optionally, a room is tied to the reserved resource.
 The resource can be reserved up to a year in advance.
 <BR>
 The resource is limited to a 7 day reservation.
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-param | default | desc
 
 ## Cancel Reservation of a Resource
 
@@ -671,7 +670,14 @@ type | The type of the rooms to retrieve (optional)
 
 Parameter | Default | Description
 --------- | ------- | -----------
-param | default | desc
+available | null | return availability of resources (might include dates) [true or false]
+date_start | null | start date to check above availability (requires available flag)
+date_end | null | end date to check above availability (requires available flag)
+capacity | null | Capacity of the room
+height | null | Height of the room
+width | null | Width of the room
+length | null | Length of the room
+room_number | null | Prefix of the room number
 
 ## Get a Specific Room
 
@@ -732,7 +738,15 @@ id | The id of the room to retrieve
 
 Parameter | Default | Description
 --------- | ------- | -----------
-param | default | desc
+available | null | return availability of resources (might include dates) [true or false]
+date_start | null | start date to check above availability (requires available flag)
+date_end | null | end date to check above availability (requires available flag)
+capacity | null | Capacity of the room
+height | null | Height of the room
+width | null | Width of the room
+length | null | Length of the room
+room_number | null | Prefix of the room number
+
 
 ## Create a Room
 
@@ -761,12 +775,6 @@ param | default | desc
 ```
 
 This endpoint creates a room.
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-param | default | desc
 
 ## Modify a Room
 
@@ -802,12 +810,6 @@ This endpoint modifies a room.
 Parameter | Description
 --------- | -----------
 id | The id of the room to modify
-
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-param | default | desc
 
 ## Delete a Room
 
@@ -871,12 +873,6 @@ The reservation can be up to 7 days long.
   If the reservation fails for some equipment in the room, their id's will be returned in the `failed` field (list).
 </aside>
 
-### Query Parameters
-
-Parameter | Default | Description
---------- | ------- | -----------
-param | default | desc
-
 ## Cancel Reservation of a Room
 
 > `POST /rooms/cancel`
@@ -926,7 +922,13 @@ id | The id of the reservation to cancel
 {
   "reservations": [
     {
-
+      "reservation_id": "int",
+      "user_id": "int",
+      "start_date": "datestring",
+      "end_date": "datestring",
+      // optional
+      "room_id": "int",
+      "resource_id": "int"
     },
     //...
   ]
@@ -939,7 +941,12 @@ This endpoint retrieves all reservations.
 
 Parameter | Default | Description
 --------- | ------- | -----------
-param | default | desc
+date_start | null | start date of reservations
+date_end | null | end date of reservations
+user_id | null | the user id of the reservations to return
+room_id | null | the room id of the reservations to return
+resource_id | null | the resource id of the reservations to return
+
 
 ## Get a specific Reservation
 
@@ -950,7 +957,13 @@ param | default | desc
 ````json
 {
   "reservation": {
-
+    "reservation_id": "int",
+    "user_id": "int",
+    "start_date": "datestring",
+    "end_date": "datestring",
+    //optional
+    "room_id": "int",
+    "resource_id": "int"
   }
 }
 ````
