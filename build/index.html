@@ -1,0 +1,1527 @@
+<!doctype html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <meta content="IE=edge,chrome=1" http-equiv="X-UA-Compatible">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <title>Enterprise Resource Management</title>
+
+    <style>
+      .highlight table td { padding: 5px; }
+.highlight table pre { margin: 0; }
+.highlight, .highlight .w {
+  color: #f8f8f2;
+  background-color: #272822;
+}
+.highlight .err {
+  color: #151515;
+  background-color: #ac4142;
+}
+.highlight .c, .highlight .cd, .highlight .cm, .highlight .c1, .highlight .cs {
+  color: #505050;
+}
+.highlight .cp {
+  color: #f4bf75;
+}
+.highlight .nt {
+  color: #f4bf75;
+}
+.highlight .o, .highlight .ow {
+  color: #d0d0d0;
+}
+.highlight .p, .highlight .pi {
+  color: #d0d0d0;
+}
+.highlight .gi {
+  color: #90a959;
+}
+.highlight .gd {
+  color: #ac4142;
+}
+.highlight .gh {
+  color: #6a9fb5;
+  background-color: #151515;
+  font-weight: bold;
+}
+.highlight .k, .highlight .kn, .highlight .kp, .highlight .kr, .highlight .kv {
+  color: #aa759f;
+}
+.highlight .kc {
+  color: #d28445;
+}
+.highlight .kt {
+  color: #d28445;
+}
+.highlight .kd {
+  color: #d28445;
+}
+.highlight .s, .highlight .sb, .highlight .sc, .highlight .sd, .highlight .s2, .highlight .sh, .highlight .sx, .highlight .s1 {
+  color: #90a959;
+}
+.highlight .sr {
+  color: #75b5aa;
+}
+.highlight .si {
+  color: #8f5536;
+}
+.highlight .se {
+  color: #8f5536;
+}
+.highlight .nn {
+  color: #f4bf75;
+}
+.highlight .nc {
+  color: #f4bf75;
+}
+.highlight .no {
+  color: #f4bf75;
+}
+.highlight .na {
+  color: #6a9fb5;
+}
+.highlight .m, .highlight .mf, .highlight .mh, .highlight .mi, .highlight .il, .highlight .mo, .highlight .mb, .highlight .mx {
+  color: #90a959;
+}
+.highlight .ss {
+  color: #90a959;
+}
+    </style>
+    <link href="stylesheets/screen.css" rel="stylesheet" media="screen" />
+    <link href="stylesheets/print.css" rel="stylesheet" media="print" />
+      <script src="javascripts/all.js"></script>
+  </head>
+
+  <body class="index" data-languages="[]">
+    <a href="#" id="nav-button">
+      <span>
+        NAV
+        <img src="images/navbar.png" />
+      </span>
+    </a>
+    <div class="tocify-wrapper">
+      <img src="images/logo.png" />
+        <div class="lang-selector">
+        </div>
+        <div class="search">
+          <input type="text" class="search" id="input-search" placeholder="Search">
+        </div>
+        <ul class="search-results"></ul>
+      <div id="toc">
+      </div>
+        <ul class="toc-footer">
+            <li><a href='#'>Sign up to use our API</a></li>
+            <li><a href='https://github.com/sorryeh/ERM387'>View on Github</a></li>
+        </ul>
+    </div>
+    <div class="page-wrapper">
+      <div class="dark-box"></div>
+      <div class="content">
+        <h1 id="introduction">Introduction</h1>
+
+<p>Welcome to our documentation! You can use our API to access ERM endpoints, which can get information on various Resources, Rooms and Users in our database.</p>
+
+<aside class="notice">
+  Notice:
+  <BR>
+  Assume {&ldquo;status&rdquo;: true, &ldquo;body&rdquo;: { } } is wrapping all JSON Responses
+  <BR>
+  (If it is missing from the Response JSON)
+</aside>
+
+<h1 id="login">Login</h1>
+
+<blockquote>
+<p><code class="prettyprint">POST /login</code></p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"usr"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pwd"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"the_token"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Successful login!"</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<aside class="success">
+<BR>
+In case of success, front end needs to redirect to Account/Resouces/Calendar.
+<BR>
+Use Token for future requests.
+<BR>
+Valid 24 hours.
+</aside>
+
+<aside class="warning">
+<BR>
+In case of failure, front end needs to redirect to Login page.
+<BR>
+A generic error will be returned.
+</aside>
+
+<h1 id="users">Users</h1>
+
+<h2 id="get-all-users">Get all Users</h2>
+
+<blockquote>
+<p><code class="prettyprint">GET /users</code></p>
+
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"users"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+                </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string@email.com"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"phone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"is_admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"reservations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+                  </span><span class="p">{</span><span class="w">
+                    </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"resource_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
+                    </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="w">
+                  </span><span class="p">},</span><span class="w">
+                  </span><span class="err">//...</span><span class="w">
+                </span><span class="p">]</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="err">//...</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This end point retrieves all Users.</p>
+
+<p>If <code class="prettyprint">users</code> or <code class="prettyprint">reservations</code> is empty: [ ]</p>
+
+<p><code class="prettyprint">room_id</code> could be swapped for full room details (under reservations)</p>
+
+<h3 id="query-parameters">Query Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>first_name</td>
+<td>null</td>
+<td>A string that must be in the first name</td>
+</tr>
+<tr>
+<td>last_name</td>
+<td>null</td>
+<td>A string that must be in the last name</td>
+</tr>
+<tr>
+<td>email</td>
+<td>null</td>
+<td>The email address (i.e. example or example.com &ndash;&gt; @example.com)</td>
+</tr>
+<tr>
+<td>is_admin</td>
+<td>null</td>
+<td>True or False for type of account</td>
+</tr>
+<tr>
+<td>phone</td>
+<td>null</td>
+<td>A part of the phone number</td>
+</tr>
+</tbody></table>
+
+<h2 id="get-a-specific-user">Get a Specific User</h2>
+
+<blockquote>
+<p><code class="prettyprint">GET /users/:id</code></p>
+
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+    </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string@email.com"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"phone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"is_admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"reservations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"resource_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="w">
+            </span><span class="p">},</span><span class="w">
+            </span><span class="err">//...</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">}</span><span class="w">
+    </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint retrieves a specific user.</p>
+
+<p>If <code class="prettyprint">users</code> or <code class="prettyprint">reservations</code> is empty: [ ]</p>
+
+<p><code class="prettyprint">room_id</code> could be swapped for full room details (under reservations)</p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>The id of the user to retrieve</td>
+</tr>
+</tbody></table>
+
+<h3 id="query-parameters">Query Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>first_name</td>
+<td>null</td>
+<td>A string that must be in the first name</td>
+</tr>
+<tr>
+<td>last_name</td>
+<td>null</td>
+<td>A string that must be in the last name</td>
+</tr>
+<tr>
+<td>email</td>
+<td>null</td>
+<td>The email address (i.e. example or example.com &ndash;&gt; @example.com)</td>
+</tr>
+<tr>
+<td>is_admin</td>
+<td>null</td>
+<td>True or False for type of account</td>
+</tr>
+<tr>
+<td>phone</td>
+<td>null</td>
+<td>A part of the phone number</td>
+</tr>
+</tbody></table>
+
+<h2 id="create-a-user">Create a User</h2>
+
+<blockquote>
+<p><code class="prettyprint">POST /users</code></p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string@email.com"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"phone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"is_admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully created user!"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint creates a user.</p>
+
+<aside class="success">
+  On success, we could also return the newly created User? (with new ID etc.)
+</aside>
+
+<aside class="warning">
+  On failure, returns a generic error.
+</aside>
+
+<aside class="notice">
+  We should have a registration page/flow.
+  <BR>
+  When successful, a confirmation link should be sent via email.
+  <BR>
+  To activate the account, the user should follow the link.
+  <BR>
+  This will be done if time permits.
+</aside>
+
+<h2 id="modify-a-user">Modify a User</h2>
+
+<blockquote>
+<p><code class="prettyprint">POST /users/:id</code></p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="err">//...</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>The body of the POST should only contain fields to be modified.
+<BR>
+You cannot modify reservations in this way.</p>
+
+<blockquote>
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully modified the User."</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint modifies a user.</p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>The id of the user to modify</td>
+</tr>
+</tbody></table>
+
+<h2 id="delete-a-user">Delete a User</h2>
+
+<blockquote>
+<p><code class="prettyprint">DELETE /users/:id</code></p>
+
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully deleted the User."</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint deletes a user.</p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>The id of the user to delete</td>
+</tr>
+</tbody></table>
+
+<h1 id="resources">Resources</h1>
+
+<h2 id="get-all-resources">Get all Resources</h2>
+
+<blockquote>
+<p><code class="prettyprint">GET /inventory</code></p>
+
+<p>Response JSON: </p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"operating_system"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"ram"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"storage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"printable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"available"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"it_resource"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"reservations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="err">//...</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="err">//...</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<aside class="notice">
+  Note:<BR>
+  Assume {&ldquo;status&rdquo;: true, &ldquo;body&rdquo;: { } } is wrapping all future JSON Responses
+</aside>
+
+<p>This endpoint retrieves all resources.</p>
+
+<aside class="warning">
+  operating_system, ram, storage, printable, available, it_resource: all optional fields based on the `type`
+</aside>
+
+<h3 id="query-parameters">Query Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>available</td>
+<td>null</td>
+<td>return availability of resources (might include dates) [true or false]</td>
+</tr>
+<tr>
+<td>date_start</td>
+<td>null</td>
+<td>start date to check above availability (requires available flag)</td>
+</tr>
+<tr>
+<td>date_end</td>
+<td>null</td>
+<td>end date to check above availability (requires available flag)</td>
+</tr>
+<tr>
+<td>ram</td>
+<td>null</td>
+<td>ram value</td>
+</tr>
+<tr>
+<td>os</td>
+<td>null</td>
+<td>operating system name</td>
+</tr>
+<tr>
+<td>storage</td>
+<td>null</td>
+<td>storage amount</td>
+</tr>
+<tr>
+<td>printable</td>
+<td>null</td>
+<td>true or false for printable flag</td>
+</tr>
+<tr>
+<td>type</td>
+<td>null</td>
+<td>name of the resource type</td>
+</tr>
+</tbody></table>
+
+<h2 id="get-all-resources-of-one-type">Get all Resources of one type</h2>
+
+<blockquote>
+<p><code class="prettyprint">GET /inventory/:type</code></p>
+
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"operating_system"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"ram"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"storage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"printable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"available"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"it_resource"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"reservations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+          </span><span class="p">{</span><span class="w">
+            </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
+            </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="w">
+          </span><span class="p">},</span><span class="w">
+          </span><span class="err">//...</span><span class="w">
+        </span><span class="p">]</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="err">//...</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint retrieves all resources of a specified type.</p>
+
+<aside class="warning">
+  operating_system, ram, storage, printable, available, it_resource: all optional fields based on the `type`
+</aside>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td>The type of the resources to retrieves</td>
+</tr>
+</tbody></table>
+
+<h3 id="query-parameters">Query Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>available</td>
+<td>null</td>
+<td>return availability of resources (might include dates) [true or false]</td>
+</tr>
+<tr>
+<td>date_start</td>
+<td>null</td>
+<td>start date to check above availability (requires available flag)</td>
+</tr>
+<tr>
+<td>date_end</td>
+<td>null</td>
+<td>end date to check above availability (requires available flag)</td>
+</tr>
+<tr>
+<td>ram</td>
+<td>null</td>
+<td>ram value</td>
+</tr>
+<tr>
+<td>os</td>
+<td>null</td>
+<td>operating system name</td>
+</tr>
+<tr>
+<td>storage</td>
+<td>null</td>
+<td>storage amount</td>
+</tr>
+<tr>
+<td>printable</td>
+<td>null</td>
+<td>true or false for printable flag</td>
+</tr>
+<tr>
+<td>type</td>
+<td>null</td>
+<td>name of the resource type</td>
+</tr>
+</tbody></table>
+
+<h2 id="get-a-specific-resource">Get a Specific Resource</h2>
+
+<blockquote>
+<p><code class="prettyprint">GET /inventory/:id</code>
+<code class="prettyprint">GET /inventory/:type/:id</code></p>
+
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"operating_system"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"ram"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"storage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"printable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"available"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"it_resource"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"reservations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+      </span><span class="p">{</span><span class="w">
+        </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="w">
+      </span><span class="p">},</span><span class="w">
+      </span><span class="err">//...</span><span class="w">
+    </span><span class="p">]</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint retrieves a resource.</p>
+
+<aside class="warning">
+  `available` is only displayed when filtering on dates/availability.
+</aside>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>The id of the resource to retrieve</td>
+</tr>
+</tbody></table>
+
+<h3 id="query-parameters">Query Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>available</td>
+<td>null</td>
+<td>return availability of resources (might include dates) [true or false]</td>
+</tr>
+<tr>
+<td>date_start</td>
+<td>null</td>
+<td>start date to check above availability (requires available flag)</td>
+</tr>
+<tr>
+<td>date_end</td>
+<td>null</td>
+<td>end date to check above availability (requires available flag)</td>
+</tr>
+<tr>
+<td>ram</td>
+<td>null</td>
+<td>ram value</td>
+</tr>
+<tr>
+<td>os</td>
+<td>null</td>
+<td>operating system name</td>
+</tr>
+<tr>
+<td>storage</td>
+<td>null</td>
+<td>storage amount</td>
+</tr>
+<tr>
+<td>printable</td>
+<td>null</td>
+<td>true or false for printable flag</td>
+</tr>
+<tr>
+<td>type</td>
+<td>null</td>
+<td>name of the resource type</td>
+</tr>
+</tbody></table>
+
+<h2 id="create-a-resource">Create a Resource</h2>
+
+<blockquote>
+<p><code class="prettyprint">POST /inventory</code>
+<code class="prettyprint">POST /inventory/:type</code></p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"ram"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"storage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"operating_system"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"it_resource"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully created a new Resource."</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint creates a resource.</p>
+
+<aside class="success">
+  We could perhaps return the newly created resource&rsquo;s informations in the response.
+</aside>
+
+<h2 id="modify-a-resource">Modify a Resource</h2>
+
+<blockquote>
+<p><code class="prettyprint">POST /inventory/:id</code>
+<code class="prettyprint">POST /inventory/:type/:id</code></p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="err">//...</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully modified the Resource."</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint modifies a resource.
+<BR>
+Reservation information cannot be modified via this endpoint.</p>
+
+<aside class="notice">
+  Only POST the fields of the resource to be modified.
+</aside>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>The id of the resource to modify</td>
+</tr>
+</tbody></table>
+
+<h2 id="delete-a-resource">Delete a Resource</h2>
+
+<blockquote>
+<p><code class="prettyprint">DELETE /inventory/:id</code>
+<code class="prettyprint">DELETE /inventory/:type/:id</code></p>
+
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully deleted the Resouce."</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint deletes a resource.</p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>The id of the resource to delete</td>
+</tr>
+</tbody></table>
+
+<h2 id="reserve-a-resource">Reserve a Resource</h2>
+
+<blockquote>
+<p><code class="prettyprint">POST /inventory/reserve</code></p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"resource_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully reserved the resource."</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint reserves a resource.
+<BR>
+The resource is tied to a user.
+<BR>
+Optionally, a room is tied to the reserved resource.
+<BR>
+The resource can be reserved up to a year in advance.
+<BR>
+The resource is limited to a 7 day reservation.</p>
+
+<h2 id="cancel-reservation-of-a-resource">Cancel Reservation of a Resource</h2>
+
+<blockquote>
+<p><code class="prettyprint">POST /inventory/cancel</code></p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Pass a list of reservation ids to cancel or a single one.</p>
+
+<blockquote>
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully cancelled the reservation(s)."</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"failed"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint cancels a reservation for a resource.
+<BR>
+Deletes the entry of the reservation in the table.</p>
+
+<aside class="warning">
+  In the response, you have a list of reservations that failed to cancel.
+  <BR>
+  If it is empty, then they were all successful.
+</aside>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>The id of the reservation to cancel</td>
+</tr>
+</tbody></table>
+
+<h1 id="rooms">Rooms</h1>
+
+<h2 id="get-all-rooms">Get all Rooms</h2>
+
+<blockquote>
+<p><code class="prettyprint">GET /rooms</code>
+<code class="prettyprint">GET /rooms/:type</code></p>
+
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"rooms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"height"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"width"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"length"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"capacity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"room_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"reservations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"equipments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+            </span><span class="p">{</span><span class="w">
+              </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"resource_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"operating_system"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"ram"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"storage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"printable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"available"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+              </span><span class="nt">"it_resource"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+            </span><span class="err">}</span><span class="p">,</span><span class="w">
+            </span><span class="err">//...</span><span class="w">
+          </span><span class="p">]</span><span class="w">
+        </span><span class="p">},</span><span class="w">
+        </span><span class="err">//...</span><span class="w">
+      </span><span class="p">],</span><span class="w">
+      </span><span class="nt">"available"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="err">//...</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint retrieves all rooms.</p>
+
+<aside class="notice">
+  The `available` field is only present when a filter is applied.
+</aside>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>type</td>
+<td>The type of the rooms to retrieve (optional)</td>
+</tr>
+</tbody></table>
+
+<h3 id="query-parameters">Query Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>available</td>
+<td>null</td>
+<td>return availability of resources (might include dates) [true or false]</td>
+</tr>
+<tr>
+<td>date_start</td>
+<td>null</td>
+<td>start date to check above availability (requires available flag)</td>
+</tr>
+<tr>
+<td>date_end</td>
+<td>null</td>
+<td>end date to check above availability (requires available flag)</td>
+</tr>
+<tr>
+<td>capacity</td>
+<td>null</td>
+<td>Capacity of the room</td>
+</tr>
+<tr>
+<td>height</td>
+<td>null</td>
+<td>Height of the room</td>
+</tr>
+<tr>
+<td>width</td>
+<td>null</td>
+<td>Width of the room</td>
+</tr>
+<tr>
+<td>length</td>
+<td>null</td>
+<td>Length of the room</td>
+</tr>
+<tr>
+<td>room_number</td>
+<td>null</td>
+<td>Prefix of the room number</td>
+</tr>
+</tbody></table>
+
+<h2 id="get-a-specific-room">Get a Specific Room</h2>
+
+<blockquote>
+<p><code class="prettyprint">GET /rooms/:id</code>
+<code class="prettyprint">GET /rooms/:type/:id</code></p>
+
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"height"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"width"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"length"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"capacity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"room_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"reservations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"equipments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+        </span><span class="p">{</span><span class="w">
+          </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"resource_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"operating_system"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"ram"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"storage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"printable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"available"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"it_resource"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="err">}</span><span class="p">,</span><span class="w">
+        </span><span class="err">//...</span><span class="w">
+      </span><span class="p">]</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="err">//...</span><span class="w">
+  </span><span class="p">],</span><span class="w">
+  </span><span class="nt">"available"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint retrieves a room.</p>
+
+<aside class="notice">
+  The `available` field is only present when a filter is applied.
+</aside>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>The id of the room to retrieve</td>
+</tr>
+</tbody></table>
+
+<h3 id="query-parameters">Query Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>available</td>
+<td>null</td>
+<td>return availability of resources (might include dates) [true or false]</td>
+</tr>
+<tr>
+<td>date_start</td>
+<td>null</td>
+<td>start date to check above availability (requires available flag)</td>
+</tr>
+<tr>
+<td>date_end</td>
+<td>null</td>
+<td>end date to check above availability (requires available flag)</td>
+</tr>
+<tr>
+<td>capacity</td>
+<td>null</td>
+<td>Capacity of the room</td>
+</tr>
+<tr>
+<td>height</td>
+<td>null</td>
+<td>Height of the room</td>
+</tr>
+<tr>
+<td>width</td>
+<td>null</td>
+<td>Width of the room</td>
+</tr>
+<tr>
+<td>length</td>
+<td>null</td>
+<td>Length of the room</td>
+</tr>
+<tr>
+<td>room_number</td>
+<td>null</td>
+<td>Prefix of the room number</td>
+</tr>
+</tbody></table>
+
+<h2 id="create-a-room">Create a Room</h2>
+
+<blockquote>
+<p><code class="prettyprint">POST /rooms</code>
+<code class="prettyprint">POST /rooms/:type</code></p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"room"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"height"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"width"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"length"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"capacity"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"room_number"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully created a room."</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint creates a room.</p>
+
+<h2 id="modify-a-room">Modify a Room</h2>
+
+<blockquote>
+<p><code class="prettyprint">POST /rooms/:id</code>
+<code class="prettyprint">POST /rooms/:type/:id</code></p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"room"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="err">//...</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully modified Room."</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint modifies a room.</p>
+
+<aside class="notice">
+  Only POST fields to modify.
+  <BR>
+  This endpoint cannot modify reservations.
+</aside>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>The id of the room to modify</td>
+</tr>
+</tbody></table>
+
+<h2 id="delete-a-room">Delete a Room</h2>
+
+<blockquote>
+<p><code class="prettyprint">DELETE /rooms/:id</code></p>
+
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully deleted a room."</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint deletes a room.</p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>The id of the room to delete</td>
+</tr>
+</tbody></table>
+
+<h2 id="reserve-a-room">Reserve a Room</h2>
+
+<blockquote>
+<p><code class="prettyprint">POST /rooms/reserve</code></p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"equipments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"resource_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="err">//...</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<blockquote>
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully reserved the room."</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"failed"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"int"</span><span class="p">,</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint reserves a room.
+<BR>
+The room is tied to a user.
+<BR>
+Optionally, you can add resource reservations to a room.
+<BR>
+The reservation can be made up to a year in advance.
+<BR>
+The reservation can be up to 7 days long.</p>
+
+<aside class="warning">
+  If the reservation fails for some equipment in the room, their id&rsquo;s will be returned in the `failed` field (list).
+</aside>
+
+<h2 id="cancel-reservation-of-a-room">Cancel Reservation of a Room</h2>
+
+<blockquote>
+<p><code class="prettyprint">POST /rooms/cancel</code></p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>Pass a reservation id (or list) to cancel.</p>
+
+<blockquote>
+<p>Response JSON: </p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully reserved the room."</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"failed"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"int"</span><span class="p">,</span><span class="w"> </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint cancels a room reservation.
+<BR>
+The reservation entry is removed from the Reservations table.</p>
+
+<aside class="warning">
+  In the response, you have a list of reservations that failed to cancel.
+  <BR>
+  If it is empty, then they were all successful.
+</aside>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>The id of the reservation to cancel</td>
+</tr>
+</tbody></table>
+
+<h1 id="reservations">Reservations</h1>
+
+<h2 id="get-all-reservations">Get all Reservations</h2>
+
+<blockquote>
+<p><code class="prettyprint">GET /reservations</code></p>
+
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"reservations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
+    </span><span class="p">{</span><span class="w">
+      </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"start_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datestring"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"end_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datestring"</span><span class="p">,</span><span class="w">
+      </span><span class="err">//</span><span class="w"> </span><span class="err">optional</span><span class="w">
+      </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"resource_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w">
+    </span><span class="p">},</span><span class="w">
+    </span><span class="err">//...</span><span class="w">
+  </span><span class="p">]</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint retrieves all reservations.</p>
+
+<h3 id="query-parameters">Query Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>date_start</td>
+<td>null</td>
+<td>start date of reservations</td>
+</tr>
+<tr>
+<td>date_end</td>
+<td>null</td>
+<td>end date of reservations</td>
+</tr>
+<tr>
+<td>user_id</td>
+<td>null</td>
+<td>the user id of the reservations to return</td>
+</tr>
+<tr>
+<td>room_id</td>
+<td>null</td>
+<td>the room id of the reservations to return</td>
+</tr>
+<tr>
+<td>resource_id</td>
+<td>null</td>
+<td>the resource id of the reservations to return</td>
+</tr>
+</tbody></table>
+
+<h2 id="get-a-specific-reservation">Get a specific Reservation</h2>
+
+<blockquote>
+<p><code class="prettyprint">GET /reservations/:id</code></p>
+
+<p>Response JSON:</p>
+</blockquote>
+<pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="nt">"reservation"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"start_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datestring"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"end_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datestring"</span><span class="p">,</span><span class="w">
+    </span><span class="err">//optional</span><span class="w">
+    </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"resource_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w">
+  </span><span class="p">}</span><span class="w">
+</span><span class="p">}</span><span class="w">
+</span></code></pre>
+
+<p>This endpoint retrieves a specific reservation.</p>
+
+<h3 id="url-parameters">URL Parameters</h3>
+
+<table><thead>
+<tr>
+<th>Parameter</th>
+<th>Description</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>id</td>
+<td>The id of the reservation to retrieve</td>
+</tr>
+</tbody></table>
+
+          <h1 id="errors">Errors</h1>
+
+<aside class="notice">The Error portion of the API is Under Construction.</aside>
+
+<p>The ERM API uses the following error codes:</p>
+
+<table><thead>
+<tr>
+<th>Error Code</th>
+<th>Meaning</th>
+</tr>
+</thead><tbody>
+<tr>
+<td>400</td>
+<td>Bad Request &ndash; Your request is wrong</td>
+</tr>
+<tr>
+<td>401</td>
+<td>Unauthorized &ndash; Your API key is wrong</td>
+</tr>
+<tr>
+<td>403</td>
+<td>Forbidden &ndash; Administrators only</td>
+</tr>
+<tr>
+<td>404</td>
+<td>Not Found &ndash; Not found</td>
+</tr>
+<tr>
+<td>405</td>
+<td>Method Not Allowed &ndash; You tried an access with an invalid method</td>
+</tr>
+<tr>
+<td>406</td>
+<td>Not Acceptable &ndash; You requested a format that isn&rsquo;t json</td>
+</tr>
+<tr>
+<td>410</td>
+<td>Gone &ndash; The item requested has been removed from our servers</td>
+</tr>
+<tr>
+<td>429</td>
+<td>Too Many Requests &ndash; You&rsquo;re requesting too many items! Slow down!</td>
+</tr>
+<tr>
+<td>500</td>
+<td>Internal Server Error &ndash; We had a problem with our server. Try again later.</td>
+</tr>
+<tr>
+<td>503</td>
+<td>Service Unavailable &ndash; We&rsquo;re temporarially offline for maintenance. Please try again later.</td>
+</tr>
+</tbody></table>
+
+      </div>
+      <div class="dark-box">
+          <div class="lang-selector">
+          </div>
+      </div>
+    </div>
+  </body>
+</html>
