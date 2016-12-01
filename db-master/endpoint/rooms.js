@@ -26,6 +26,23 @@ function getRooms(type) {
       },
       {
         model: models.Reservation,
+        include: [
+          {
+            model: models.ReservationResource,
+            include: [
+              {
+                model: models.Resource,
+                include:[
+                  { model: models.Computer, required: false },
+                  { model: models.WhiteBoard, required: false },
+                  { model: models.Projector, required: false }
+                ], 
+                required: false
+              }
+            ],
+            required: false
+          }
+        ],
         where: {
           endtime: {
             $gte: new Date()
@@ -47,28 +64,47 @@ function getRooms(type) {
 }
 
 function mapResource(resource) {
-  return new Promise((resolve, reject) => {
+
     if (resource.Reservations && resource.Reservations.length > 0) {
-      getRoomResources(resource.Room.roomId).then(function (roomItems) {
-        var reservations = resource.Reservations.map(function (roomRes) {
-          var items = [];
-          if (roomItems && roomItems.length > 0) {
-            items = roomItems.filter(res => res.reservationId === roomRes.reservationId).map(res => resourceEndpoint.addPropertiesByType(res.Resource));
+
+      let reservations = resource.Reservations.map(function (reservation){
+        let reservationResources = reservation.ReservationResources.map(function (reservationResource){
+          let resource = reservationResource.Resource;
+          let type = resource.resourceType;
+          let resourceObj = {};
+          resourceObj[type] = {};
+          resourceObj.resourceType = type;
+          resourceObj.resourceId = resource.resourceId;
+          resourceObj.isIt = resource.isIt;
+
+          switch(type){
+            case "Computer":
+              resourceObj[type].operatingSystem = resource[type].operatingSystem;
+              resourceObj[type].RAM = resource[type].RAM;
+              resourceObj[type].storage = resource[type].storage;
+              break;
+            case "Projector":
+              break;
+            case "WhiteBoard":
+              resourceObj[type].isPrintable = resource[type].isPrintable;
+              break;
+            default:
+              break;
           }
-          return {
-            reservation_id: roomRes.reservationId,
-            user_id: roomRes.userId,
-            start_time: roomRes.startTime,
-            end_time: roomRes.endTime,
-            items: items
-          }
+          return resourceObj
         });
-        resolve(addRoomProperties(resource, reservations));
+        return {
+            reservationId: reservation.reservationId,
+            userId: reservation.userId,
+            startTime: reservation.startTime,
+            endTime: reservation.endTime,
+            items: reservationResources
+          }
       });
-    } else {
-      resolve(addRoomProperties(resource, []));
+      return addRoomProperties(resource, reservations);
+    } else{
+      return addRoomProperties(resource, []);
     }
-  })
 }
 
 function addRoomProperties(resource, reservations) {
@@ -122,10 +158,27 @@ function getRoomById(id) {
     include: [
       {
         model: models.Room,
-        required: true
+        required: true,
       },
       {
         model: models.Reservation,
+        include: [
+          {
+            model: models.ReservationResource,
+            include: [
+              {
+                model: models.Resource,
+                include:[
+                  { model: models.Computer, required: false },
+                  { model: models.WhiteBoard, required: false },
+                  { model: models.Projector, required: false }
+                ], 
+                required: false
+              }
+            ],
+            required: false
+          }
+        ],
         where: {
           endtime: {
             $gte: new Date()
