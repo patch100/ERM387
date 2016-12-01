@@ -8,7 +8,8 @@ module.exports = {
   getRoomById: getRoomById,
   //getRoomItems: getRoomItems,
   getRoomTypes: getRoomTypes,
-  addRoomReservation:addReservation
+  addRoomReservation:addReservation,
+  cancelReservation: cancelReservation
 }
 
 function getRooms(type) {
@@ -186,6 +187,15 @@ function addReservation(room){
   }).catch(function(){
     var reserveRoom = {reserveId:null,status:"failed"}
     return reserveRoom;  
+  });
+}
+
+function cancelReservation(reservationId){
+  return models.Reservation.destroy({where: { reservationId: reservationId}})
+    .then(function(){
+    return {status:"pass"};  
+  }).catch(function(){
+    return {reservationId: reservationId, status:"failed"};  
   });
 }
  
