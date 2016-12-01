@@ -56,9 +56,13 @@ module.exports = function (app, router, db, models) {
       //TODO this is for modification
       //ID is autoincrement here. Therefore, not the right route
       // TODO Refactor, the type is taken from the body
-      //db.modifyUser(req.params.user_type, req.body.user).then(result => {
+      db.modifyUser(req.params.user_type, req.body.user).then(result => {
         /*TODO HERE Check if return is true or false*/
-        res.json({ status: true, body: "some message" });
+        if(result){
+          res.json({ status: true, body: "User successfully modified." });
+        } else {
+          res.json({ status: false, body: "We're sorry, the specified user could not be modified." });
+        }
       });
       //add user to DB with req.params.user_type and req.params.user_id
       // Might not implement this from the perspective of a users route.. Maybe /signup or /register route
