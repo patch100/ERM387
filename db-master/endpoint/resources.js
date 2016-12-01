@@ -8,6 +8,7 @@ module.exports = {
   addResource: addResource,
   removeResource: removeResource,
   addPropertiesByType: addPropertiesByType,
+  addResourceReservation: addResourceReservation,
   cancelReservation: cancelReservation
 }
 
@@ -212,6 +213,33 @@ function getIncludeByType(type){
   }
   return includeObj;
 }
+
+function addResourceReservation(resource,reserveId){
+  if (reserveId != null){
+    return models.ReservationResource.create({resourceId:resource.resourceId,reservationId:reserveId})
+            .then(function(reserve){
+                  var reserveResource = {reserveId:reserve.reservationId,status:"pass"}
+            }).catch(function(){
+                var reserveResource = {reserveId:null,status:"failed"}
+                return reserveResource;  
+  });
+  }
+  else{
+    return models.Reservation.create({
+      resourceId:resource.resourceId,
+      startTime:resource.startTime,
+      endTime:resource.endTime,
+      userId:resource.user
+      }).then(function(reserve){
+          var reserveResource = {reserveId:reserve.reservationId,status:"pass"}
+          return reserveResource;         
+      }).catch(function(){
+          var reserveResource = {reserveId:null,status:"failed"}
+          return reserveResource;  
+  });
+  }
+}
+
 
 function cancelReservation(reservation){
   //If independent reservation

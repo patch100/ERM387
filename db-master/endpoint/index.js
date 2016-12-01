@@ -20,6 +20,7 @@ module.exports = {
     addResource: resources.addResource,
     removeResource: resources.removeResource,
     addRoomReservation:rooms.addRoomReservation,
+    addResourceReservation: resources.addResourceReservation,
     cancelRoomReservation: rooms.cancelReservation,
     cancelResourceReservation: resources.cancelReservation
 }
