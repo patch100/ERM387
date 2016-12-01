@@ -13,16 +13,19 @@ module.exports = {
 }
 
 function getResourceTypes(){
-  return models.Resource.findAll({
-    attributes: ['resourceType'], 
-    group: ['resourceType']  
-  }).then(resources => {
-    var mappedResources = [];
-    if(resources){
-      mappedResources = resources.map(resource => {return resource.resourceType}).sort();
-    }
-    return mappedResources;
-  })
+  return Promise.resolve(['Computer', 'Projector', 'Room', 'WhiteBoard']);
+  //We should actually return the defined types.
+  //That only sends the types that we have in the db..
+  // return models.Resource.findAll({
+  //   attributes: ['resourceType'], 
+  //   group: ['resourceType']  
+  // }).then(resources => {
+  //   var mappedResources = [];
+  //   if(resources){
+  //     mappedResources = resources.map(resource => {return resource.resourceType}).sort();
+  //   }
+  //   return mappedResources;
+  // })
 }
 
 function getResourcesByType(type){
