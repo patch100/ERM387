@@ -7,7 +7,8 @@ module.exports = {
   getResourceById: getResourceById,
   addResource: addResource,
   removeResource: removeResource,
-  addPropertiesByType: addPropertiesByType
+  addPropertiesByType: addPropertiesByType,
+  cancelReservation: cancelReservation
 }
 
 function getResourceTypes(){
@@ -210,6 +211,19 @@ function getIncludeByType(type){
       break;
   }
   return includeObj;
+}
+
+function cancelReservation(reservation){
+  //If independent reservation
+  return models.Reservation.destroy({where: {reservationId: reservation.reservationId, resourceId: reservation.resourceId}})
+    .then(() => {
+      //If part of a room
+      return models.ReservationResource.destroy({where: {reservationId: reservation.reservationId, resourceId: reservation.resourceId}});
+    }).then(() => {
+      return {reservationId: reservation.reservationId, resourceId: reservation.resourceId, status:"pass"}; 
+    }).catch((err) => {
+      return {reservationId: reservation.reservationId, resourceId: reservation.resourceId, status:"failed"};  
+    });
 }
 
 

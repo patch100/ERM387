@@ -190,12 +190,13 @@ function addReservation(room){
   });
 }
 
-function cancelReservation(reservationId){
-  return models.Reservation.destroy({where: { reservationId: reservationId}})
+//Expecting {reservationId, resourceId}
+function cancelReservation(reservation){
+  return models.Reservation.destroy({where: { reservationId: reservation.reservationId, resourceId: reservation.resourceId}})
     .then(function(){
-    return {status:"pass"};  
+    return {reservationId: reservation.reservationId, resourceId: reservation.resourceId, status:"pass"};  
   }).catch(function(){
-    return {reservationId: reservationId, status:"failed"};  
+    return {reservationId: reservation.reservationId, resourceId: reservation.resourceId, status:"failed"};  
   });
 }
  
