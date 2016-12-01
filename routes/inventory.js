@@ -50,9 +50,17 @@ module.exports = function (app, router, db, models) {
       // }
     })
     .post(function(req, res) {
-      db.addResource(req.body.resource)
+      // checks if the resource has an ID. 
+      if(db.getResourceById(req.params.resource_id) == req.body.resource_id){
+        // if resource already has ID, then update the resource
+        db.modifyResource(req.body.resource)
         .then(resp => res.json({status: true, body: resp}));
-      //add item to DB with req.params.resource_type and req.params.resource_id
+      } else { // it is a new resource; add it!
+        db.addResource(req.body.resource)
+        .then(resp => res.json({status: true, body: resp}));
+        //add item to DB with req.params.resource_type and req.params.resource_id
+      }
+      
     })
     .delete(function(req, res) {
       db.removeResource(req.params.resource_id)
