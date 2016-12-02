@@ -138,7 +138,7 @@ function createResourceObj(type, resource){
   switch(type){
     case "Computer":
       resourceObj[type].operatingSystem = resource.operating_system;
-      resourceObj[type].RAM = resource.ram;
+      resourceObj[type].ram = resource.ram;
       resourceObj[type].storage = resource.storage;
       break;
     case "Projector":
@@ -158,16 +158,6 @@ function createResourceObj(type, resource){
   return resourceObj;
 }
 
-function removeResource(id){
-  return models.Resource.destroy({
-    where: {
-      resourceId: id
-    }
-  }).then(affectedRows => {
-    return true;
-  });
-}
-
 function addPropertiesByType(resource){
   var res = {};
   res.type = resource.resourceType;
@@ -176,7 +166,7 @@ function addPropertiesByType(resource){
   switch(resource.resourceType){
     case "Computer":
       res.operatingSystem = resource.Computer.operatingSystem;
-      res.RAM = resource.Computer.RAM;
+      res.ram = resource.Computer.ram;
       res.storage = resource.Computer.storage;
       break;
     case "Projector":
@@ -419,7 +409,7 @@ function mapResource(reservation) {
           switch(type){
             case "Computer":
               resourceObj[type].operatingSystem = resource[type].operatingSystem;
-              resourceObj[type].RAM = resource[type].RAM;
+              resourceObj[type].ram = resource[type].ram;
               resourceObj[type].storage = resource[type].storage;
               break;
             case "Projector":

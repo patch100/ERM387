@@ -17,6 +17,7 @@ module.exports = {
     getResourceById: resources.getResourceById,
     addUser: users.addUser,
     removeUser: users.removeUser,
+    userLogin:users.userLogin,
     addResource: resources.addResource,
     removeResource: resources.removeResource,
     addRoomReservation:rooms.addRoomReservation,

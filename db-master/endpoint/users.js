@@ -10,7 +10,7 @@ module.exports = {
   getUserById: getUserById,
   addUser: addUser,
   removeUser: removeUser,
-  loginUser:userLogin
+  userLogin:userLogin
 }
 
 function getUsers(){
@@ -19,6 +19,7 @@ function getUsers(){
     if(users){
       mappedUsers = users.map(user => {
         return {
+          userId:user.userId,
           first_name: user.firstName,
           last_name: user.lastName,
           email: user.email,

@@ -230,7 +230,7 @@ function getRoomsByType(type) {
 
 function addReservation(room){
   return models.Reservation.create({
-      resourceId:room.roomId,
+      resourceId:room.reserveId,
       startTime:room.startTime,
       endTime:room.endTime,
       userId:room.user
