@@ -42,12 +42,12 @@ module.exports = function (app, router, db, models) {
       // check the body for all the parameter. Needs to be sanitized.
       // check for Resources in the room.
       db.addRoom(req.body.room)
-        .then(resp => res.json({status: true, body: resp}))
+        .then(resp => res.json({status: true, body: "Room created"}))
     })
     .delete(function(req, res) {
       //Delete item from DB with req.params.room_type and req.params.room_id
       db.removeRoom(req.params.room_id)
-        .then(resp =>  res.json({status:true, body: resp}))
+        .then(resp =>  res.json({status:true, body: "Room removed"}))
     });
 
   router.route('/rooms/:room_id/:resource_type/:resource_id')
