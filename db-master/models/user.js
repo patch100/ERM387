@@ -14,8 +14,9 @@ module.exports = function(sequelize, DataTypes) {
     tableName: 'User',
     classMethods: {
       associate: function(models) {
-        User.belongsTo(models.UserType, {foreignKey: 'typeId'});
-        User.belongsToMany(models.Resource, {through: models.Reservation, foreignKey: 'userId'});
+        User.belongsTo(models.UserType, {foreignKey: 'typeId', onDelete: "CASCADE", onUpdate: "CASCADE"});
+        User.hasMany(models.Reservation, {foreignKey: 'userId', onDelete: "SET NULL", onUpdate: "CASCADE"});
+        //User.belongsToMany(models.Resource, {through: models.Reservation, foreignKey: 'userId'});
       }
     }
   });

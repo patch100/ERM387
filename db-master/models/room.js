@@ -15,9 +15,8 @@ module.exports = function(sequelize, DataTypes) {
     timestamps: false,
     classMethods: {
       associate: function(models) {
-        Room.belongsTo(models.Resource, {foreignKey: 'resourceId'});
-        Room.belongsToMany(models.Equipment, {through: models.RoomEquipment, foreignKey: 'roomId'});
-      }
+        Room.belongsTo(models.Resource, {foreignKey: 'resourceId', onDelete: "CASCADE", onUpdate: "CASCADE"});
+        }
     }
    });
 
