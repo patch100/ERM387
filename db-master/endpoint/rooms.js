@@ -52,11 +52,11 @@ function getRooms(type) {
       }]
   }).then(resources => {
     if (resources) {
-      var resPromises = [];
+      var resourcesArr = [];
       for (var i = 0; i < resources.length; i++) {
-        resPromises.push(mapResource(resources[i]))
+        resourcesArr.push(mapResource(resources[i]))
       }
-      return resPromises;
+      return resourcesArr;
     } else {
       return null;
     }
@@ -64,10 +64,9 @@ function getRooms(type) {
 }
 
 function mapResource(resource) {
-
     if (resource.Reservations && resource.Reservations.length > 0) {
-
       let reservations = resource.Reservations.map(function (reservation){
+        reservation.ReservationResources = reservation.ReservationResources || [];
         let reservationResources = reservation.ReservationResources.map(function (reservationResource){
           let resource = reservationResource.Resource;
           let type = resource.resourceType;
@@ -79,14 +78,14 @@ function mapResource(resource) {
 
           switch(type){
             case "Computer":
-              resourceObj[type].operatingSystem = resource[type].operatingSystem;
-              resourceObj[type].RAM = resource[type].RAM;
+              resourceObj[type].operating_system = resource[type].operatingSystem;
+              resourceObj[type].ram = resource[type].RAM;
               resourceObj[type].storage = resource[type].storage;
               break;
             case "Projector":
               break;
             case "WhiteBoard":
-              resourceObj[type].isPrintable = resource[type].isPrintable;
+              resourceObj[type].is_printable = resource[type].isPrintable;
               break;
             default:
               break;
@@ -94,10 +93,10 @@ function mapResource(resource) {
           return resourceObj
         });
         return {
-            reservationId: reservation.reservationId,
-            userId: reservation.userId,
-            startTime: reservation.startTime,
-            endTime: reservation.endTime,
+            reservation_id: reservation.reservationId,
+            user_id: reservation.userId,
+            start_time: reservation.startTime,
+            end_time: reservation.endTime,
             items: reservationResources
           }
       });
@@ -121,25 +120,25 @@ function addRoomProperties(resource, reservations) {
   }
 }
 
-function getRoomResources(roomId) {
-  return models.Reservation.findAll({
-    where: {
-      roomId: roomId,
-      endTime: {
-        $gte: new Date()
-      }
-    },
-    include: [{
-      model: models.Resource,
-      require: true,
-      include: [
-        { model: models.Computer, required: false },
-        { model: models.WhiteBoard, required: false },
-        { model: models.Projector, required: false }
-      ]
-    }]
-  });
-}
+// function getRoomResources(roomId) {
+//   return models.Reservation.findAll({
+//     where: {
+//       roomId: roomId,
+//       endTime: {
+//         $gte: new Date()
+//       }
+//     },
+//     include: [{
+//       model: models.Resource,
+//       require: true,
+//       include: [
+//         { model: models.Computer, required: false },
+//         { model: models.WhiteBoard, required: false },
+//         { model: models.Projector, required: false }
+//       ]
+//     }]
+//   });
+// }
 
 // function getRoomItems(id) {
 //   return getRoomById(id).then(room => {
