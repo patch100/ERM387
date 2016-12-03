@@ -20,13 +20,20 @@ module.exports = function (app, router, db, models) {
 
               res.cookie('token', userToken)
 
+              var hasAccess; // ***************************************
+              db.getUserById(req.body.user_id) // ***************************************
+
               res.json({
                 status: true,
-                body: { message: "Successful Login!"}
+                body: { message: "Successful Login!",
+                        isAdmin: hasAccess } // ***************************************
               });
 
             }else{  // Username & password are invalid
-              res.json({status: false, body: {error: "message"}})
+              res.json({
+                status: false,
+                body: {error: "message"}
+              })
 
             }
           } // end of responseObject
