@@ -1,8 +1,10 @@
-exports = module.exports = function (app, router, db) {
+exports = module.exports = function(app, router, db) {
 
 
     router.get('/', function(req, res) {
-      res.json({ message: 'Welcome to our API!' });
+        res.json({
+            message: 'Welcome to our API!'
+        });
     });
 
     var rooms = require('./routes/rooms')(app, router, db);
