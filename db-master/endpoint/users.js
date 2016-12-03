@@ -11,7 +11,13 @@ module.exports = {
   getUserById: getUserById,
   addUser: addUser,
   removeUser: removeUser,
-  userLogin:userLogin
+  userLogin:userLogin,
+  getUserTypes: getUserTypes
+}
+
+function getUserTypes(){
+  return models.UserType.findAll({attributes:['typeName'], group:['typeName']})
+  .then((types) => {return types.map(type => {return type.typeName})});
 }
 
 function getUsers(){

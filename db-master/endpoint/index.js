@@ -26,5 +26,6 @@ module.exports = {
     cancelResourceReservation: resources.cancelReservation,
     updateResource: resources.updateResource,
     getReservations: resources.getReservations,
-    getReservationById: resources.getReservationById
+    getReservationById: resources.getReservationById,
+    getUserTypes: users.getUserTypes
 }
