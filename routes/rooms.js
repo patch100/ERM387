@@ -1,9 +1,13 @@
-module.exports = function (app, router, db, models) {
+module.exports = function (app, router, db) {
 
   // /rooms/:room_type/:room_id' room_id is optional (changes behaviour of HTTP verbs)
 
   router.route('/rooms')
     .get(function(req, res) {
+
+      var filters = req.query;
+      console.log(filters);
+      // db.getRooms(filters).then(rooms => res.json({status: true, body: rooms}));
       db.getRooms().then(rooms => res.json({status: true, body: rooms}));
     });
 
@@ -31,9 +35,13 @@ module.exports = function (app, router, db, models) {
     })
 
   router.route('/rooms/:room_type/:room_id')
+
+  router.route('/rooms/:room_type/:room_id')
     .get(function(req, res) {
       //return room with req.params.room_type and req.params.room_id
       // REFACTOR: technically an ID should be unique, the room type should not be needed to retrieve by id
+
+
       db.getRoomById(req.params.room_id)
         .then(room => res.json({ status: true, body: room }));
     })
@@ -64,15 +72,6 @@ module.exports = function (app, router, db, models) {
       db.removeRoomItem(req.params.resource_id, req.params.room_id)
         .then(resp =>  res.json({status:true, body: resp}))
     })
-
-
-
-
-
-
-
-
-
 
 
 

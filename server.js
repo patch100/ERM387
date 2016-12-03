@@ -16,15 +16,18 @@ var router = express.Router();
 
 // Where you call other files such as controllers and routings. next to "app" add any other packages you import that are required in the controllers
 // // DB testing
-const endpoint = require('./db-master/endpoint/index');
+const models = require('./db-master/models/index');
 const db = require('./db-master/endpoint/index');
 require('./routes')(app, router, db);
 
 
 
+models.sequelize.sync().then(function(){
+    app.listen(port)
+    console.log('Magic happens on port ' + port);
+})
 
-app.listen(port)
-console.log('Magic happens on port ' + port);
+
 
 
 
