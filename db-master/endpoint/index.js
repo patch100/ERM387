@@ -7,7 +7,7 @@ module.exports = {
     getRooms: rooms.getRooms,
     getRoomsByType: rooms.getRoomsByType,
     getRoomById: rooms.getRoomById,
-    getRoomItems: rooms.getRoomItems,
+    //getRoomItems: rooms.getRoomItems,
     getRoomTypes: rooms.getRoomTypes,
     getUsers: users.getUsers,
     getUserById: users.getUserById,
@@ -17,6 +17,15 @@ module.exports = {
     getResourceById: resources.getResourceById,
     addUser: users.addUser,
     removeUser: users.removeUser,
+    userLogin:users.userLogin,
     addResource: resources.addResource,
-    removeResource: resources.removeResource
+    removeResource: resources.removeResource,
+    addRoomReservation:rooms.addRoomReservation,
+    addResourceReservation: resources.addResourceReservation,
+    cancelRoomReservation: rooms.cancelReservation,
+    cancelResourceReservation: resources.cancelReservation,
+    updateResource: resources.updateResource,
+    getReservations: resources.getReservations,
+    getReservationById: resources.getReservationById,
+    getUserTypes: users.getUserTypes
 }

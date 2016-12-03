@@ -1,5 +1,6 @@
 const models = require('../models/index');
 const crypto = require('crypto');
+const addPropertiesByType = require('./resources').addPropertiesByType
 
 //algorithm = 'aes-256-ctr',
 //password = 'd6F3Efeq';
@@ -10,21 +11,31 @@ module.exports = {
   getUserById: getUserById,
   addUser: addUser,
   removeUser: removeUser,
-  loginUser:userLogin
+  userLogin:userLogin,
+  getUserTypes: getUserTypes
+}
+
+function getUserTypes(){
+  return models.UserType.findAll({attributes:['typeName'], group:['typeName']})
+  .then((types) => {return types.map(type => {return type.typeName})});
 }
 
 function getUsers(){
-  return models.User.findAll({include: [{model: models.UserType, required:true}]}).then(users => {
+  return models.User.findAll({include: getUserReservationsInclude()}).then(users => {
     var mappedUsers = {};
     if(users){
       mappedUsers = users.map(user => {
+        var reservations = [];
+        if(user.Reservations) reservations = getReservations(user.Reservations);
         return {
+          userId:user.userId,
           first_name: user.firstName,
           last_name: user.lastName,
           email: user.email,
           phone_number: user.phoneNumber,
           is_admin: user.isAdmin,
           type: user.UserType.typeName,
+          reservations: reservations
         }
       });
       return mappedUsers;
@@ -37,13 +48,12 @@ function getUserById(id){
     where: {
       userId: id
     },
-    include: [{
-      model: models.UserType,
-      required: true
-    }]
+    include: getUserReservationsInclude()
   }).then(user => {
     var mappedUser = {};
     if(user){
+      var reservations = [];
+      if(user.Reservations) reservations = getReservations(user.Reservations);
       mappedUser = {
         first_name: user.firstName,
         last_name: user.lastName,
@@ -51,10 +61,30 @@ function getUserById(id){
         phone_number: user.phoneNumber,
         is_admin: user.isAdmin,
         type: user.UserType.typeName,
+        reservations: reservations
       }
     }
     return mappedUser;
   })
+}
+
+function getReservations(reservations){
+    var reservationsArr = [];
+    for (var i = 0; i < reservations.length; i++) {
+      var res = addPropertiesByType(reservations[i].Resource);
+      res.reservation_id = reservations[i].reservationId;
+      res.start_time = reservations[i].startTime;
+      res.end_time = reservations[i].endTime;
+      res.user_id = reservations[i].userId;
+
+      var items = [];
+      for (var j = 0; j < reservations[i].ReservationResources.length; j++) {
+        items.push(addPropertiesByType(reservations[i].ReservationResources[j].Resource));
+      }
+      if (items && items.length) res.items = items;
+      reservationsArr.push(res);
+    }
+    return reservationsArr;
 }
 
 function addUser(type, user){
@@ -100,17 +130,15 @@ function userLogin(username,password){
       required: true
     }]
   }).then(user => {
-    if(user.passwordHash == crypto.createHash('sha256').update(password).digest("hex")){
-      return true;
- /**    
-      mappedUser = {
+    if(user.passwordHash == crypto.createHash('sha256').update(password).digest("hex")){   
+      var mappedUser = {
         is_admin: user.isAdmin,
-        type: user.UserType.typeName
+        type: user.UserType.typeName,
+        status: true
       }
       return mappedUser;
- */ 
     }
-    return false;
+    return {status: false};
   })
 }
 
@@ -127,5 +155,30 @@ function decrypt(text){
   var dec = decipher.update(text,'hex','utf8')
   dec += decipher.final('utf8');
   return dec;
+}
+
+function getUserReservationsInclude(){
+  return [{ 
+      model: models.UserType, 
+      required:true 
+    },{ 
+      model: models.Reservation, 
+      required: false,
+      include: [
+        {model: models.Resource, required: false, include:[
+          {model: models.Computer, required: false},
+          {model: models.Projector, required: false},
+          {model: models.WhiteBoard, required: false},
+          {model: models.Room, required: false}
+        ]},
+        {model: models.ReservationResource, required: false, include:[
+          {model: models.Resource, required: false, include:[
+            {model: models.Computer, required: false},
+            {model: models.Projector, required: false},
+            {model: models.WhiteBoard, required: false},
+            {model: models.Room, required: false}
+          ]}
+        ]}
+      ]}];
 }
  
