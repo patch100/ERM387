@@ -17,7 +17,7 @@ module.exports = function (app, router, db, models) {
   //     }
     })
     .post(function(req, res) {
-      // TODO: create a new user
+      // TODO: Create a new user
       // Check if user creation is from an unregistered user or an admin
       // Assume Admin creation initially, implement registration later
       
@@ -35,7 +35,7 @@ module.exports = function (app, router, db, models) {
        res.json({ status: true, body: "Successfully Created User" });
       });
      }
-   })
+   });
 
 
   router.route('/users/:user_id')
@@ -53,25 +53,20 @@ module.exports = function (app, router, db, models) {
       // }
     })
     .post(function(req, res) {
-      //TODO this is for modification
-      //ID is autoincrement here. Therefore, not the right route
-      // TODO Refactor, the type is taken from the body
-      db.modifyUser(req.params.user_type, req.body.user).then(result => {
+      //TODO This is to modify a user.
+      db.updateUser(req.params.user_id, req.body.user).then(result => {
         /*TODO HERE Check if return is true or false*/
         if(result){
           res.json({ status: true, body: "User successfully modified." });
         } else {
           res.json({ status: false, body: "We're sorry, the specified user could not be modified." });
         }
-      });
-      //add user to DB with req.params.user_type and req.params.user_id
-      // Might not implement this from the perspective of a users route.. Maybe /signup or /register route
-      // or do both (IT employee/manager wants to create a user without going through signup/register...?)
-    }
-    .delete(function(req, res) {
-      db.removeUser(req.params.user_type, req.params.user_id).then(result => {
-      //Delete user from DB with req.params.user_type and req.params.user_id
+      })
+      
+     //Delete user from DB with req.params.user_type and req.params.user_id
       /*Assuming that only admins can delete users for now*/
+    .delete(function(req, res) {
+      db.removeUser(req.params.user_id).then(result => {
       if(user_type=="admin"){
 
         res.json({ status: true, body: "User successfully deleted." });
