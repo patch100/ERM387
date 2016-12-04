@@ -18,9 +18,17 @@ module.exports = function(app, router, db) {
         .get(function(req, res) {
 
             var filters = req.query;
-            console.log(filters);
+            if (filters.date_start || filters.date_end) {
+                filters.date_start = {
+                    $gt: filters.date_start
+                };
+                filters.date_end = {
+                    $lt: filters.date_end
+                };
+            }
+
             // db.getRooms(filters).then(rooms => res.json({status: true, body: rooms}));
-            db.getRooms().then(rooms => res.json({
+            db.getRooms( /* filters, */ ).then(rooms => res.json({
                 status: true,
                 body: rooms
             }));
@@ -29,7 +37,18 @@ module.exports = function(app, router, db) {
     router.route('/rooms/:room_type')
         .get(function(req, res) {
             //return room with req.params.room_type
-            db.getRoomsByType(req.params.room_type)
+
+            var filters = req.query;
+            if (filters.date_start || filters.date_end) {
+                filters.date_start = {
+                    $gt: filters.date_start
+                };
+                filters.date_end = {
+                    $lt: filters.date_end
+                };
+            }
+
+            db.getRoomsByType( /* filters, */ req.params.room_type)
                 .then(aa => res.json({
                     status: true,
                     body: aa
@@ -44,24 +63,26 @@ module.exports = function(app, router, db) {
                     status: true,
                     body: items
                 }));
-            // try {
-            //   models.sequelize.sync(/*{force:true}*/).then(() => {
-            //
-            //   });
-            // } catch (e) {
-            //   console.log(e);
-            //   res.json({ status: false, body: {error: "message"} });
-            // }
-
         })
 
-    router.route('/rooms/:room_type/:room_id')
+
+
+    router.route('/rooms/:room_id')
         .get(function(req, res) {
             //return room with req.params.room_type and req.params.room_id
             // REFACTOR: technically an ID should be unique, the room type should not be needed to retrieve by id
 
+            var filters = req.query;
+            if (filters.date_start || filters.date_end) {
+                filters.date_start = {
+                    $gt: filters.date_start
+                };
+                filters.date_end = {
+                    $lt: filters.date_end
+                };
+            }
 
-            db.getRoomById(req.params.room_id)
+            db.getRoomById( /* filters, */ req.params.room_id)
                 .then(room => res.json({
                     status: true,
                     body: room
@@ -85,6 +106,8 @@ module.exports = function(app, router, db) {
                     body: resp
                 }))
         });
+
+
 
     router.route('/rooms/:room_id/:resource_type/:resource_id')
         .post(function(req, res) {

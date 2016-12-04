@@ -5,58 +5,63 @@ module.exports = function(app, router, db, models) {
     router.route('/inventory')
         .get(function(req, res) {
             //return all inventory items
-            db.getResources()
+            var filters = req.query;
+            if (filters.date_start || filters.date_end) {
+                filters.date_start = {
+                    $gt: filters.date_start
+                };
+                filters.date_end = {
+                    $lt: filters.date_end
+                };
+            }
+
+            db.getResources( /*filters*/ )
                 .then(resources => res.json({
                     status: true,
                     body: resources
                 }));
-            // try {
-            //   models.sequelize.sync().then(() => {
-            //     db.getResources()
-            //       .then(aa => res.json({
-            //         status: true, body: JSON.stringify(aa)})
-            //       )
-            //     });
-            // } catch (e) {
-            //   console.log(e);
-            //   res.json({status: false, body: {error: "message"}})
-            // }
         });
 
     router.route('/inventory/:resource_type')
         .get(function(req, res) {
             //return items with req.params.resource_type
-            db.getResourcesByType(req.params.resource_type)
+            var filters = req.query;
+            if (filters.date_start || filters.date_end) {
+                filters.date_start = {
+                    $gt: filters.date_start
+                };
+                filters.date_end = {
+                    $lt: filters.date_end
+                };
+            }
+
+            db.getResourcesByType( /* filters, */ req.params.resource_type)
                 .then(resources => res.json({
                     status: true,
                     body: resources
                 }));
-            // try {
-            //   models.sequelize.sync(/*{force:true}*/).then(() => {
-            //
-            //   });
-            // } catch (e) {
-            //   console.log(e);
-            //   res.json({ status: false, body: {error: "message"}});
-            // }
+
         });
 
     router.route('/inventory/:resource_type/:resource_id')
         .get(function(req, res) {
             //return item with req.params.resource_type and req.params.resource_id
-            db.getResourceById(req.params.resource_id)
+            var filters = req.query;
+            if (filters.date_start || filters.date_end) {
+                filters.date_start = {
+                    $gt: filters.date_start
+                };
+                filters.date_end = {
+                    $lt: filters.date_end
+                };
+            }
+
+            db.getResourceById( /* filters, */ req.params.resource_id)
                 .then(resource => res.json({
                     status: true,
                     body: resource
                 }))
-                // try {
-                //   models.sequelize.sync().then( () => {
-                //
-                //   });
-                // } catch (e) {
-                //   console.log(e);
-                //   res.json({status: false, body: {error: "message"}});
-                // }
+
         })
         .post(function(req, res) {
             db.addResource(req.body.resource)
@@ -74,5 +79,28 @@ module.exports = function(app, router, db, models) {
                 }));
             //Delete item from DB req.params.resource_type and req.params.resource_id
         });
+
+    router.route('/inventory/reserve')
+        .post(function(req, res) {
+            //return all inventory items
+
+            db.addResourceReservation(req.body, null)
+                .then(resp => res.json({
+                    status: true,
+                    body: resp
+                }));
+        });
+
+    router.route('/inventory/cancel')
+        .post(function(req, res) {
+            //return all inventory items
+
+            db.cancelReservation(req.body)
+                .then(resp => res.json({
+                    status: true,
+                    body: resp
+                }));
+        });
+
 
 }
