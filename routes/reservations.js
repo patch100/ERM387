@@ -13,24 +13,34 @@ module.exports = function(app, router, db) {
                 };
             }
 
-            db.getReservations( /*filters*/ )
-                .then(reservations => {
+            try {
+                db.getReservations( /*filters*/ )
+                    .then(reservations => {
 
-                    if (reservations == null) {
-                        res.json({
-                            status: true,
-                            body: {
-                                error: "No reservations found"
-                            }
-                        })
-                    } else {
-                        res.json({
-                            status: true,
-                            body: reservations
-                        })
+                        if (reservations == null) {
+                            res.json({
+                                status: true,
+                                body: {
+                                    error: "No reservations found"
+                                }
+                            })
+                        } else {
+                            res.json({
+                                status: true,
+                                body: reservations
+                            })
+                        }
+
+                    })
+            } catch (e) {
+                res.json({
+                    status: false,
+                    body: {
+                        error: "No reservations found"
                     }
-
                 })
+            }
+
 
         })
 
@@ -38,24 +48,34 @@ module.exports = function(app, router, db) {
         .get(function(req, res) {
             //return all users
 
-            db.getReservationsById(req.params.reservation_id)
-                .then(reservation => {
+            try {
+                db.getReservationsById(req.params.reservation_id)
+                    .then(reservation => {
 
-                    if (reservation == null) {
-                        res.json({
-                            status: true,
-                            body: {
-                                error: "No reservation found"
-                            }
-                        })
-                    } else {
-                        res.json({
-                            status: true,
-                            body: reservation
-                        })
+                        if (reservation == null) {
+                            res.json({
+                                status: true,
+                                body: {
+                                    error: "No reservation found"
+                                }
+                            })
+                        } else {
+                            res.json({
+                                status: true,
+                                body: reservation
+                            })
+                        }
+
+                    })
+            } catch (e) {
+                res.json({
+                    status: false,
+                    body: {
+                        error: "No reservation found"
                     }
-
                 })
+            }
+
 
         })
 
