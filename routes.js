@@ -46,6 +46,8 @@ exports = module.exports = function (app, router, db, models) {
 
   app.all('/inventory', requireAuthentication)
   app.all('/rooms', requireAuthentication)
+  app.all('/users', requireAuthentication)
+  app.all('/reservation', requireAuthentication)
 
   var login = require('./routes/login')(app, router, db, models);
   var rooms = require('./routes/rooms')(app, router, db, models);
