@@ -18,7 +18,13 @@ module.exports = function (app, router, db, models) {
       //   console.log(e);
       //   res.json({status: false, body: {error: "message"}})
       // }
+    })
+
+    .post(function(req, res){
+      db.addResource(req.body.resource)
+        .then(resp => res.json({status: true, body: "Successfully created a new Resource."}))
     });
+    
 
   router.route('/inventory/:resource_type')
     .get(function(req, res) {
@@ -50,13 +56,21 @@ module.exports = function (app, router, db, models) {
       // }
     })
     .post(function(req, res) {
-      db.addResource(req.body.resource)
-        .then(resp => res.json({status: true, body: resp}));
-      //add item to DB with req.params.resource_type and req.params.resource_id
+      // checks if the resource has an ID. 
+      //if(db.getResourceById(req.params.resource_id) == req.body.resource_id){
+      db.updateResource(req.params.resource_id, req.body.resource).then(resp => {
+        if(resp){
+          res.json({status: true, body: "Successfully modified the Resource."});
+          }
+          else{
+            res.json({status: false, body: "There was an error in modifying the Resource."});
+          }
     })
+    })
+
     .delete(function(req, res) {
       db.removeResource(req.params.resource_id)
-        .then(resp => res.json({status: true, body: resp}));
+        .then(resp => res.json({status: true, body: "Successfully deleted the Resouce."}));
       //Delete item from DB req.params.resource_type and req.params.resource_id
     });
 

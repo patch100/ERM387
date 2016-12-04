@@ -5,6 +5,14 @@ module.exports = function (app, router, db, models) {
   router.route('/rooms')
     .get(function(req, res) {
       db.getRooms().then(rooms => res.json({status: true, body: rooms}));
+    })
+
+    .post(function(req, res) {
+      //add item to DB with req.params.room_type and req.params.room_id
+      // check the body for all the parameter. Needs to be sanitized.
+      // check for Resources in the room.
+      db.addResource(req.body.room)
+        .then(resp => res.json({status: true, body: "Room created"}))
     });
 
   router.route('/rooms/:room_type')
@@ -12,7 +20,7 @@ module.exports = function (app, router, db, models) {
       //return room with req.params.room_type
       db.getRoomsByType(req.params.room_type)
         .then(aa => res.json({ status: true, body: aa }))
-    })
+    });
 
   router.route('/rooms/items/:room_id')  // REFACTOR: we want consistency, :room_id should come after items
       .get(function(req, res) {
@@ -28,7 +36,7 @@ module.exports = function (app, router, db, models) {
         //   res.json({ status: false, body: {error: "message"} });
         // }
 
-    })
+    });
 
   router.route('/rooms/:room_type/:room_id')
     .get(function(req, res) {
@@ -37,17 +45,23 @@ module.exports = function (app, router, db, models) {
       db.getRoomById(req.params.room_id)
         .then(room => res.json({ status: true, body: room }));
     })
-    .post(function(req, res) {
-      //add item to DB with req.params.room_type and req.params.room_id
-      // check the body for all the parameter. Needs to be sanitized.
-      // check for Resources in the room.
-      db.addRoom(req.body.room)
-        .then(resp => res.json({status: true, body: resp}))
-    })
+
+    .post(function(req,res){
+      db.updateResource(req.params.room_id,req.body.room).then(result => {
+      if(result){
+
+        res.json({ status: true, body: "Successfully modified Room." });
+      }
+      else{
+        res.json({ status: false, body: "There was an error in modifiying Room." });
+      }})
+    });
+
+  router.route('/rooms/:room_id')
     .delete(function(req, res) {
       //Delete item from DB with req.params.room_type and req.params.room_id
-      db.removeRoom(req.params.room_id)
-        .then(resp =>  res.json({status:true, body: resp}))
+      db.removeResource(req.params.room_id)
+        .then(resp =>  res.json({status:true, body: "Room removed"}))
     });
 
   router.route('/rooms/:room_id/:resource_type/:resource_id')
@@ -63,17 +77,5 @@ module.exports = function (app, router, db, models) {
       // path '/rooms/items/:room_id' and resource id in POST body. (something like that)
       db.removeRoomItem(req.params.resource_id, req.params.room_id)
         .then(resp =>  res.json({status:true, body: resp}))
-    })
-
-
-
-
-
-
-
-
-
-
-
-
+    });
 }
