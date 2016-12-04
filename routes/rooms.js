@@ -2,43 +2,6 @@ module.exports = function(app, router, db) {
 
   // /rooms/:room_type/:room_id' room_id is optional (changes behaviour of HTTP verbs)
 
-    router.route('/rooms/reserve')
-        .post(function(req, res) {
-
-            db.addReservation(req.body)
-                .then(rooms => res.json({
-                    status: true,
-                    body: rooms
-                }));
-
-            if (req.body.equipments) {
-                for (var resource in req.body.equipments) {
-                    var resourceBody = {
-                        "resource_id": resource.resource_id,
-                        "date_start": req.body.date_start,
-                        "date_end": req.body.date_end,
-                        "room_id": req.body.room_id,
-                        "user_id": req.body.user_id
-                    }
-                    db.addResourceReservation(resourceBody, null) // not sure about second param
-                        .then(resp => res.json({
-                            status: true,
-                            body: resp
-                        }));
-                }
-            }
-
-        });
-
-    router.route('/rooms/cancel')
-        .post(function(req, res) {
-            db.cancelReservation(req.body.reservation_id)
-                .then(resp => res.json({
-                    status: true,
-                    body: resp
-                }));
-        });
-
   router.route('/rooms')
     .get(function(req, res) {
 
@@ -58,6 +21,13 @@ module.exports = function(app, router, db) {
                     status: true,
                     body: rooms
                 }));
+    })
+    .post(function(req, res) {
+      //add item to DB with req.params.room_type and req.params.room_id
+      // check the body for all the parameter. Needs to be sanitized.
+      // check for Resources in the room.
+      db.addResource(req.body.room)
+        .then(resp => res.json({status: true, body: "Room created"}))
     });
 
   router.route('/rooms/:room_type')
@@ -114,16 +84,16 @@ module.exports = function(app, router, db) {
                     body: room
                 }));
         })
-        .post(function(req, res) {
-            //add item to DB with req.params.room_type and req.params.room_id
-            // check the body for all the parameter. Needs to be sanitized.
-            // check for Resources in the room.
-            db.addRoom(req.body.room)
-                .then(resp => res.json({
-                    status: true,
-                    body: resp
-                }))
-        })
+    .post(function(req,res){
+      db.updateResource(req.params.room_id,req.body.room).then(result => {
+      if(result){
+
+        res.json({ status: true, body: "Successfully modified Room." });
+      }
+      else{
+        res.json({ status: false, body: "There was an error in modifiying Room." });
+      }})
+    })
     .delete(function(req, res) {
       //Delete item from DB with req.params.room_type and req.params.room_id
             db.removeRoom(req.params.room_id)
@@ -132,7 +102,6 @@ module.exports = function(app, router, db) {
                     body: resp
                 }))
     });
-
 
 
   router.route('/rooms/:room_id/:resource_type/:resource_id')
@@ -155,4 +124,43 @@ module.exports = function(app, router, db) {
                     body: resp
                 }))
     });
+
+
+    router.route('/rooms/reserve')
+        .post(function(req, res) {
+
+            db.addReservation(req.body)
+                .then(rooms => res.json({
+                    status: true,
+                    body: rooms
+                }));
+
+            if (req.body.equipments) {
+                for (var resource in req.body.equipments) {
+                    var resourceBody = {
+                        "resource_id": resource.resource_id,
+                        "date_start": req.body.date_start,
+                        "date_end": req.body.date_end,
+                        "room_id": req.body.room_id,
+                        "user_id": req.body.user_id
+                    }
+                    db.addResourceReservation(resourceBody, null) // not sure about second param
+                        .then(resp => res.json({
+                            status: true,
+                            body: resp
+                        }));
+                }
+            }
+
+        });
+
+    router.route('/rooms/cancel')
+        .post(function(req, res) {
+            db.cancelReservation(req.body.reservation_id)
+                .then(resp => res.json({
+                    status: true,
+                    body: resp
+                }));
+        });
+
 }
