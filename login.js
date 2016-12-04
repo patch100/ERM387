@@ -11,7 +11,7 @@ module.exports = function (app, router, db, models) {
         .then(
           responseObject => {
 
-            if(responseObject){ // If successful (User exists, and password matches)
+            if(responseObject.status){ // If successful (User exists, and password matches)
 
               // create json web token
               var userToken = jwt.sign(user, app.get('superSecret'), {
@@ -20,13 +20,10 @@ module.exports = function (app, router, db, models) {
 
               res.cookie('token', userToken)
 
-              var hasAccess; // ***************************************
-              db.getUserById(req.body.user_id) // ***************************************
-
               res.json({
                 status: true,
                 body: { message: "Successful Login!",
-                        isAdmin: hasAccess } // ***************************************
+                        isAdmin: responseObject.is_admin } // ***************************************
               });
 
             }else{  // Username & password are invalid

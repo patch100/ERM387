@@ -6,20 +6,20 @@ exports = module.exports = function (app, router, db, models) {
   });
 
 
-
-
   function requireAuthentication(){
     if (req.cookies.token){ // ****************************
       router.use(function(req, res, next) {
         // check header or url parameters or post parameters for token
-        var token = req.body.token || req.query.token || req.headers['token'] || req.cookies.token;
+        var token = req.cookies.token;
 
         // decode token
         if (token) {
           // verifies secret and checks exp
           jwt.verify(token, app.get('superSecret'), function(err, decoded) {
             if (err) {
-              return res.json({ success: false, message: 'Failed to authenticate token.' });
+              return res.json({ status: false,
+                                body: {error: 'Failed to authenticate token.'}
+                              });
             } else {
               // if everything is good, save to request for use in other routes
               req.decoded = decoded;
@@ -30,14 +30,18 @@ exports = module.exports = function (app, router, db, models) {
         } else {
           // if there is no token, return an error
           return res.status(403).send({
-            success: false,
-            message: 'No token provided.'
+            status: false,
+            body: {error: 'No token provided.'}
           });
 
         }
       });
 
     }
+
+
+
+
   }
 
   app.all('/inventory', requireAuthentication)
