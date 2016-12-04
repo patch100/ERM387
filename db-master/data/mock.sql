@@ -13,6 +13,9 @@ SELECT typeId, 'GHI', 'JKL', '3334445555', 'ghi@jkl.com', 0, '123', NOW(), NOW()
 FROM UserType WHERE typeName = 'End-User';
 
 INSERT INTO User (typeId, firstName, lastName, phoneNumber, email, isAdmin, passwordHash, createdAt, updatedAt)
+SELECT typeId, 'Joe', 'Blo', '15140001234', 'joeblo@gmail.com', 1, '1681db84', NOW(), NOW()
+
+INSERT INTO User (typeId, firstName, lastName, phoneNumber, email, isAdmin, passwordHash, createdAt, updatedAt)
 SELECT typeId, 'MNO', 'PQR', '3334445555', 'mno@pqr.com', 1, '123', NOW(), NOW()
 
 FROM UserType WHERE typeName = 'End-User';
@@ -51,7 +54,7 @@ FROM Resource WHERE resourceType = 'Room' ORDER BY resourceId DESC LIMIT 1;
 INSERT INTO Room (roomType, resourceId, height, width, length, capacity, roomNumber)
 SELECT "meeting", resourceId, 8, 40, 40, 120, 'H890'
 FROM Resource WHERE resourceType = 'Room' ORDER BY resourceId ASC LIMIT 1;
- 
+
 #Reservations
 INSERT INTO Reservation (userId, resourceId, startTime, endTime, createdAt, updatedAt)
 SELECT
