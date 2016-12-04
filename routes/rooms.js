@@ -2,6 +2,18 @@ module.exports = function(app, router, db) {
 
     // /rooms/:room_type/:room_id' room_id is optional (changes behaviour of HTTP verbs)
 
+    router.route('/rooms/reserve')
+        .post(function(req, res) {
+
+
+        });
+
+    router.route('/rooms/cancel')
+        .post(function(req, res) {
+
+
+        });
+
     router.route('/rooms')
         .get(function(req, res) {
 
@@ -42,8 +54,6 @@ module.exports = function(app, router, db) {
             // }
 
         })
-
-    router.route('/rooms/:room_type/:room_id')
 
     router.route('/rooms/:room_type/:room_id')
         .get(function(req, res) {
