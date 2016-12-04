@@ -1,4 +1,4 @@
-module.exports = function(app, router, db, models) {
+module.exports = function(app, router, db) {
 
     router.route('/login')
         .post(function(req, res) {
@@ -29,6 +29,8 @@ module.exports = function(app, router, db, models) {
                                 res.json({
                                     status: false,
                                     body: { error: "Failure to Authenticate" }
+                        error: "Failed Login.."
+                    }
                                 });
                             }
                         } // end of responseObject
@@ -46,11 +48,19 @@ module.exports = function(app, router, db, models) {
             try {
                 models.sequelize.sync( /*{force:true}*/ ).then(() => {
                     db.getRoomItems(1)
-                        .then(aa => res.json({ status: true, body: aa }))
+                        .then(aa => res.json({
+                            status: true,
+                            body: aa
+                        }))
                 });
             } catch (e) {
                 console.log(e);
                 res.json({ status: false, body: { error: "message" } });
+                    status: false,
+                    body: {
+                        error: "message"
+                    }
+                });
             }
 
         });
