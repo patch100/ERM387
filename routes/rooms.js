@@ -5,13 +5,38 @@ module.exports = function(app, router, db) {
     router.route('/rooms/reserve')
         .post(function(req, res) {
 
+            db.addReservation(req.body)
+                .then(rooms => res.json({
+                    status: true,
+                    body: rooms
+                }));
+
+            if (req.body.equipments) {
+                for (var resource in req.body.equipments) {
+                    var resourceBody = {
+                        "resource_id": resource.resource_id,
+                        "date_start": req.body.date_start,
+                        "date_end": req.body.date_end,
+                        "room_id": req.body.room_id,
+                        "user_id": req.body.user_id
+                    }
+                    db.addResourceReservation(resourceBody, null) // not sure about second param
+                        .then(resp => res.json({
+                            status: true,
+                            body: resp
+                        }));
+                }
+            }
 
         });
 
     router.route('/rooms/cancel')
         .post(function(req, res) {
-
-
+            db.cancelReservation(req.body.reservation_id)
+                .then(resp => res.json({
+                    status: true,
+                    body: resp
+                }));
         });
 
     router.route('/rooms')
@@ -28,10 +53,11 @@ module.exports = function(app, router, db) {
             }
 
             // db.getRooms(filters).then(rooms => res.json({status: true, body: rooms}));
-            db.getRooms( /* filters, */ ).then(rooms => res.json({
-                status: true,
-                body: rooms
-            }));
+            db.getRooms( /* filters, */ )
+                .then(rooms => res.json({
+                    status: true,
+                    body: rooms
+                }));
         });
 
     router.route('/rooms/:room_type')
@@ -129,7 +155,5 @@ module.exports = function(app, router, db) {
                     body: resp
                 }))
         })
-
-
 
 }

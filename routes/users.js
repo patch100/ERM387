@@ -1,4 +1,4 @@
-module.exports = function(app, router, db, models) {
+module.exports = function(app, router, db) {
 
     // /users/:user_type/:user_id'  // not sure we need this
 

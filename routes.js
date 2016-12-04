@@ -11,6 +11,7 @@ exports = module.exports = function(app, router, db) {
     var users = require('./routes/users')(app, router, db);
     var inventory = require('./routes/inventory')(app, router, db);
     var login = require('./routes/login')(app, router, db);
+    var reservations = require('./routes/reservations')(app, router, db);
 
     app.use('/', router);
 

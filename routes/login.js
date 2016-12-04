@@ -1,4 +1,4 @@
-module.exports = function(app, router, db, models) {
+module.exports = function(app, router, db) {
 
     router.route('/login')
         .get(function(req, res) {

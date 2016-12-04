@@ -1,4 +1,4 @@
-module.exports = function(app, router, db, models) {
+module.exports = function(app, router, db) {
 
     // /inventory/:resource_type/:resource_id' // resource_id is optional (changes the behaviour of HTTP verbs)
 
