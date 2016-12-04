@@ -20,6 +20,11 @@
     console.log(JSON.stringify(aa))
   })
 
+  var user = {first_name:"hello", last_name:"bye"}
+  endpoint.updateUser(2,user).then(aa => {
+    console.log(JSON.stringify(aa));
+  })
+
   //Rooms
 
   endpoint.getRooms().then(aa => {

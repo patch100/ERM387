@@ -7,9 +7,8 @@ const endpoint = require('./endpoint/index');
 // App
 
 models.sequelize.sync().then(() => {
-
-
-  endpoint.cancelRoomReservation(6).then(aa => {
+  var user = {first_name:"hello", last_name:"bye"}
+  endpoint.updateUser(2,user).then(aa => {
     console.log(JSON.stringify(aa));
   })
 
