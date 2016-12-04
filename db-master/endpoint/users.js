@@ -11,7 +11,8 @@ module.exports = {
   getUserById: getUserById,
   addUser: addUser,
   removeUser: removeUser,
-  userLogin:userLogin
+  userLogin:userLogin,
+  updateUser:updateUser
 }
 
 function getUsers(){
@@ -174,5 +175,30 @@ function getUserReservationsInclude(){
           ]}
         ]}
       ]}];
+}
+
+function updateUser(userId, modifyProperties){
+  return models.User.findById(userId)
+    .then(user => {
+      if(user){
+        var updatedModel = {};
+        for (var property in modifyProperties) {
+          if (modifyProperties.hasOwnProperty(property)) {
+            updatedModel[toCamelCase(property)] = modifyProperties[property];
+          }
+        }
+           return models.User.update(updatedModel, { where: { userId: userId }, logging: true })
+                  .then(updatedRows =>{return {status: "pass" };})
+      }
+      else{
+        return { status: "fail" };        
+      }
+    })
+}
+
+function toCamelCase(str) {
+  return str.replace(/_([a-z])/g, function (m, w) {
+    return w.toUpperCase();
+  });
 }
  
