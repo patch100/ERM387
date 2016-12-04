@@ -1,18 +1,24 @@
 {
-  "development": {
-    "username": "root",
-    "password": "1234",
-    "database": "db_387",
-    "host": "localhost",
-    "port": "3306",
-    "dialect": "mysql",
-    "logging": false
-  },
-  "production": {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
-    "dialect": "mysql"
-  }
+    "test": {
+        "database": "main",
+        "username": "test",
+        "dialect": "sqlite",
+        "storage": "../test.db"
+    },
+    "development": {
+        "username": "root",
+        "password": "1234",
+        "database": "db_387",
+        "host": "localhost",
+        "port": "3306",
+        "dialect": "mysql",
+        "logging": false
+    },
+    "production": {
+        "username": "root",
+        "password": null,
+        "database": "database_production",
+        "host": "127.0.0.1",
+        "dialect": "mysql"
+    }
 }
