@@ -131,11 +131,12 @@ function userLogin(username,password){
       required: true
     }]
   }).then(user => {
-    if(user.passwordHash == crypto.createHash('sha256').update(password).digest("hex")){   
+    if(user.passwordHash == crypto.createHash('sha256').update(password).digest("hex")){
       var mappedUser = {
         is_admin: user.isAdmin,
         type: user.UserType.typeName,
-        status: true
+        status: true,
+        id: user.userId
       }
       return mappedUser;
     }
@@ -150,7 +151,7 @@ function encrypt(text){
   crypted += cipher.final('hex');
   return crypted;
 }
- 
+
 function decrypt(text){
   var decipher = crypto.createDecipher(algorithm,password)
   var dec = decipher.update(text,'hex','utf8')
@@ -159,11 +160,11 @@ function decrypt(text){
 }
 
 function getUserReservationsInclude(){
-  return [{ 
-      model: models.UserType, 
-      required:true 
-    },{ 
-      model: models.Reservation, 
+  return [{
+      model: models.UserType,
+      required:true
+    },{
+      model: models.Reservation,
       required: false,
       include: [
         {model: models.Resource, required: false, include:[
@@ -197,7 +198,7 @@ function updateUser(userId, modifyProperties){
                   .then(updatedRows =>{return {status: "pass" };})
       }
       else{
-        return { status: "fail" };        
+        return { status: "fail" };
       }
     })
 }
@@ -207,4 +208,4 @@ function toCamelCase(str) {
     return w.toUpperCase();
   });
 }
- 
+
