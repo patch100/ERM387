@@ -15,10 +15,10 @@
         "logging": false
     },
     "production": {
-        "username": "root",
-        "password": null,
-        "database": "database_production",
-        "host": "127.0.0.1",
+        "username": "erm",
+        "password": "erm123!",
+        "database": "erm",
+        "host": "162.253.53.97",
         "dialect": "mysql"
     }
 }
