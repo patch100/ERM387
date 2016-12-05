@@ -36,7 +36,7 @@ function getRooms(type) {
                   { model: models.Computer, required: false },
                   { model: models.WhiteBoard, required: false },
                   { model: models.Projector, required: false }
-                ], 
+                ],
                 required: false
               }
             ],
@@ -171,7 +171,7 @@ function getRoomById(id) {
                   { model: models.Computer, required: false },
                   { model: models.WhiteBoard, required: false },
                   { model: models.Projector, required: false }
-                ], 
+                ],
                 required: false
               }
             ],
@@ -235,10 +235,10 @@ function addReservation(room){
       userId:room.user
   }).then(function(reserve){
     var reserveRoom = {reserveId:reserve.reservationId,status:"pass"}
-    return reserveRoom;  
+    return reserveRoom;
   }).catch(function(){
     var reserveRoom = {reserveId:null,status:"failed"}
-    return reserveRoom;  
+    return reserveRoom;
   });
 }
 
@@ -246,9 +246,9 @@ function addReservation(room){
 function cancelReservation(reservation){
   return models.Reservation.destroy({where: { reservationId: reservation.reservationId, resourceId: reservation.resourceId}})
     .then(function(){
-    return {reservationId: reservation.reservationId, resourceId: reservation.resourceId, status:"pass"};  
+    return {reservationId: reservation.reservationId, resourceId: reservation.resourceId, status:"pass"};
   }).catch(function(){
-    return {reservationId: reservation.reservationId, resourceId: reservation.resourceId, status:"failed"};  
+    return {reservationId: reservation.reservationId, resourceId: reservation.resourceId, status:"failed"};
   });
 }
- 
+
