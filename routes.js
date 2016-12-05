@@ -8,7 +8,7 @@ exports = module.exports = function(app, router, db, jwt) {
         });
     });
 
-    function requireAuthentication(req, res) {
+    function requireAuthentication(req, res, next) {
         var cookies = new Cookies(req, res)
         if (typeof cookies.get('token') !== "undefined") { // ****************************
                 // check header or url parameters or post parameters for token
