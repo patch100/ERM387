@@ -2,14 +2,10 @@
 
 'use strict';
 const models = require('./models/index');
-const endpoint = require('./endpoint/index');
+GLOBAL.endpoint = require('./endpoint/index');
 
 // App
 
 models.sequelize.sync().then(() => {
-  var user = {first_name:"hello", last_name:"bye"}
-  endpoint.updateUser(2,user).then(aa => {
-    console.log(JSON.stringify(aa));
-  })
-
+  require('./data/testCases.js');
 });

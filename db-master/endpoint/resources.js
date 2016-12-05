@@ -288,13 +288,13 @@ function updateModelByType(type, resourceId, updatedModel) {
   return new Promise((resolve, reject) => {
     switch (type) {
       case "Computer":
-        resolve(models.Computer.update(updatedModel, { where: { resourceId: resourceId }, logging: true }));
+        resolve(models.Computer.update(updatedModel, { where: { resourceId: resourceId }}));
         break;
       case "WhiteBoard":
-        resolve(models.WhiteBoard.update(updatedModel, { where: { resourceId: resourceId }, logging: true }));
+        resolve(models.WhiteBoard.update(updatedModel, { where: { resourceId: resourceId } }));
         break;
       case "Projector":
-        resolve(models.Projector.update(updatedModel, { where: { resourceId: resourceId }, logging: true }));
+        resolve(models.Projector.update(updatedModel, { where: { resourceId: resourceId } }));
         break;
       case "Room":
         resolve(models.Room.update(updatedModel, { where: { resourceId: resourceId } }))
