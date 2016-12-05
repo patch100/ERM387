@@ -2,11 +2,11 @@
 var express = require('express');
 var app = express();
 var bodyParser = require('body-parser');
-
-
+var jwt = require('jsonwebtoken')
 
 // configure app to use bodyParser()
 // this will let us get the data from a POST
+app.set('superSecret', 'thisprojectisawesome')
 app.use(bodyParser.urlencoded({
     extended: true
 }));
@@ -29,7 +29,7 @@ var router = express.Router();
 // // DB testing
 const models = require('./db-master/models/index');
 const db = require('./db-master/endpoint/index');
-require('./routes')(app, router, db);
+require('./routes')(app, router, db, jwt);
 
 
 

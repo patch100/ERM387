@@ -1,9 +1,8 @@
 {
     "test": {
         "database": "main",
-        "username": "test",
         "dialect": "sqlite",
-        "storage": "../test.db"
+        "storage": "test.db"
     },
     "development": {
         "username": "root",

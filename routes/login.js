@@ -1,4 +1,4 @@
-module.exports = function(app, router, db) {
+module.exports = function(app, router, db, jwt) {
 
 router.route('/login')
     .post(function(req, res) {
