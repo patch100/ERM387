@@ -42,8 +42,10 @@ function getResources(type) {
   var includeObj = getIncludeByType(type);
   return models.Resource.findAll({
     where: typeFilter,
-    include: includeObj
+    include: includeObj,
+    logging: true
   }).then(resources => {
+    console.log(JSON.stringify(resources));
     if (resources) {
       var items = [];
       for (var i = 0; i < resources.length; i++) {
@@ -107,7 +109,6 @@ function getReservation(resource) {
 function getReservationDetail(reservation) {
   var res = {};
   res.reservation_id = reservation.reservationId;
-  res.id = reservation.resourceId;
   res.user_id = reservation.userId;
   res.start_time = reservation.startTime;
   res.end_time = reservation.endTime;
