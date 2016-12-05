@@ -2,7 +2,7 @@
     "test": {
         "database": "main",
         "dialect": "sqlite",
-        "storage": "test.db"
+        "storage": "./db-master/test.db"
     },
     "development": {
         "username": "root",
