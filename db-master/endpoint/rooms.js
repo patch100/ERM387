@@ -57,9 +57,9 @@ function getRooms(type, filters) {
       for (var i = 0; i < resources.length; i++) {
         resourcesArr.push(mapResource(resources[i]))
       }
-      return resourcesArr;
+      return {status: true, body: resourcesArr};
     } else {
-      return null;
+      return {status: true, body: []}
     }
   }).catch(err => {
     return null;
@@ -190,14 +190,14 @@ function getRoomById(id) {
       }]
   }).then(resource => {
     if(resource){
-      return mapResource(resource);
+      return {status:true, body:mapResource(resource)};
     }
     else{
-      return null;
+      return {status: true, body: {}};
     }
   })
   .catch(err => {
-    return null;
+    return {status: false, body: null};
   })
 }
 
@@ -207,7 +207,9 @@ function getRoomTypes() {
     if (mappedRooms) {  // BUG: isnt it supposed to be if rooms?
       mappedRooms = rooms.map(room => room.roomType).sort()
     }
-    return mappedRooms;
+    return {status: true, body: mappedRooms};
+  }).catch(err => {
+    return {status: false, body: null};
   })
 }
 
@@ -246,11 +248,9 @@ function addReservation(room){
       endTime:room.endTime,
       userId:room.user
   }).then(function(reserve){
-    var reserveRoom = {reserveId:reserve.reservationId,status:"pass"}
-    return reserveRoom;
+    return {status: true, body:{reservation_id: reserve.reservationId}};
   }).catch(function(){
-    var reserveRoom = {reserveId:null,status:"failed"}
-    return reserveRoom;
+    return {status: false, body:{reservation_id: null}};
   });
 }
 
@@ -258,8 +258,8 @@ function addReservation(room){
 function cancelReservation(reservation){
   return models.Reservation.destroy({where: { reservationId: reservation.reservationId, resourceId: reservation.resourceId}})
     .then(function(){
-    return {reservationId: reservation.reservationId, resourceId: reservation.resourceId, status:"pass"};
+      return {status: true, reservation_id: reservation.reservationId, resourceId: reservation.resourceId};
   }).catch(function(){
-    return {reservationId: reservation.reservationId, resourceId: reservation.resourceId, status:"failed"};
+      return {status: false, reservation_id: reservation.reservationId, resourceId: reservation.resourceId};
   });
 }
