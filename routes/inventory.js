@@ -1,11 +1,11 @@
 module.exports = function(app, router, db) {
 
-    // /inventory/:resource_type/:resource_id' // resource_id is optional (changes the behaviour of HTTP verbs)
-
     router.route('/inventory')
         .get(function(req, res) {
             //return all inventory items
-            var filters = req.query;
+
+            // TODO Filtering
+            /*var filters = req.query;
             if (filters.date_start || filters.date_end) {
                 filters.date_start = {
                     $gt: filters.date_start
@@ -13,33 +13,49 @@ module.exports = function(app, router, db) {
                 filters.date_end = {
                     $lt: filters.date_end
                 };
-            }
+            }*/
 
             db.getResources( /*filters*/ )
                 .then(resources => {
-                    if (resources) {
-                        res.json({ status: true, body: resources })
+                    result = {}
+                    return res.json({ status: true, body: { resources: resources } })
+                    if (resources.status) {
+                        result.status = true
+                        for (var resource of resources.body.resources) {
+                            for (var reservation of resource.reservation) {
+                                reservation.date_start = Date.parse(reservation.start_time);
+                                reservation.date_end = Date.parse(reservation.end_time);
+                                delete reservation.start_time;
+                                delete reservation.end_time;
+                            }
+                            resource.it_resource = resource.is_it;
+                            delete resource.is_it;
+                            resource.reservations = resource.reservation;
+                            delete resource.reservation;
+                            result.body.resources.push(resource);
+                        }
+                        res.json(result);
                     } else {
-                        res.json({ status: true, body: { error: "No match found." } })
+                        res.json({ status: false, body: { error: "No match found." } })
                     }
                 })
-          })
-    .post(function(req, res) {
-        try {
-            db.addResource(req.body.resource).then(
-                resp => {
-                    res.json({ status: true, body: { error: "Successfully created a new Resource." } })
-                })
-        } catch (e) {
-            res.json({ status: false, body: { error: "Failed to create the Resource." } })
-        }
-    });
+        })
+        .post(function(req, res) {
+            try {
+                db.addResource(req.body.resource).then(
+                    resp => {
+                        res.json({ status: true, body: { message: "Successfully created a new Resource." } })
+                    })
+            } catch (e) {
+                res.json({ status: false, body: { error: "Failed to create the Resource." } })
+            }
+        });
 
 
-    router.route('/inventory/:resource_type')
+    router.route('/inventory/:type')
         .get(function(req, res) {
             //return items with req.params.resource_type
-            var filters = req.query;
+            /* var filters = req.query;
             if (filters.date_start || filters.date_end) {
                 filters.date_start = {
                     $gt: filters.date_start
@@ -47,22 +63,34 @@ module.exports = function(app, router, db) {
                 filters.date_end = {
                     $lt: filters.date_end
                 };
-            }
+            } */
+            db.getResourcesByType( /* filters, */ req.params.type)
+                .then(resources => {
+                    if (resources.status) {
+                        result = {
+                            status: true,
+                            body: {
+                                resources: []
+                            }
+                        }
+                        for (var resource of resources.body.resource) {
+                            resource.it_resouce = resource.is_it;
+                            delete resource.is_it;
+                            resource.reservations = resource.reservation;
+                            delete resource.reservation;
 
-            try {
-            db.getResourcesByType( /* filters, */ req.params.resource_type)
-                .then(resources =>
-                  {
-                if (resources) {
-                  res.json({ status: true, body: resources })
-                } else {
-                  res.json({ status: false, body: {error: "No match found."}})
-                }
-              }
-            );
-              } catch (e) {
-                res.json({status: false, body: {error: "Failed to fetch resources."}})
-              }
+                            for (reservation of resource.reservations) {
+                                reservation.date_start = Date.parse(reservation.start_time);
+                                reservation.date_end = Date.parse(reservation.end_time);
+                                delete reservation.start_time;
+                                delete reservation.end_time;
+                            }
+                            result.body.resources.push(resource);
+                        }
+                    } else {
+                        res.json({ status: false, body: { error: "Failed to retrieve resources." } })
+                    }
+                });
         });
 
 
@@ -84,7 +112,7 @@ module.exports = function(app, router, db) {
                     status: true,
                     body: resource
                 }))
-              })
+        })
         .post(function(req, res) {
             // checks if the resource has an ID.
             //if(db.getResourceById(req.params.resource_id) == req.body.resource_id){
@@ -106,7 +134,6 @@ module.exports = function(app, router, db) {
     router.route('/inventory/reserve')
         .post(function(req, res) {
             //return all inventory items
-
             db.addResourceReservation(req.body, null)
                 .then(resp => res.json({
                     status: true,
