@@ -42,17 +42,15 @@ function getResources(type) {
   var includeObj = getIncludeByType(type);
   return models.Resource.findAll({
     where: typeFilter,
-    include: includeObj,
-    logging: true
+    include: includeObj
   }).then(resources => {
-    console.log(JSON.stringify(resources));
     if (resources) {
       var items = [];
       for (var i = 0; i < resources.length; i++) {
         var element = {}
         var resource = resources[i];
         element = addPropertiesByType(resource);
-        element.reservation = getReservation(resource);
+        element.reservations = getReservation(resource);
         items.push(element);
       }
       return {status: true, body: items};
@@ -79,7 +77,7 @@ function getResourceById(id) {
     if (resource) {
       var mappedResource = {};
       mappedResource = addPropertiesByType(resource);
-      mappedResource.reservation = getReservation(resource);
+      mappedResource.reservations = getReservation(resource);
       return {status: true, body: mappedResource};
     }
     else {
@@ -112,8 +110,6 @@ function getReservationDetail(reservation) {
   res.user_id = reservation.userId;
   res.start_time = reservation.startTime;
   res.end_time = reservation.endTime;
-  res.room_id = reservation.roomId;
-
   return res;
 }
 
@@ -175,7 +171,7 @@ function addPropertiesByType(resource) {
   var res = {};
   res.type = resource.resourceType;
   res.is_it = resource.isIt;
-  res.id = resource.resourceId;
+  res.resource_id = resource.resourceId;
   switch (resource.resourceType) {
     case "Computer":
       res.operating_system = resource.Computer.operatingSystem;
@@ -232,7 +228,6 @@ function addResourceReservation(resource, reserveId) {
   if (reserveId != null) {
     return models.ReservationResource.create({ resourceId: resource.resourceId, reservationId: reserveId })
       .then(function (reserve) {
-        console.log("HERE");
         var reserveResource = { body: {id: resource.resourceId}, status: true };
         return reserveResource;
       }).catch(function (err) {
@@ -292,8 +287,7 @@ function updateModelByType(type, resourceId, updatedModel) {
   return new Promise((resolve, reject) => {
     switch (type) {
       case "Computer":
-        console.log(updatedModel);
-        resolve(models.Computer.update(updatedModel, { where: { resourceId: resourceId },  logging:true}));
+        resolve(models.Computer.update(updatedModel, { where: { resourceId: resourceId}}));
         break;
       case "WhiteBoard":
         resolve(models.WhiteBoard.update(updatedModel, { where: { resourceId: resourceId } }));
@@ -308,8 +302,8 @@ function updateModelByType(type, resourceId, updatedModel) {
         break;
     }
   })
-    .then(updatedRows => { return { status: true, body: {id: resourceId} }; })
-    .catch((err) => { return { status: true, body: {id: resourceId} }; });
+    .then(updatedRows => { return { status: true, body: {resource_id: resourceId} }; })
+    .catch((err) => { return { status: true, body: {resource_id: resourceId} }; });
 }
 
 function toCamelCase(str) {

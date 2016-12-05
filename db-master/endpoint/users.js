@@ -72,6 +72,7 @@ function getUserById(id){
         phone_number: user.phoneNumber,
         is_admin: user.isAdmin,
         type: user.UserType.typeName,
+        user_id: user.userId,
         reservations: reservations
       }
       return {status: true, body: mappedUser}
@@ -93,7 +94,6 @@ function getReservations(reservations){
       res.reservation_id = reservations[i].reservationId;
       res.start_time = reservations[i].startTime;
       res.end_time = reservations[i].endTime;
-      res.user_id = reservations[i].userId;
 
       var items = [];
       for (var j = 0; j < reservations[i].ReservationResources.length; j++) {
@@ -167,7 +167,7 @@ function userLogin(username,password){
           is_admin: user.isAdmin,
           type: user.UserType.typeName,
           status: true,
-          id: user.userId
+          User_id: user.userId
         }
         return mappedUser;
       }

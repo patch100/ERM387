@@ -74,21 +74,20 @@ function mapResource(resource) {
           let resource = reservationResource.Resource;
           let type = resource.resourceType;
           let resourceObj = {};
-          resourceObj[type] = {};
-          resourceObj.resourceType = type;
-          resourceObj.resourceId = resource.resourceId;
-          resourceObj.isIt = resource.isIt;
+          resourceObj.type = type;
+          resourceObj.resource_id = resource.resourceId;
+          resourceObj.is_it = resource.isIt;
 
           switch(type){
             case "Computer":
-              resourceObj[type].operating_system = resource[type].operatingSystem;
-              resourceObj[type].ram = resource[type].RAM;
-              resourceObj[type].storage = resource[type].storage;
+              resourceObj.operating_system = resource[type].operatingSystem;
+              resourceObj.ram = resource[type].RAM;
+              resourceObj.storage = resource[type].storage;
               break;
             case "Projector":
               break;
             case "WhiteBoard":
-              resourceObj[type].is_printable = resource[type].isPrintable;
+              resourceObj.is_printable = resource[type].isPrintable;
               break;
             default:
               break;
@@ -111,9 +110,9 @@ function mapResource(resource) {
 
 function addRoomProperties(resource, reservations) {
   return {
-    id: resource.resourceId,
-    room_id: resource.Room.roomId,
-    type: resource.Room.roomType,
+    resource_id: resource.resourceId,
+    type: resource.resourceType,
+    room_type: resource.Room.roomType,
     room_number: resource.Room.roomNumber,
     capacity: resource.Room.capacity,
     length: resource.Room.length,
