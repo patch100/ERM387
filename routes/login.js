@@ -11,12 +11,10 @@ router.route('/login')
                     responseObject => {
                         if (responseObject.status) { // If successful (User exists, and password matches)
                             // create json web token
-                            var userToken = jwt.sign(user, app.get('superSecret'), {
-                                expiresInMinutes: 1440 // expires in 24 hours
+                            var userToken = jwt.sign({id: responseObject.id, timenow: Math.floor(Date.now() / 1000)}, app.get('superSecret'), {
+                                expiresIn: "1 day" // expires in 24 hours
                             });
-
                             res.cookie('token', userToken)
-
                             res.json({
                                 status: true,
                                 body: {
