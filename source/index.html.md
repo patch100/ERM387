@@ -28,18 +28,19 @@ Welcome to our documentation! You can use our API to access ERM endpoints, which
 
 ```json
 {
-    "username": "usr",
-    "password": "pwd"
+    "user_id": "email",
+    "user_password": "pwd"
 }
 ```
 
 > Response JSON:
 
+> The 'token': 'qwdklwqkqwklqw' will be in the Cookies
+
 ```json
 {
     "status": true,
     "body": {
-        "token": "the_token",
         "message": "Successful login!"
     }
 }
@@ -49,7 +50,7 @@ Welcome to our documentation! You can use our API to access ERM endpoints, which
 <BR>
 In case of success, front end needs to redirect to Account/Resouces/Calendar.
 <BR>
-Use Token for future requests.
+Pass Token for future requests (in the Cookies).
 <BR>
 Valid 24 hours.
 </aside>
@@ -338,6 +339,8 @@ type | null | name of the resource type
 
 > `GET /inventory/:type`
 
+> The possible types: Computer or Projector or Whiteboard
+
 > Response JSON:
 
 ```json
@@ -394,8 +397,10 @@ type | null | name of the resource type
 
 ## Get a Specific Resource
 
-> `GET /inventory/:id`
 > `GET /inventory/:type/:id`
+
+> The possible types are: Projector or Computer or Whiteboard
+> The id is the resource_id
 
 > Response JSON:
 
@@ -451,7 +456,6 @@ type | null | name of the resource type
 ## Create a Resource
 
 > `POST /inventory`
-> `POST /inventory/:type`
 
 ```json
 {
@@ -481,8 +485,7 @@ This endpoint creates a resource.
 
 ## Modify a Resource
 
-> `POST /inventory/:id`
-> `POST /inventory/:type/:id`
+> `POST /inventory/:resource_type/:resource_id`
 
 ```json
 {
@@ -516,8 +519,7 @@ id | The id of the resource to modify
 
 ## Delete a Resource
 
-> `DELETE /inventory/:id`
-> `DELETE /inventory/:type/:id`
+> `DELETE /inventory/:resource_type/:resource_id`
 
 > Response JSON:
 
@@ -609,7 +611,7 @@ id | The id of the reservation to cancel
 ## Get all Rooms
 
 > `GET /rooms`
-> `GET /rooms/:type`
+> `GET /rooms/:room_type`
 
 > Response JSON:
 
@@ -681,8 +683,7 @@ room_number | null | Prefix of the room number
 
 ## Get a Specific Room
 
-> `GET /rooms/:id`
-> `GET /rooms/:type/:id`
+> `GET /rooms/:room_type/:room_id`
 
 > Response JSON:
 
@@ -751,7 +752,6 @@ room_number | null | Prefix of the room number
 ## Create a Room
 
 > `POST /rooms`
-> `POST /rooms/:type`
 
 ```json
 {
@@ -778,8 +778,7 @@ This endpoint creates a room.
 
 ## Modify a Room
 
-> `POST /rooms/:id`
-> `POST /rooms/:type/:id`
+> `POST /rooms/:room_type/:room_id`
 
 ```json
 {
@@ -813,7 +812,7 @@ id | The id of the room to modify
 
 ## Delete a Room
 
-> `DELETE /rooms/:id`
+> `DELETE /rooms/:room_type/:room_id`
 
 > Response JSON:
 
@@ -924,8 +923,8 @@ id | The id of the reservation to cancel
     {
       "reservation_id": "int",
       "user_id": "int",
-      "start_date": "datestring",
-      "end_date": "datestring",
+      "date_start": "datestring",
+      "date_end": "datestring",
       // optional
       "room_id": "int",
       "resource_id": "int"
@@ -950,7 +949,7 @@ resource_id | null | the resource id of the reservations to return
 
 ## Get a specific Reservation
 
-> `GET /reservations/:id`
+> `GET /reservations/:reservation_id`
 
 > Response JSON:
 
@@ -974,5 +973,5 @@ This endpoint retrieves a specific reservation.
 
 Parameter | Description
 --------- | -----------
-id | The id of the reservation to retrieve
+reservation_id | The id of the reservation to retrieve
 

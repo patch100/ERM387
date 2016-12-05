@@ -134,18 +134,19 @@
 <p><code class="prettyprint">POST /login</code></p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-    </span><span class="nt">"username"</span><span class="p">:</span><span class="w"> </span><span class="s2">"usr"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pwd"</span><span class="w">
+    </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"email"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"user_password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"pwd"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
 <blockquote>
 <p>Response JSON:</p>
+
+<p>The &lsquo;token&rsquo;: &#39;qwdklwqkqwklqw&rsquo; will be in the Cookies</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
     </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
     </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-        </span><span class="nt">"token"</span><span class="p">:</span><span class="w"> </span><span class="s2">"the_token"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Successful login!"</span><span class="w">
     </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
@@ -155,7 +156,7 @@
 <BR>
 In case of success, front end needs to redirect to Account/Resouces/Calendar.
 <BR>
-Use Token for future requests.
+Pass Token for future requests (in the Cookies).
 <BR>
 Valid 24 hours.
 </aside>
@@ -562,6 +563,8 @@ You cannot modify reservations in this way.</p>
 <blockquote>
 <p><code class="prettyprint">GET /inventory/:type</code></p>
 
+<p>The possible types: Computer or Projector or Whiteboard</p>
+
 <p>Response JSON:</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
@@ -664,8 +667,10 @@ You cannot modify reservations in this way.</p>
 <h2 id="get-a-specific-resource">Get a Specific Resource</h2>
 
 <blockquote>
-<p><code class="prettyprint">GET /inventory/:id</code>
-<code class="prettyprint">GET /inventory/:type/:id</code></p>
+<p><code class="prettyprint">GET /inventory/:type/:id</code></p>
+
+<p>The possible types are: Projector or Computer or Whiteboard
+The id is the resource_id</p>
 
 <p>Response JSON:</p>
 </blockquote>
@@ -766,8 +771,7 @@ You cannot modify reservations in this way.</p>
 <h2 id="create-a-resource">Create a Resource</h2>
 
 <blockquote>
-<p><code class="prettyprint">POST /inventory</code>
-<code class="prettyprint">POST /inventory/:type</code></p>
+<p><code class="prettyprint">POST /inventory</code></p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -797,8 +801,7 @@ You cannot modify reservations in this way.</p>
 <h2 id="modify-a-resource">Modify a Resource</h2>
 
 <blockquote>
-<p><code class="prettyprint">POST /inventory/:id</code>
-<code class="prettyprint">POST /inventory/:type/:id</code></p>
+<p><code class="prettyprint">POST /inventory/:resource_type/:resource_id</code></p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -840,8 +843,7 @@ Reservation information cannot be modified via this endpoint.</p>
 <h2 id="delete-a-resource">Delete a Resource</h2>
 
 <blockquote>
-<p><code class="prettyprint">DELETE /inventory/:id</code>
-<code class="prettyprint">DELETE /inventory/:type/:id</code></p>
+<p><code class="prettyprint">DELETE /inventory/:resource_type/:resource_id</code></p>
 
 <p>Response JSON:</p>
 </blockquote>
@@ -949,7 +951,7 @@ Deletes the entry of the reservation in the table.</p>
 
 <blockquote>
 <p><code class="prettyprint">GET /rooms</code>
-<code class="prettyprint">GET /rooms/:type</code></p>
+<code class="prettyprint">GET /rooms/:room_type</code></p>
 
 <p>Response JSON:</p>
 </blockquote>
@@ -1067,8 +1069,7 @@ Deletes the entry of the reservation in the table.</p>
 <h2 id="get-a-specific-room">Get a Specific Room</h2>
 
 <blockquote>
-<p><code class="prettyprint">GET /rooms/:id</code>
-<code class="prettyprint">GET /rooms/:type/:id</code></p>
+<p><code class="prettyprint">GET /rooms/:room_type/:room_id</code></p>
 
 <p>Response JSON:</p>
 </blockquote>
@@ -1181,8 +1182,7 @@ Deletes the entry of the reservation in the table.</p>
 <h2 id="create-a-room">Create a Room</h2>
 
 <blockquote>
-<p><code class="prettyprint">POST /rooms</code>
-<code class="prettyprint">POST /rooms/:type</code></p>
+<p><code class="prettyprint">POST /rooms</code></p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"room"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -1209,8 +1209,7 @@ Deletes the entry of the reservation in the table.</p>
 <h2 id="modify-a-room">Modify a Room</h2>
 
 <blockquote>
-<p><code class="prettyprint">POST /rooms/:id</code>
-<code class="prettyprint">POST /rooms/:type/:id</code></p>
+<p><code class="prettyprint">POST /rooms/:room_type/:room_id</code></p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"room"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -1252,7 +1251,7 @@ Deletes the entry of the reservation in the table.</p>
 <h2 id="delete-a-room">Delete a Room</h2>
 
 <blockquote>
-<p><code class="prettyprint">DELETE /rooms/:id</code></p>
+<p><code class="prettyprint">DELETE /rooms/:room_type/:room_id</code></p>
 
 <p>Response JSON:</p>
 </blockquote>
@@ -1378,8 +1377,8 @@ The reservation entry is removed from the Reservations table.</p>
     </span><span class="p">{</span><span class="w">
       </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"start_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datestring"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"end_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datestring"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datestring"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datestring"</span><span class="p">,</span><span class="w">
       </span><span class="err">//</span><span class="w"> </span><span class="err">optional</span><span class="w">
       </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"resource_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w">
@@ -1430,7 +1429,7 @@ The reservation entry is removed from the Reservations table.</p>
 <h2 id="get-a-specific-reservation">Get a specific Reservation</h2>
 
 <blockquote>
-<p><code class="prettyprint">GET /reservations/:id</code></p>
+<p><code class="prettyprint">GET /reservations/:reservation_id</code></p>
 
 <p>Response JSON:</p>
 </blockquote>
@@ -1458,7 +1457,7 @@ The reservation entry is removed from the Reservations table.</p>
 </tr>
 </thead><tbody>
 <tr>
-<td>id</td>
+<td>reservation_id</td>
 <td>The id of the reservation to retrieve</td>
 </tr>
 </tbody></table>
