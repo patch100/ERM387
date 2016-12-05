@@ -65,11 +65,19 @@ module.exports = function(app, router, db) {
         /*Assuming that only admins can delete users for now*/
         .delete(function(req, res) {
             db.removeUser(req.params.user_id).then(result => {
-                if (result.user_type == "admin") {
+            /** should be checked if admin before removing from db ? As this would give error
+                if (user_type == "admin") {
                     res.json({ status: true, body: "User successfully deleted." });
                 } else {
                     res.json({ status: false, body: "Unable to delete user." });
                 }
+            */
+            if (result) {
+                res.json({ status: true, body: "User successfully deleted." });
+            } else {
+                res.json({ status: false, body: "Unable to delete user." });
+            }
+
             });
 
         })
