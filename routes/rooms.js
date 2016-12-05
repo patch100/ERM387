@@ -63,7 +63,7 @@ module.exports = function(app, router, db) {
 
 
 
-    router.route('/rooms/:room_id')
+    router.route('/rooms/:room_type/:room_id')
     .get(function(req, res) {
       //return room with req.params.room_type and req.params.room_id
       // REFACTOR: technically an ID should be unique, the room type should not be needed to retrieve by id
@@ -77,7 +77,6 @@ module.exports = function(app, router, db) {
                     $lt: filters.date_end
                 };
       }
-
             db.getRoomById( /* filters, */ req.params.room_id)
                 .then(room => res.json({
                     status: true,
