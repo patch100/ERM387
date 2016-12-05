@@ -33,6 +33,7 @@ function getResourceTypes() {
 }
 
 function getResourcesByType(type) {
+  type = type.charAt(0).toUpperCase() + type.slice(1);
   return getResources(type);
 }
 
