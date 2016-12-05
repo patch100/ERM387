@@ -212,6 +212,7 @@ function getRoomTypes() {
 }
 
 function getRoomsByType(type) {
+  type = type.charAt(0).toLowerCase() + type.slice(1);
   return getRooms(type);
 }
 
