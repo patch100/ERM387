@@ -131,16 +131,22 @@ function userLogin(username,password){
       required: true
     }]
   }).then(user => {
-    if(user.passwordHash == crypto.createHash('sha256').update(password).digest("hex")){
-      var mappedUser = {
-        is_admin: user.isAdmin,
-        type: user.UserType.typeName,
-        status: true,
-        id: user.userId
+    if(user){
+      if(user.passwordHash == crypto.createHash('sha256').update(password).digest("hex")){
+        var mappedUser = {
+          is_admin: user.isAdmin,
+          type: user.UserType.typeName,
+          status: true,
+          id: user.userId
+        }
+        return mappedUser;
       }
-      return mappedUser;
+      else{
+        return {status: false};;
+      }
+    }else{
+        return {status: false};
     }
-    return {status: false};
   })
 }
 
@@ -208,4 +214,3 @@ function toCamelCase(str) {
     return w.toUpperCase();
   });
 }
-
