@@ -18,7 +18,11 @@ module.exports = {
 
 function getUserTypes(){
   return models.UserType.findAll({attributes:['typeName'], group:['typeName']})
-  .then((types) => {return types.map(type => {return type.typeName})});
+  .then((types) => {return types.map(type => {return type.typeName})})
+    .catch(function (err) {
+        console.log(err)
+        return null;
+    })
 }
 
 function getUsers(){
@@ -41,7 +45,11 @@ function getUsers(){
       });
       return mappedUsers;
     }
-  });
+  })
+  .catch(function (err) {
+      console.log(err)
+      return null;
+  })
 }
 
 function getUserById(id){
@@ -66,6 +74,10 @@ function getUserById(id){
       }
     }
     return mappedUser;
+  })
+  .catch(function (err) {
+      console.log(err)
+      return null;
   })
 }
 
@@ -106,7 +118,11 @@ function addUser(type, user){
   }).then((type) => {
     if(type) userObj.typeId = type.typeId;
     return models.User.create(userObj).then(user => { return user != null; });
-  });
+  })
+  .catch(function (err) {
+    console.log(err)
+    return null;
+  })
 }
 
 function removeUser(userId){
@@ -116,9 +132,13 @@ function removeUser(userId){
     },
     limit: 1
   }).then((affectedRows) => {
-    if(affectedRows === 1) return true;
+    if(affectedRows === 1) console.log(affectedRows);
     return false;
-  });
+  })
+  .catch(function (err) {
+    console.log(err)
+    return null;
+  })
 }
 
 function userLogin(username,password){
@@ -148,6 +168,10 @@ function userLogin(username,password){
         return {status: false};
     }
   })
+  .catch(function (err) {
+      console.log(err)
+      return null;
+   })
 }
 
 
@@ -191,13 +215,18 @@ function getUserReservationsInclude(){
 }
 
 function updateUser(userId, modifyProperties){
+  console.log(userId)
+  console.log(modifyProperties)
   return models.User.findById(userId)
     .then(user => {
       if(user){
         var updatedModel = {};
         for (var property in modifyProperties) {
           if (modifyProperties.hasOwnProperty(property)) {
-            updatedModel[toCamelCase(property)] = modifyProperties[property];
+              if(property == 'phone')
+                updatedModel["phoneNumber"] = modifyProperties[property]
+              else 
+                updatedModel[toCamelCase(property)] = modifyProperties[property];
           }
         }
            return models.User.update(updatedModel, { where: { userId: userId }, logging: true })
@@ -206,6 +235,10 @@ function updateUser(userId, modifyProperties){
       else{
         return { status: "fail" };
       }
+    })
+    .catch(function (err) {
+        console.log(err)
+        return null;
     })
 }
 

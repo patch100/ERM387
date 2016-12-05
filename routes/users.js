@@ -22,8 +22,8 @@ module.exports = function(app, router, db) {
             // Assume Admin creation initially, implement registration later
 
             var newUser = req.body.user;
-            var user_type = req.body.user_type;
-            var email = req.body.email;
+            var user_type = req.body.user.user_type;
+            var email = req.body.user.email;
             var validator = require('validator');
 
             if (!validator.isEmail(email)) {
@@ -51,6 +51,7 @@ module.exports = function(app, router, db) {
 
         })
         .post(function(req, res) {
+
             db.updateUser(req.params.user_id, req.body.user).then(result => {
                 /*TODO HERE Check if return is true or false*/
                 if (result) {
@@ -64,12 +65,19 @@ module.exports = function(app, router, db) {
         /*Assuming that only admins can delete users for now*/
         .delete(function(req, res) {
             db.removeUser(req.params.user_id).then(result => {
+            /** should be checked if admin before removing from db ? As this would give error
                 if (user_type == "admin") {
-
                     res.json({ status: true, body: "User successfully deleted." });
                 } else {
                     res.json({ status: false, body: "Unable to delete user." });
                 }
+            */
+            if (result) {
+                res.json({ status: true, body: "User successfully deleted." });
+            } else {
+                res.json({ status: false, body: "Unable to delete user." });
+            }
+
             });
 
         })
