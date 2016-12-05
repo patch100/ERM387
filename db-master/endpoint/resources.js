@@ -48,7 +48,6 @@ function getResources(type) {
       for (var i = 0; i < resources.length; i++) {
         var element = {}
         var resource = resources[i];
-
         element = addPropertiesByType(resource);
         element.reservation = getReservation(resource);
         items.push(element);
@@ -58,6 +57,9 @@ function getResources(type) {
     else {
       return null;
     }
+  }).catch(err => {
+    console.log(err);
+    return null;
   });
 }
 
@@ -114,11 +116,13 @@ function getReservationDetail(reservation) {
 
 function addResource(resource) {
   var resourceType = resource.type.charAt(0).toUpperCase() + resource.type.slice(1);
-  var includeObj = getIncludeByType(resourceType);
+  var includeObj = getIncludeByType(resourceType, true);
   var resourceObj = createResourceObj(resourceType, resource);
   return models.Resource.create(resourceObj, { include: includeObj })
     .then(resource => {
       return addPropertiesByType(resource);
+    }).catch(err => {
+      return null;
     });
 }
 
@@ -129,6 +133,8 @@ function removeResource(id) {
     }
   }).then(affectedRows => {
     return true;
+  }).catch(err => {
+    return false;
   });
 }
 
@@ -155,6 +161,7 @@ function createResourceObj(type, resource) {
       resourceObj[type].capacity = resource.capacity;
       resourceObj[type].roomNumber = resource.room_number;
       resourceObj[type].roomType = resource.room_type;
+      break;
     default:
       break;
   }
@@ -184,14 +191,17 @@ function addPropertiesByType(resource) {
       res.capacity = resource.Room.capacity;
       res.room_number = resource.Room.roomNumber;
       res.room_type = resource.Room.roomType;
+      break;
   }
   return res;
 }
 
-function getIncludeByType(type) {
+function getIncludeByType(type, onlyType) {
   var includeObj = [];
-  includeObj.push({ model: models.Reservation, where: { endTime: { $gte: new Date() } }, required: false });
-  includeObj.push({ model: models.ReservationResource, required: false, include: [{ model: models.Reservation, where: { endTime: { $gte: new Date() } }, required: false }] });
+  if(!onlyType){
+    includeObj.push({ model: models.Reservation, where: { endTime: { $gte: new Date() } }, required: false });
+    includeObj.push({ model: models.ReservationResource, required: false, include: [{ model: models.Reservation, where: { endTime: { $gte: new Date() } }, required: false }] });
+  }
   switch (type) {
     case "Computer":
       includeObj.push({ model: models.Computer, required: true });

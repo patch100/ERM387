@@ -12,7 +12,8 @@ module.exports = {
   cancelReservation: cancelReservation
 }
 
-function getRooms(type) {
+function getRooms(type, filters) {
+  var roomFilters = filters || {}
   var typeFilter = type ? { roomType: type } : {};
   return models.Resource.findAll({
     where: {
@@ -60,6 +61,8 @@ function getRooms(type) {
     } else {
       return null;
     }
+  }).catch(err => {
+    return null;
   });
 }
 
@@ -186,7 +189,15 @@ function getRoomById(id) {
         required: false
       }]
   }).then(resource => {
-    return mapResource(resource);
+    if(resource){
+      return mapResource(resource);
+    }
+    else{
+      return null;
+    }
+  })
+  .catch(err => {
+    return null;
   })
 }
 
@@ -251,4 +262,3 @@ function cancelReservation(reservation){
     return {reservationId: reservation.reservationId, resourceId: reservation.resourceId, status:"failed"};
   });
 }
-
