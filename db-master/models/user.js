@@ -6,7 +6,7 @@ module.exports = function(sequelize, DataTypes) {
     firstName : {type: DataTypes.STRING(), allowNull: false, validate: {isAlpha: true}},
     lastName : {type: DataTypes.STRING(), allowNull: false, validate: {isAlpha: true}},
     phoneNumber: {type: DataTypes.STRING(), allowNull: true},
-    email: {type: DataTypes.STRING(), allowNull: false, validate: {isEmail: true}},
+    email: {type: DataTypes.STRING(), allowNull: false, validate: {isEmail: true}, unique: true},
     isAdmin: {type: DataTypes.BOOLEAN(), defaultValue: false, allowNull: false},
     passwordHash: {type: DataTypes.STRING(64), allowNull: false},
     typeId: {type: DataTypes.INTEGER(), allowNull: true}
