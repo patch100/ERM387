@@ -17,7 +17,7 @@ module.exports = {
 }
 
 function getResourceTypes() {
-  return Promise.resolve(['Computer', 'Projector', 'Room', 'WhiteBoard']);
+  return Promise.resolve({status: true, body:['Computer', 'Projector', 'Room', 'WhiteBoard']});
   //We should actually return the defined types.
   //That only sends the types that we have in the db..
   // return models.Resource.findAll({
@@ -53,14 +53,13 @@ function getResources(type) {
         element.reservation = getReservation(resource);
         items.push(element);
       }
-      return items;
+      return {status: true, body: items};
     }
     else {
-      return null;
+      return {status: true, body: []};
     }
   }).catch(err => {
-    console.log(err);
-    return null;
+    return {status: false, body: null};
   });
 }
 
@@ -79,12 +78,14 @@ function getResourceById(id) {
       var mappedResource = {};
       mappedResource = addPropertiesByType(resource);
       mappedResource.reservation = getReservation(resource);
-      return mappedResource;
+      return {status: true, body: mappedResource};
     }
     else {
-      return null;
+      return {status: true, body: {}};
     }
-  })
+  }).catch(err => {
+    return {status: false, body: null}
+  });
 }
 
 function getReservation(resource) {
@@ -121,9 +122,9 @@ function addResource(resource) {
   var resourceObj = createResourceObj(resourceType, resource);
   return models.Resource.create(resourceObj, { include: includeObj })
     .then(resource => {
-      return addPropertiesByType(resource);
+      return {status: true, body: addPropertiesByType(resource)};
     }).catch(err => {
-      return null;
+      return {status: false, body: null};
     });
 }
 
@@ -133,9 +134,9 @@ function removeResource(id) {
       resourceId: id
     }
   }).then(affectedRows => {
-    return true;
+    return {status: true};
   }).catch(err => {
-    return false;
+    return {status: false};
   });
 }
 
@@ -230,9 +231,11 @@ function addResourceReservation(resource, reserveId) {
   if (reserveId != null) {
     return models.ReservationResource.create({ resourceId: resource.resourceId, reservationId: reserveId })
       .then(function (reserve) {
-        var reserveResource = { reserveId: reserve.reservationId, status: "pass" }
-      }).catch(function () {
-        var reserveResource = { reserveId: null, status: "failed" }
+        console.log("HERE");
+        var reserveResource = { body: {id: resource.resourceId}, status: true };
+        return reserveResource;
+      }).catch(function (err) {
+        var reserveResource = { body: {id: resource.resourceId}, status: false }
         return reserveResource;
       });
   }
@@ -243,10 +246,10 @@ function addResourceReservation(resource, reserveId) {
       endTime: resource.endTime,
       userId: resource.user
     }).then(function (reserve) {
-      var reserveResource = { reserveId: reserve.reservationId, status: "pass" }
+      var reserveResource = { body: {id: resource.resourceId}, status: true }
       return reserveResource;
-    }).catch(function () {
-      var reserveResource = { reserveId: null, status: "failed" }
+    }).catch(function (err) {
+      var reserveResource = { body: {id: resource.resourceId}, status: false }
       return reserveResource;
     });
   }
@@ -260,9 +263,9 @@ function cancelReservation(reservation) {
       //If part of a room
       return models.ReservationResource.destroy({ where: { reservationId: reservation.reservationId, resourceId: reservation.resourceId } });
     }).then(() => {
-      return { reservationId: reservation.reservationId, resourceId: reservation.resourceId, status: "pass" };
+      return {status: true, body:{reservationId: reservation.reservationId, resourceId: reservation.resourceId}};
     }).catch((err) => {
-      return { reservationId: reservation.reservationId, resourceId: reservation.resourceId, status: "failed" };
+      return {status: false, body:{reservationId: null, resourceId: reservation.resourceId}};
     });
 }
 
@@ -273,13 +276,13 @@ function update(resourceId, modifyProperties) {
       if (resource) {
         var updatedModel = {};
         for (var property in modifyProperties) {
-          if (modifyProperties.hasOwnProperty(property)) {
+          if (modifyProperties.hasOwnProperty(property) && property != "resource_id" && property != "item_id" && property != "type" && property != "resource_type") {
             updatedModel[toCamelCase(property)] = modifyProperties[property];
           }
         }
         return updateModelByType(resource.resourceType, resource.resourceId, updatedModel);
       } else {
-        return { status: "fail" };
+        return { status: false, body:{id: resourceId} };
       }
     });
 }
@@ -288,7 +291,8 @@ function updateModelByType(type, resourceId, updatedModel) {
   return new Promise((resolve, reject) => {
     switch (type) {
       case "Computer":
-        resolve(models.Computer.update(updatedModel, { where: { resourceId: resourceId }}));
+        console.log(updatedModel);
+        resolve(models.Computer.update(updatedModel, { where: { resourceId: resourceId },  logging:true}));
         break;
       case "WhiteBoard":
         resolve(models.WhiteBoard.update(updatedModel, { where: { resourceId: resourceId } }));
@@ -303,8 +307,8 @@ function updateModelByType(type, resourceId, updatedModel) {
         break;
     }
   })
-    .then(updatedRows => { return { status: "success" }; })
-    .catch((err) => { console.log(err); return { status: "fail" }; });
+    .then(updatedRows => { return { status: true, body: {id: resourceId} }; })
+    .catch((err) => { return { status: true, body: {id: resourceId} }; });
 }
 
 function toCamelCase(str) {
@@ -365,10 +369,13 @@ function getReservations() {
         if (items && items.length) res.items = items;
         reservationsArr.push(res);
       }
-      return reservationsArr;
+      return {status: true, body: reservationsArr};
     } else {
-      return null;
+      return {status: true, body: []};
     }
+  }).catch(err => {
+    console.log(err);
+    return {status: false, body: null}
   });
 }
 
