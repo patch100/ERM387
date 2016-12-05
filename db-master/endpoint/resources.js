@@ -21,8 +21,8 @@ function getResourceTypes() {
   //We should actually return the defined types.
   //That only sends the types that we have in the db..
   // return models.Resource.findAll({
-  //   attributes: ['resourceType'], 
-  //   group: ['resourceType']  
+  //   attributes: ['resourceType'],
+  //   group: ['resourceType']
   // }).then(resources => {
   //   var mappedResources = [];
   //   if(resources){
@@ -153,7 +153,8 @@ function createResourceObj(type, resource) {
       resourceObj[type].length = resource.length;
       resourceObj[type].width = resource.width;
       resourceObj[type].capacity = resource.capacity;
-      resourceObj[type].roomNumber = resource.roomNumber;
+      resourceObj[type].roomNumber = resource.room_number;
+      resourceObj[type].roomType = resource.room_type;
     default:
       break;
   }
