@@ -18,10 +18,10 @@ module.exports = {
 
 function getUserTypes(){
   return models.UserType.findAll({attributes:['typeName'], group:['typeName']})
-  .then((types) => {return types.map(type => {return type.typeName})})
+  .then((types) => {return {status: true, body: types.map(type => {return type.typeName})}})
     .catch(function (err) {
         console.log(err)
-        return null;
+        return {status: false, body: null}
     })
 }
 
@@ -33,7 +33,7 @@ function getUsers(){
         var reservations = [];
         if(user.Reservations) reservations = getReservations(user.Reservations);
         return {
-          userId:user.userId,
+          user_id:user.userId,
           first_name: user.firstName,
           last_name: user.lastName,
           email: user.email,
@@ -43,12 +43,14 @@ function getUsers(){
           reservations: reservations
         }
       });
-      return mappedUsers;
+      return {status: true, body: mappedUsers};
+    }else{
+      return {status: true, body: []}
     }
   })
   .catch(function (err) {
       console.log(err)
-      return null;
+      return {status: false, body:null}
   })
 }
 
@@ -72,12 +74,15 @@ function getUserById(id){
         type: user.UserType.typeName,
         reservations: reservations
       }
+      return {status: true, body: mappedUser}
     }
-    return mappedUser;
+    else{
+      return {status: false, body: null}
+    }
   })
   .catch(function (err) {
       console.log(err)
-      return null;
+      return {status: false, body: null}
   })
 }
 
@@ -117,11 +122,16 @@ function addUser(type, user){
     }
   }).then((type) => {
     if(type) userObj.typeId = type.typeId;
-    return models.User.create(userObj).then(user => { return user != null; });
+    return models.User.create(userObj).then(user => {
+      if(user){
+        return {status: true};
+      }else{
+        return {status: false};
+      }
+    });
   })
   .catch(function (err) {
-    console.log(err)
-    return null;
+    return {status: false};
   })
 }
 
@@ -132,12 +142,12 @@ function removeUser(userId){
     },
     limit: 1
   }).then((affectedRows) => {
-    if(affectedRows === 1) console.log(affectedRows);
-    return false;
+    if(affectedRows === 1)
+      return {status: true};
+    return {status: false}
   })
   .catch(function (err) {
-    console.log(err)
-    return null;
+    return {status: false};
   })
 }
 
@@ -169,7 +179,6 @@ function userLogin(username,password){
     }
   })
   .catch(function (err) {
-      console.log(err)
       return null;
    })
 }
@@ -215,30 +224,28 @@ function getUserReservationsInclude(){
 }
 
 function updateUser(userId, modifyProperties){
-  console.log(userId)
-  console.log(modifyProperties)
   return models.User.findById(userId)
     .then(user => {
       if(user){
         var updatedModel = {};
         for (var property in modifyProperties) {
-          if (modifyProperties.hasOwnProperty(property)) {
+          if (modifyProperties.hasOwnProperty(property) && property != "user_id" && property != "is_admin") {
               if(property == 'phone')
                 updatedModel["phoneNumber"] = modifyProperties[property]
-              else 
+              else
                 updatedModel[toCamelCase(property)] = modifyProperties[property];
           }
         }
            return models.User.update(updatedModel, { where: { userId: userId }, logging: true })
-                  .then(updatedRows =>{return {status: "pass" };})
+                  .then(updatedRows =>{return {status: true };})
       }
       else{
-        return { status: "fail" };
+        return { status: false };
       }
     })
     .catch(function (err) {
-        console.log(err)
-        return null;
+      console.log(err);
+        return {status: false };
     })
 }
 
