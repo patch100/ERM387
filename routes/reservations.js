@@ -49,7 +49,7 @@ module.exports = function(app, router, db) {
             //return all users
 
             try {
-                db.getReservationsById(req.params.reservation_id)
+                db.getReservationById(req.params.reservation_id)
                     .then(reservation => {
 
                         if (reservation == null) {
