@@ -72,33 +72,30 @@ module.exports = function(app, router, db) {
                     $lt: filters.date_end
                 };
             } */
-            db.getResourcesByType( /* filters, */ req.params.type)
-                .then(resources => {
-                    if (resources.status) {
-                        result = {
-                            status: true,
-                            body: {
-                                resources: []
+            if (resource_types.indexOf(req.params.type) > -1) {
+                db.getResourcesByType( /* filters, */ req.params.type)
+                    .then(resources => {
+                        if (resources.status && resources.body) {
+                            result = { status: true, body: { resources: [] } }
+                            for (var resource of resources.body) {
+                                resource.it_resource = resource.is_it;
+                                delete resource.is_it;
+                                for (reservation of resource.reservations) {
+                                    reservation.date_start = Date.parse(reservation.start_time);
+                                    reservation.date_end = Date.parse(reservation.end_time);
+                                    delete reservation.start_time;
+                                    delete reservation.end_time;
+                                }
+                                result.body.resources.push(resource);
                             }
+                            res.json(result)
+                        } else {
+                            res.json({ status: false, body: { error: "Failed to retrieve resources." } })
                         }
-                        for (var resource of resources.body.resource) {
-                            resource.it_resouce = resource.is_it;
-                            delete resource.is_it;
-                            resource.reservations = resource.reservation;
-                            delete resource.reservation;
-
-                            for (reservation of resource.reservations) {
-                                reservation.date_start = Date.parse(reservation.start_time);
-                                reservation.date_end = Date.parse(reservation.end_time);
-                                delete reservation.start_time;
-                                delete reservation.end_time;
-                            }
-                            result.body.resources.push(resource);
-                        }
-                    } else {
-                        res.json({ status: false, body: { error: "Failed to retrieve resources." } })
-                    }
-                });
+                    });
+            } else {
+                res.json({ status: false, body: { error: "Invalid Resource Type" } });
+            }
         });
 
 
