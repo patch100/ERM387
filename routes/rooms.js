@@ -103,6 +103,13 @@ module.exports = function(app, router, db) {
                             result.body.rooms.push(room);
                         }
                         res.json(result)
+                    } else {
+                        res.json({
+                            status: false,
+                            body: {
+                                error: "No match found."
+                            }
+                        })
                     }
                 })
         });
@@ -134,10 +141,34 @@ module.exports = function(app, router, db) {
                 };
             }
             db.getRoomById( /* filters, */ req.params.room_id)
-                .then(room => res.json({
-                    status: true,
-                    body: room
-                }));
+                .then(room => {
+                    //massage variables to match doc
+                    if (room.status) {
+
+                        if (room.body.reservations) {
+                            for (var resource of room.body.reservations) {
+                                if (resource.start_time) {
+                                    resource["date_start"] = Date.parse(resource.start_time);
+                                    delete resource.start_time;
+                                }
+                                if (resource.end_time) {
+                                    resource["date_end"] = Date.parse(resource.end_time);
+                                    delete resource.end_time;
+                                }
+                            }
+                        }
+                        res.json(room)
+                    } else {
+                        res.json({
+                            status: false,
+                            body: {
+                                error: "No match found."
+                            }
+                        })
+                    }
+
+
+                });
         })
         .post(function(req, res) {
             db.updateResource(req.params.room_id, req.body.room).then(result => {
