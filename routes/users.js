@@ -7,14 +7,45 @@ module.exports = function(app, router, db) {
             //return all users
             var filters = req.query;
 
-            //TODO prefix email?
+            //TODO check for room_id in reservations
 
             db.getUsers( /*filters*/ )
-                .then(users => res.json({
-                    status: true,
-                    body: users
-                }))
-
+                .then(users => {
+                    var result = {};
+                    result["status"] = true;
+                    result["body"] = {
+                        "users": []
+                    }
+                    for (var user of users) {
+                        //massage variables to match doc
+                        if (user.userId) {
+                            user["id"] = user.userId;
+                            delete user.userId;
+                        }
+                        if (user.phone_number) {
+                            user["phone"] = user.phone_number;
+                            delete user.phone_number;
+                        }
+                        if (user.reservations) {
+                            for (var resource of user.reservations) {
+                                if (resource.id) {
+                                    resource["resource_id"] = resource.id;
+                                    delete resource.id;
+                                }
+                                if (resource.start_time) {
+                                    resource["date_start"] = Date.parse(resource.start_time);
+                                    delete resource.start_time;
+                                }
+                                if (resource.end_time) {
+                                    resource["date_end"] = Date.parse(resource.end_time);
+                                    delete resource.end_time;
+                                }
+                            }
+                        }
+                        result.body.users.push(user);
+                    }
+                    res.json(result)
+                })
         })
         .post(function(req, res) {
             // TODO: Create a new user
@@ -22,15 +53,25 @@ module.exports = function(app, router, db) {
             // Assume Admin creation initially, implement registration later
 
             var newUser = req.body.user;
-            var user_type = req.body.user.user_type;
+            var user_type = req.body.user.type;
             var email = req.body.user.email;
             var validator = require('validator');
-
+            newUser["password"] = "root";
             if (!validator.isEmail(email)) {
-                res.json({ status: false, body: "The email provided is an invalid format." });
+                res.json({
+                    status: false,
+                    body: {
+                        "message": "The email provided is an invalid format."
+                    }
+                });
             } else {
                 db.addUser(user_type, newUser).then(result => {
-                    res.json({ status: true, body: "Successfully Created User" });
+                    res.json({
+                        status: true,
+                        body: {
+                            "message": "Successfully created user!"
+                        }
+                    });
                 });
             }
         });
@@ -41,13 +82,44 @@ module.exports = function(app, router, db) {
             //return user with req.params.user_type and req.params.user_id *** not sure if needed
 
             var filters = req.query;
-            //TODO prefix email?
+
+            //TODO check for room_id in reservations
 
             db.getUserById( /*filters, */ req.params.user_id)
-                .then(user => res.json({
-                    status: true,
-                    body: user
-                }))
+                .then(user => {
+                    var result = {};
+                    result["status"] = true;
+                    result["body"] = {
+                            "user": {}
+                        }
+                        //massage variables to match doc
+
+
+                    user["id"] = req.params.user_id;
+
+                    if (user.phone_number) {
+                        user["phone"] = user.phone_number;
+                        delete user.phone_number;
+                    }
+                    if (user.reservations) {
+                        for (var resource of user.reservations) {
+                            if (resource.id) {
+                                resource["resource_id"] = resource.id;
+                                delete resource.id;
+                            }
+                            if (resource.start_time) {
+                                resource["date_start"] = Date.parse(resource.start_time);
+                                delete resource.start_time;
+                            }
+                            if (resource.end_time) {
+                                resource["date_end"] = Date.parse(resource.end_time);
+                                delete resource.end_time;
+                            }
+                        }
+                    }
+                    result.body.user = user;
+                    res.json(result)
+                })
 
         })
         .post(function(req, res) {
@@ -55,9 +127,19 @@ module.exports = function(app, router, db) {
             db.updateUser(req.params.user_id, req.body.user).then(result => {
                 /*TODO HERE Check if return is true or false*/
                 if (result) {
-                    res.json({ status: true, body: "User successfully modified." });
+                    res.json({
+                        status: true,
+                        body: {
+                            "message": "User was successfully modified!"
+                        }
+                    });
                 } else {
-                    res.json({ status: false, body: "We're sorry, the specified user could not be modified." });
+                    res.json({
+                        status: false,
+                        body: {
+                            "message": "Were sorry the user could not be modified"
+                        }
+                    });
                 }
             })
         })
@@ -65,18 +147,24 @@ module.exports = function(app, router, db) {
         /*Assuming that only admins can delete users for now*/
         .delete(function(req, res) {
             db.removeUser(req.params.user_id).then(result => {
-            /** should be checked if admin before removing from db ? As this would give error
-                if (user_type == "admin") {
-                    res.json({ status: true, body: "User successfully deleted." });
+                /** should be checked if admin before removing from db ? As this would give error
+                    if (user_type == "admin") {
+                        res.json({ status: true, body: "User successfully deleted." });
+                    } else {
+                        res.json({ status: false, body: "Unable to delete user." });
+                    }
+                */
+                if (result) {
+                    res.json({
+                        status: true,
+                        body: "User successfully deleted."
+                    });
                 } else {
-                    res.json({ status: false, body: "Unable to delete user." });
+                    res.json({
+                        status: false,
+                        body: "Unable to delete user."
+                    });
                 }
-            */
-            if (result) {
-                res.json({ status: true, body: "User successfully deleted." });
-            } else {
-                res.json({ status: false, body: "Unable to delete user." });
-            }
 
             });
 

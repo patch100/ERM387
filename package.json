@@ -1,20 +1,21 @@
 {
-  "name"         : "Soen387Final",
-  "version"      : "0.0.1",
-  "main"         : "server.js",
-  "scripts": {
-      "start": "nodemon server.js"
+    "name": "Soen387Final",
+    "version": "0.0.1",
+    "main": "server.js",
+    "scripts": {
+        "start": "nodemon server.js"
     },
-  "dependencies" : {
-    "express"    : "*",
-    "nodemon"    : "*",
-    "body-parser": "*",
-    "mysql": "^2.11.1",
-    "sequelize": "^3.24.8",
-    "sequelize-cli": "^2.4.0",
-    "sqlite3": "*",
-    "dotenv": "*",
-    "cookies": "*",
-    "jsonwebtoken": "*"
-  }
+    "dependencies": {
+        "express": "*",
+        "nodemon": "*",
+        "body-parser": "*",
+        "mysql": "^2.11.1",
+        "sequelize": "^3.24.8",
+        "sequelize-cli": "^2.4.0",
+        "sqlite3": "*",
+        "dotenv": "*",
+        "cookies": "*",
+        "jsonwebtoken": "*",
+        "validator": "*"
+    }
 }
