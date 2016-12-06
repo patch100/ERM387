@@ -1,7 +1,5 @@
 module.exports = function(app, router, db) {
-
     var resource_types = ['Computer', 'Projector', 'Room', 'WhiteBoard'];
-
     router.route('/inventory')
         .get(function(req, res) {
             //return all inventory items
@@ -149,29 +147,68 @@ module.exports = function(app, router, db) {
                     if (resp.status) {
                         res.json({ status: true, body: { message: "Successfully deleted the Resouce." } });
                     } else {
-                        res.json({status: false, body: { error: "Deleting resource failed." } });
+                        res.json({ status: false, body: { error: "Deleting resource failed." } });
                     }
                 });
         });
 
     router.route('/inventory/reserve')
         .post(function(req, res) {
-
-            db.addResourceReservation(req.body, null)
-                .then(resp => res.json({
-                    status: true,
-                    body: resp
-                }));
+            var creation = {
+                resourceId: req.body.resource_id,
+                startTime: new Date(req.body.date_start),
+                endTime: new Date(req.body.date_end),
+                user: req.body.user_id
+            }
+            db.addResourceReservation(creation, null).then(
+                resp => {
+                    if (resp.status) {
+                        res.json({
+                            status: true,
+                            body: {
+                                message: "Successfully reserved the resource",
+                                failed: [],
+                                reservation_id: resp.body.id
+                            }
+                        });
+                    } else {
+                        res.json({
+                            status: false,
+                            body: {
+                                error: "Failed to reserve the resource.",
+                                failed: [resp.body.id]
+                            }
+                        });
+                    }
+                });
         });
 
-    router.route('/inventory/cancel')
-        .post(function(req, res) {
-            //return all inventory items
-
-            db.cancelReservation(req.body)
-                .then(resp => res.json({
-                    status: true,
-                    body: resp
-                }));
-        });
+    router.route('/inventory/cancel').post(function(req, res) {
+        var creation = {
+            reservationId: req.body.reservation_id
+        }
+        db.cancelReservation(creation).then(
+            resp => {
+                if (resp.status) {
+                    res.json({
+                        status: true,
+                        body: {
+                            reservation_id: resp.body.reservationId,
+                            resource_id: resp.body.resourceId,
+                            message: "Successfully cancelled the reservation.",
+                            failed: []
+                        }
+                    });
+                } else {
+                    res.json({
+                        status: false,
+                        body: {
+                            resource_id: resp.body.resourceId,
+                            failed: [resp.body.reservationId],
+                            error: "Reservation cancellation failed"
+                        }
+                    });
+                }
+            });
+    });
 }
