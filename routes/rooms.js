@@ -56,11 +56,26 @@ module.exports = function(app, router, db) {
             //add item to DB with req.params.room_type and req.params.room_id
             // check the body for all the parameter. Needs to be sanitized.
             // check for Resources in the room.
+            console.log(req.body);
             db.addResource(req.body.room)
-                .then(resp => res.json({
-                    status: true,
-                    body: "Room created"
-                }))
+                .then(resp => {
+                    console.log(resp);
+                    if (resp.status) {
+                        res.json({
+                            status: true,
+                            body: {
+                                "message": "Room was successfully created!"
+                            }
+                        });
+                    } else {
+                        res.json({
+                            status: false,
+                            body: {
+                                "message": "Were sorry the room could not be created"
+                            }
+                        });
+                    }
+                })
         });
 
     router.route('/rooms/:room_type')
@@ -172,27 +187,45 @@ module.exports = function(app, router, db) {
         })
         .post(function(req, res) {
             db.updateResource(req.params.room_id, req.body.room).then(result => {
-                if (result) {
-
+                if (result.status) {
                     res.json({
                         status: true,
-                        body: "Successfully modified Room."
+                        body: {
+                            "message": "Room was successfully modified!"
+                        }
                     });
                 } else {
                     res.json({
                         status: false,
-                        body: "There was an error in modifiying Room."
+                        body: {
+                            "message": "Were sorry the room could not be modified"
+                        }
                     });
                 }
             })
         })
         .delete(function(req, res) {
             //Delete item from DB with req.params.room_type and req.params.room_id
-            db.removeRoom(req.params.room_id)
-                .then(resp => res.json({
-                    status: true,
-                    body: resp
-                }))
+            db.removeResource(req.params.room_id)
+                .then(resp => {
+                    if (resp.status) {
+                        res.json({
+                            status: true,
+                            body: {
+                                "message": "Room was successfully deleted!"
+                            }
+                        });
+                    } else {
+                        res.json({
+                            status: false,
+                            body: {
+                                "message": "Were sorry the room could not be deleted"
+                            }
+                        });
+                    }
+
+
+                })
         });
 
 
