@@ -230,13 +230,16 @@ function updateUser(userId, modifyProperties){
         var updatedModel = {};
         for (var property in modifyProperties) {
           if (modifyProperties.hasOwnProperty(property) && property != "user_id" && property != "is_admin") {
-              if(property == 'phone')
+              if(property == 'password'){
+                updatedModel["passwordHash"] = crypto.createHash('sha256').update(modifyProperties[property]).digest("hex");
+              }
+              else if(property == 'phone')
                 updatedModel["phoneNumber"] = modifyProperties[property]
               else
                 updatedModel[toCamelCase(property)] = modifyProperties[property];
           }
         }
-           return models.User.update(updatedModel, { where: { userId: userId }, logging: true })
+           return models.User.update(updatedModel, { where: { userId: userId }})
                   .then(updatedRows =>{return {status: true };})
       }
       else{
