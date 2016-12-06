@@ -70,12 +70,24 @@ module.exports = function(app, router, db) {
                 });
             } else {
                 db.addUser(user_type, newUser).then(result => {
-                    res.json({
-                        status: true,
-                        body: {
-                            "message": "Successfully created user!"
-                        }
-                    });
+
+                    if (result.status) {
+                        res.json({
+                            status: true,
+                            body: {
+                                "message": "Successfully created user!"
+                            }
+                        });
+                    } else {
+                        res.json({
+                            status: false,
+                            body: {
+                                "message": "Were sorry the user could not be created"
+                            }
+                        });
+                    }
+
+
                 });
             }
         });
@@ -126,7 +138,7 @@ module.exports = function(app, router, db) {
 
             db.updateUser(req.params.user_id, req.body.user).then(result => {
                 /*TODO HERE Check if return is true or false*/
-                if (result) {
+                if (result.status) {
                     res.json({
                         status: true,
                         body: {
@@ -154,7 +166,7 @@ module.exports = function(app, router, db) {
                         res.json({ status: false, body: "Unable to delete user." });
                     }
                 */
-                if (result) {
+                if (result.status) {
                     res.json({
                         status: true,
                         body: {
