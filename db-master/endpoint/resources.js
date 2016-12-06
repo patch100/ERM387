@@ -369,53 +369,48 @@ function getReservations() {
 }
 
 function getReservationById(reservationId) {
-  return models.Reservation.findOne({
-    include: [
-      {
-        model: models.ReservationResource,
-        include: [
-          {
+    return models.Reservation.findOne({
+        include: [{
+            model: models.ReservationResource,
+            include: [{
+                model: models.Resource,
+                include: [
+                    { model: models.Room, required: false },
+                    { model: models.Computer, required: false },
+                    { model: models.WhiteBoard, required: false },
+                    { model: models.Projector, required: false }
+                ],
+                required: false
+            }],
+        }, {
             model: models.Resource,
             include: [
-              { model: models.Room, required: false },
-              { model: models.Computer, required: false },
-              { model: models.WhiteBoard, required: false },
-              { model: models.Projector, required: false }
+                { model: models.Room, required: false },
+                { model: models.Computer, required: false },
+                { model: models.WhiteBoard, required: false },
+                { model: models.Projector, required: false }
             ],
             required: false
-          }
-        ],
-      },
-      {
-        model: models.Resource,
-        include: [
-          { model: models.Room, required: false },
-          { model: models.Computer, required: false },
-          { model: models.WhiteBoard, required: false },
-          { model: models.Projector, required: false }
-        ],
-        required: false
-      }
-    ],
-    where: {
-      reservationId: reservationId
-    }
-  }).then(reservation => {
-    if (reservation) {
-      var res = addPropertiesByType(reservation.Resource);
-      res.reservation_id = reservation.reservationId;
-      res.start_time = reservation.startTime;
-      res.end_time = reservation.endTime;
-      res.user_id = reservation.userId;
+        }],
+        where: {
+            reservationId: reservationId
+        }
+    }).then(reservation => {
+        if (reservation) {
+            var res = addPropertiesByType(reservation.Resource);
+            res.reservation_id = reservation.reservationId;
+            res.start_time = reservation.startTime;
+            res.end_time = reservation.endTime;
+            res.user_id = reservation.userId;
 
-      var items = [];
-      for (var i = 0; i < reservation.ReservationResources.length; i++) {
-        items.push(addPropertiesByType(reservation.ReservationResources[i].Resource));
-      }
-      if (items && items.length) res.items = items;
-      return res;
-    } else {
-      return null;
-    }
-  });
+            var items = [];
+            for (var i = 0; i < reservation.ReservationResources.length; i++) {
+                items.push(addPropertiesByType(reservation.ReservationResources[i].Resource));
+            }
+            if (items && items.length) res.items = items;
+            return { status: true, body: res };
+        } else {
+            return { status: true, body: null };
+        }
+    });
 }
