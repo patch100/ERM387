@@ -1,5 +1,7 @@
 module.exports = function(app, router, db) {
 
+    var resource_types = ['Computer', 'Projector', 'Room', 'WhiteBoard'];
+
     router.route('/inventory')
         .get(function(req, res) {
             //return all inventory items
