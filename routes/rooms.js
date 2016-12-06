@@ -129,6 +129,7 @@ module.exports = function(app, router, db) {
                 })
         });
 
+    //TODO do we remove this????
     router.route('/rooms/items/:room_id') // REFACTOR: we want consistency, :room_id should come after items
         .get(function(req, res) {
             //return room with req.params.room_type and req.params.room_id
@@ -256,8 +257,8 @@ module.exports = function(app, router, db) {
             result = {
                 "equipments": []
             }
-
-            db.addReservation(req.body)
+            console.log(req.body);
+            db.addRoomReservation(req.body)
                 .then(rooms => result["reserve_id"] = rooms.reserveId).then(() => {
                     var equipments = []
                     if (req.body.equipments) {
@@ -280,16 +281,24 @@ module.exports = function(app, router, db) {
                         body: result
                     })
                 });
-
         });
 
     router.route('/rooms/cancel')
         .post(function(req, res) {
             db.cancelReservation(req.body.reservation_id)
-                .then(resp => res.json({
-                    status: true,
-                    body: resp
-                }));
+                .then(resp => {
+                    if (resp.status) {
+                        res.json({
+                            status: true,
+                            body: resp
+                        });
+                    } else {
+                        res.json({
+                            status: false,
+                            body: resp
+                        });
+                    }
+                });
         });
 
 }
