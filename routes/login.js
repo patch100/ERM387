@@ -19,6 +19,7 @@ router.route('/login')
                                 status: true,
                                 body: {
                                     message: "Successful Login!",
+                                    userId: responseObject.id,
                                     isAdmin: responseObject.is_admin
                                 } // ***************************************
                             });
