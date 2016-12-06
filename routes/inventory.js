@@ -38,17 +38,27 @@ module.exports = function(app, router, db) {
                         res.json({ status: false, body: { error: "No match found." } });
                     }
                 })
-        .post(function(req, res) {
-            try {
-                db.addResource(req.body.resource).then(
-                    resp => {
-                        res.json({ status: true, body: { message: "Successfully created a new Resource." } })
-                    })
-            } catch (e) {
-                res.json({ status: false, body: { error: "Failed to create the Resource." } })
+        }).post(function(req, res) {
+            if (resource_types.indexOf(req.body.resource.type) === -1) {
+                return res.json({ status: false, body: { message: "Wrong Resource Type." } });
             }
-        });
+            creation = req.body.resource;
+            creation.is_it = creation.it_resource;
+            delete creation.it_resource;
+            if (creation.type === "WhiteBoard") {
+                creation.isPrintable = creation.printable;
+                delete creation.printable;
+            }
 
+            db.addResource(creation).then(
+                resp => {
+                    if (resp.status) {
+                        res.json({ status: true, body: { message: "Successfully created a new Resource." } });
+                    } else {
+                        res.json({ status: false, body: { message: "Failed to create the Resource." } });
+                    }
+                });
+        });
 
     router.route('/inventory/:type')
         .get(function(req, res) {
