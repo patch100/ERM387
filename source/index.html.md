@@ -774,7 +774,8 @@ room_number | null | Prefix of the room number
 ```json
 {
   "room": {
-    "type": "string",
+    "type": "string", //resource type (Room)
+    "room_type" : "string", //specific room type
     "height": "decimal",
     "width": "decimal",
     "length": "decimal",
