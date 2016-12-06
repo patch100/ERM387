@@ -133,22 +133,16 @@ module.exports = function(app, router, db) {
             } else {
                 res.json({ status: false, body: { error: "Invalid Resource Type" } });
             }
+        }).post(function(req, res) {
             // checks if the resource has an ID.
             //if(db.getResourceById(req.params.resource_id) == req.body.resource_id){
             db.updateResource(req.params.resource_id, req.body.resource).then(resp => {
                 if (resp) {
-                    res.json({ status: true, body: "Successfully modified the Resource." });
+                    res.json({ status: true, body: { message: "Successfully modified the Resource." } });
                 } else {
-                    res.json({ status: false, body: "There was an error in modifying the Resource." });
+                    res.json({ status: false, body: { error: "There was an error in modifying the Resource." } });
                 }
-            })
-        })
-
-    .delete(function(req, res) {
-        db.removeResource(req.params.resource_id)
-            .then(resp => res.json({ status: true, body: "Successfully deleted the Resouce." }));
-        //Delete item from DB req.params.resource_type and req.params.resource_id
-    });
+            });
 
     router.route('/inventory/reserve')
         .post(function(req, res) {
