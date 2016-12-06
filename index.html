@@ -182,7 +182,7 @@ A generic error will be returned.
     </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"users"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
             </span><span class="p">{</span><span class="w">
-                </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+                </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
                 </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
                 </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string@email.com"</span><span class="p">,</span><span class="w">
                 </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
@@ -193,7 +193,6 @@ A generic error will be returned.
                   </span><span class="p">{</span><span class="w">
                     </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
                     </span><span class="nt">"resource_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
-                    </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
                     </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
                     </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
                     </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="w">
@@ -252,7 +251,7 @@ A generic error will be returned.
 <h2 id="get-a-specific-user">Get a Specific User</h2>
 
 <blockquote>
-<p><code class="prettyprint">GET /users/:id</code></p>
+<p><code class="prettyprint">GET /users/:user_id</code></p>
 
 <p>Response JSON:</p>
 </blockquote>
@@ -260,7 +259,7 @@ A generic error will be returned.
     </span><span class="nt">"status"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
     </span><span class="nt">"body"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
         </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
-          </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string@email.com"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
@@ -271,8 +270,6 @@ A generic error will be returned.
             </span><span class="p">{</span><span class="w">
               </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
               </span><span class="nt">"resource_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
-              </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
-              </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
               </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
               </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="w">
             </span><span class="p">},</span><span class="w">
@@ -284,6 +281,12 @@ A generic error will be returned.
 </span></code></pre>
 
 <p>This endpoint retrieves a specific user.</p>
+
+<aside class="success">
+<BR>
+date_start and date_end format is epoch time
+<BR>
+</aside>
 
 <p>If <code class="prettyprint">users</code> or <code class="prettyprint">reservations</code> is empty: [ ]</p>
 
@@ -346,9 +349,10 @@ A generic error will be returned.
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
+    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string@email.com"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">Unique</span><span class="w">
+    </span><span class="nt">"password"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">Password</span><span class="w">
     </span><span class="nt">"first_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"last_name"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"email"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string@email.com"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"phone"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"is_admin"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
     </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="w">
@@ -369,10 +373,6 @@ A generic error will be returned.
 
 <p>This endpoint creates a user.</p>
 
-<aside class="success">
-  On success, we could also return the newly created User? (with new ID etc.)
-</aside>
-
 <aside class="warning">
   On failure, returns a generic error.
 </aside>
@@ -380,7 +380,7 @@ A generic error will be returned.
 <aside class="notice">
   We should have a registration page/flow.
   <BR>
-  When successful, a confirmation link should be sent via email.
+  When successful, a confirmation link could be sent via email.
   <BR>
   To activate the account, the user should follow the link.
   <BR>
@@ -390,7 +390,7 @@ A generic error will be returned.
 <h2 id="modify-a-user">Modify a User</h2>
 
 <blockquote>
-<p><code class="prettyprint">POST /users/:id</code></p>
+<p><code class="prettyprint">POST /users/:user_id</code></p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"user"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
@@ -433,7 +433,7 @@ You cannot modify reservations in this way.</p>
 <h2 id="delete-a-user">Delete a User</h2>
 
 <blockquote>
-<p><code class="prettyprint">DELETE /users/:id</code></p>
+<p><code class="prettyprint">DELETE /users/:user_id</code></p>
 
 <p>Response JSON:</p>
 </blockquote>
@@ -474,17 +474,19 @@ You cannot modify reservations in this way.</p>
   </span><span class="nt">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"resource_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"it_resource"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="err">//</span><span class="w"> </span><span class="err">Optional</span><span class="w"> </span><span class="err">(depends</span><span class="w"> </span><span class="err">on</span><span class="w"> </span><span class="err">type</span><span class="w"> </span><span class="err">of</span><span class="w"> </span><span class="err">Resource)</span><span class="w">
         </span><span class="nt">"operating_system"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"ram"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"storage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"printable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
         </span><span class="nt">"available"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"it_resource"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
         </span><span class="nt">"reservations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
           </span><span class="p">{</span><span class="w">
             </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
             </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+            </span><span class="err">//</span><span class="w"> </span><span class="err">epoch</span><span class="w"> </span><span class="err">time</span><span class="w"> </span><span class="err">==&gt;</span><span class="w"> </span><span class="err">date_string</span><span class="w">
             </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
             </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="w">
           </span><span class="p">},</span><span class="w">
@@ -571,17 +573,19 @@ You cannot modify reservations in this way.</p>
   </span><span class="nt">"resources"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
         </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"resource_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+        </span><span class="nt">"it_resource"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+        </span><span class="err">//</span><span class="w"> </span><span class="err">Optional</span><span class="w">
         </span><span class="nt">"operating_system"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"ram"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"storage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"printable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
         </span><span class="nt">"available"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-        </span><span class="nt">"it_resource"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
         </span><span class="nt">"reservations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
           </span><span class="p">{</span><span class="w">
             </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
             </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+            </span><span class="err">//</span><span class="w"> </span><span class="err">Epoch</span><span class="w"> </span><span class="err">time</span><span class="w">
             </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
             </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="w">
           </span><span class="p">},</span><span class="w">
@@ -667,7 +671,7 @@ You cannot modify reservations in this way.</p>
 <h2 id="get-a-specific-resource">Get a Specific Resource</h2>
 
 <blockquote>
-<p><code class="prettyprint">GET /inventory/:type/:id</code></p>
+<p><code class="prettyprint">GET /inventory/:type/:resource_id</code></p>
 
 <p>The possible types are: Projector or Computer or Whiteboard
 The id is the resource_id</p>
@@ -677,17 +681,19 @@ The id is the resource_id</p>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"resource_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"it_resource"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="err">Optional</span><span class="w">
     </span><span class="nt">"operating_system"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"ram"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"storage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"printable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
     </span><span class="nt">"available"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"it_resource"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
     </span><span class="nt">"reservations"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
       </span><span class="p">{</span><span class="w">
         </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+        </span><span class="err">//</span><span class="w"> </span><span class="err">Epoch</span><span class="w"> </span><span class="err">time</span><span class="w">
         </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
         </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="w">
       </span><span class="p">},</span><span class="w">
@@ -776,10 +782,12 @@ The id is the resource_id</p>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"resource"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
+    </span><span class="nt">"it_resource"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="err">Optional</span><span class="w"> </span><span class="err">(depends</span><span class="w"> </span><span class="err">on</span><span class="w"> </span><span class="err">type)</span><span class="w">
     </span><span class="nt">"ram"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"storage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"operating_system"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
-    </span><span class="nt">"it_resource"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+    </span><span class="nt">"printable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
   </span><span class="p">}</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -875,9 +883,9 @@ Reservation information cannot be modified via this endpoint.</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"resource_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+  </span><span class="err">//</span><span class="w"> </span><span class="err">Epoch</span><span class="w"> </span><span class="err">time</span><span class="w">
   </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
@@ -886,7 +894,8 @@ Reservation information cannot be modified via this endpoint.</p>
 <p>Response JSON:</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully reserved the resource."</span><span class="w">
+  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully reserved the resource."</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"failed"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w"> </span><span class="p">]</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
@@ -958,7 +967,7 @@ Deletes the entry of the reservation in the table.</p>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"rooms"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
     </span><span class="p">{</span><span class="w">
-      </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+      </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"height"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"width"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
@@ -969,7 +978,6 @@ Deletes the entry of the reservation in the table.</p>
         </span><span class="p">{</span><span class="w">
           </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"equipments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
@@ -980,7 +988,6 @@ Deletes the entry of the reservation in the table.</p>
               </span><span class="nt">"ram"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
               </span><span class="nt">"storage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
               </span><span class="nt">"printable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-              </span><span class="nt">"available"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
               </span><span class="nt">"it_resource"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
             </span><span class="err">}</span><span class="p">,</span><span class="w">
             </span><span class="err">//...</span><span class="w">
@@ -988,7 +995,7 @@ Deletes the entry of the reservation in the table.</p>
         </span><span class="p">},</span><span class="w">
         </span><span class="err">//...</span><span class="w">
       </span><span class="p">],</span><span class="w">
-      </span><span class="nt">"available"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+      </span><span class="nt">"available"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">Optional</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="err">//...</span><span class="w">
   </span><span class="p">]</span><span class="w">
@@ -1074,7 +1081,7 @@ Deletes the entry of the reservation in the table.</p>
 <p>Response JSON:</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+  </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"height"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"width"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
@@ -1085,26 +1092,26 @@ Deletes the entry of the reservation in the table.</p>
     </span><span class="p">{</span><span class="w">
       </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
-      </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"equipments"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">
         </span><span class="p">{</span><span class="w">
           </span><span class="nt">"type"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"resource_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"it_resource"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
+          </span><span class="err">//</span><span class="w"> </span><span class="err">Optional</span><span class="w">
           </span><span class="nt">"operating_system"</span><span class="p">:</span><span class="w"> </span><span class="s2">"string"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"ram"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"storage"</span><span class="p">:</span><span class="w"> </span><span class="s2">"decimal"</span><span class="p">,</span><span class="w">
           </span><span class="nt">"printable"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"available"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-          </span><span class="nt">"it_resource"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="p">,</span><span class="w">
-        </span><span class="err">}</span><span class="p">,</span><span class="w">
+          </span><span class="nt">"available"</span><span class="p">:</span><span class="w"> </span><span class="kc">false</span><span class="w">
+        </span><span class="p">},</span><span class="w">
         </span><span class="err">//...</span><span class="w">
       </span><span class="p">]</span><span class="w">
     </span><span class="p">},</span><span class="w">
     </span><span class="err">//...</span><span class="w">
   </span><span class="p">],</span><span class="w">
-  </span><span class="nt">"available"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w">
+  </span><span class="nt">"available"</span><span class="p">:</span><span class="w"> </span><span class="kc">true</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">Optional</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
@@ -1282,6 +1289,7 @@ Deletes the entry of the reservation in the table.</p>
 <p><code class="prettyprint">POST /rooms/reserve</code></p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
+  </span><span class="err">//</span><span class="w"> </span><span class="err">Epoch</span><span class="w"> </span><span class="err">time</span><span class="w">
   </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"date_string"</span><span class="p">,</span><span class="w">
   </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
@@ -1300,7 +1308,7 @@ Deletes the entry of the reservation in the table.</p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
   </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully reserved the room."</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"failed"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"int"</span><span class="p">,</span><span class="w"> </span><span class="p">]</span><span class="w">
+  </span><span class="nt">"failed"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"int"</span><span class="p">,</span><span class="w"> </span><span class="p">]</span><span class="w"> </span><span class="err">//</span><span class="w"> </span><span class="err">resource_id</span><span class="w"> </span><span class="err">that</span><span class="w"> </span><span class="err">failed</span><span class="w"> </span><span class="err">to</span><span class="w"> </span><span class="err">reserve</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
@@ -1334,8 +1342,7 @@ The reservation can be up to 7 days long.</p>
 <p>Response JSON: </p>
 </blockquote>
 <pre class="highlight json"><code><span class="p">{</span><span class="w">
-  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully reserved the room."</span><span class="p">,</span><span class="w">
-  </span><span class="nt">"failed"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="s2">"int"</span><span class="p">,</span><span class="w"> </span><span class="p">]</span><span class="w">
+  </span><span class="nt">"message"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Successfully reserved the room."</span><span class="w">
 </span><span class="p">}</span><span class="w">
 </span></code></pre>
 
@@ -1377,9 +1384,10 @@ The reservation entry is removed from the Reservations table.</p>
     </span><span class="p">{</span><span class="w">
       </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+      </span><span class="err">//</span><span class="w"> </span><span class="err">Epoch</span><span class="w"> </span><span class="err">time</span><span class="w">
       </span><span class="nt">"date_start"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datestring"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"date_end"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datestring"</span><span class="p">,</span><span class="w">
-      </span><span class="err">//</span><span class="w"> </span><span class="err">optional</span><span class="w">
+      </span><span class="err">//</span><span class="w"> </span><span class="err">optional</span><span class="w"> </span><span class="err">(one</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">both)</span><span class="w">
       </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
       </span><span class="nt">"resource_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w">
     </span><span class="p">},</span><span class="w">
@@ -1437,9 +1445,10 @@ The reservation entry is removed from the Reservations table.</p>
   </span><span class="nt">"reservation"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span><span class="w">
     </span><span class="nt">"reservation_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"user_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
+    </span><span class="err">//</span><span class="w"> </span><span class="err">epoch</span><span class="w"> </span><span class="err">time</span><span class="w">
     </span><span class="nt">"start_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datestring"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"end_date"</span><span class="p">:</span><span class="w"> </span><span class="s2">"datestring"</span><span class="p">,</span><span class="w">
-    </span><span class="err">//optional</span><span class="w">
+    </span><span class="err">//optional</span><span class="w"> </span><span class="err">(one</span><span class="w"> </span><span class="err">or</span><span class="w"> </span><span class="err">both)</span><span class="w">
     </span><span class="nt">"room_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="p">,</span><span class="w">
     </span><span class="nt">"resource_id"</span><span class="p">:</span><span class="w"> </span><span class="s2">"int"</span><span class="w">
   </span><span class="p">}</span><span class="w">

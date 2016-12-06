@@ -75,7 +75,7 @@ A generic error will be returned.
     "body": {
         "users": [
             {
-                "id": "int",
+                "user_id": "int",
                 "first_name": "string",
                 "email": "string@email.com",
                 "last_name": "string",
@@ -86,7 +86,6 @@ A generic error will be returned.
                   {
                     "reservation_id": "int",
                     "resource_id": "int",
-                    "user_id": "int",
                     "room_id": "int",
                     "date_start": "date_string",
                     "date_end": "date_string"
@@ -118,7 +117,7 @@ phone       | null  | A part of the phone number
 
 ## Get a Specific User
 
-> `GET /users/:id`
+> `GET /users/:user_id`
 
 > Response JSON:
 
@@ -127,7 +126,7 @@ phone       | null  | A part of the phone number
     "status": true,
     "body": {
         "user": {
-          "id": "int",
+          "user_id": "int",
           "first_name": "string",
           "email": "string@email.com",
           "last_name": "string",
@@ -138,8 +137,6 @@ phone       | null  | A part of the phone number
             {
               "reservation_id": "int",
               "resource_id": "int",
-              "user_id": "int",
-              "room_id": "int",
               "date_start": "date_string",
               "date_end": "date_string"
             },
@@ -151,6 +148,12 @@ phone       | null  | A part of the phone number
 ```
 
 This endpoint retrieves a specific user.
+
+<aside class="success">
+<BR>
+date_start and date_end format is epoch time
+<BR>
+</aside>
 
 If `users` or `reservations` is empty: [ ]
 
@@ -179,9 +182,10 @@ phone       | null  | A part of the phone number
 ```json
 {
   "user": {
+    "email": "string@email.com", // Unique
+    "password": "string", // Password
     "first_name": "string",
     "last_name": "string",
-    "email": "string@email.com",
     "phone": "int",
     "is_admin": true,
     "type": "string"
@@ -202,9 +206,6 @@ phone       | null  | A part of the phone number
 
 This endpoint creates a user.
 
-<aside class="success">
-  On success, we could also return the newly created User? (with new ID etc.)
-</aside>
 <aside class="warning">
   On failure, returns a generic error.
 </aside>
@@ -212,7 +213,7 @@ This endpoint creates a user.
 <aside class="notice">
   We should have a registration page/flow.
   <BR>
-  When successful, a confirmation link should be sent via email.
+  When successful, a confirmation link could be sent via email.
   <BR>
   To activate the account, the user should follow the link.
   <BR>
@@ -221,7 +222,7 @@ This endpoint creates a user.
 
 ## Modify a User
 
-> `POST /users/:id`
+> `POST /users/:user_id`
 
 ```json
 {
@@ -256,7 +257,7 @@ id | The id of the user to modify
 
 ## Delete a User
 
-> `DELETE /users/:id`
+> `DELETE /users/:user_id`
 
 > Response JSON:
 
@@ -290,17 +291,19 @@ id | The id of the user to delete
   "resources": [
       {
         "type": "string",
-        "id": "int",
+        "resource_id": "int",
+        "it_resource": false,
+        // Optional (depends on type of Resource)
         "operating_system": "string",
         "ram": "decimal",
         "storage": "decimal",
         "printable": true,
         "available": false,
-        "it_resource": false,
         "reservations": [
           {
             "reservation_id": "int",
             "user_id": "int",
+            // epoch time ==> date_string
             "date_start": "date_string",
             "date_end": "date_string"
           },
@@ -348,17 +351,19 @@ type | null | name of the resource type
   "resources": [
       {
         "type": "string",
-        "id": "int",
+        "resource_id": "int",
+        "it_resource": false,
+        // Optional
         "operating_system": "string",
         "ram": "decimal",
         "storage": "decimal",
         "printable": true,
         "available": false,
-        "it_resource": false,
         "reservations": [
           {
             "reservation_id": "int",
             "user_id": "int",
+            // Epoch time
             "date_start": "date_string",
             "date_end": "date_string"
           },
@@ -397,7 +402,7 @@ type | null | name of the resource type
 
 ## Get a Specific Resource
 
-> `GET /inventory/:type/:id`
+> `GET /inventory/:type/:resource_id`
 
 > The possible types are: Projector or Computer or Whiteboard
 > The id is the resource_id
@@ -408,17 +413,19 @@ type | null | name of the resource type
 {
   "resource": {
     "type": "string",
-    "id": "int",
+    "resource_id": "int",
+    "it_resource": false,
+    // Optional
     "operating_system": "string",
     "ram": "decimal",
     "storage": "decimal",
     "printable": true,
     "available": false,
-    "it_resource": false,
     "reservations": [
       {
         "reservation_id": "int",
         "user_id": "int",
+        // Epoch time
         "date_start": "date_string",
         "date_end": "date_string"
       },
@@ -461,10 +468,12 @@ type | null | name of the resource type
 {
   "resource": {
     "type": "string",
+    "it_resource": true,
+    // Optional (depends on type)
     "ram": "decimal",
     "storage": "decimal",
     "operating_system": "string",
-    "it_resource": true
+    "printable": true
   }
 }
 ```
@@ -544,9 +553,9 @@ id | The id of the resource to delete
 ```json
 {
   "resource_id": "int",
+  // Epoch time
   "date_start": "date_string",
   "date_end": "date_string",
-  "room_id": "int",
   "user_id": "int"
 }
 ```
@@ -555,7 +564,8 @@ id | The id of the resource to delete
 
 ```json
 {
-  "message": "Successfully reserved the resource."
+  "message": "Successfully reserved the resource.",
+  "failed": [ ]
 }
 ```
 
@@ -619,7 +629,7 @@ id | The id of the reservation to cancel
 {
   "rooms": [
     {
-      "id": "int",
+      "room_id": "int",
       "type": "string",
       "height": "decimal",
       "width": "decimal",
@@ -630,7 +640,6 @@ id | The id of the reservation to cancel
         {
           "reservation_id": "int",
           "user_id": "int",
-          "room_id": "int",
           "date_start": "date_string",
           "date_end": "date_string",
           "equipments": [
@@ -641,7 +650,6 @@ id | The id of the reservation to cancel
               "ram": "decimal",
               "storage": "decimal",
               "printable": true,
-              "available": false,
               "it_resource": false,
             },
             //...
@@ -649,7 +657,7 @@ id | The id of the reservation to cancel
         },
         //...
       ],
-      "available": true
+      "available": true // Optional
     },
     //...
   ]
@@ -689,7 +697,7 @@ room_number | null | Prefix of the room number
 
 ```json
 {
-  "id": "int",
+  "room_id": "int",
   "type": "string",
   "height": "decimal",
   "width": "decimal",
@@ -700,26 +708,26 @@ room_number | null | Prefix of the room number
     {
       "reservation_id": "int",
       "user_id": "int",
-      "room_id": "int",
       "date_start": "date_string",
       "date_end": "date_string",
       "equipments": [
         {
           "type": "string",
           "resource_id": "int",
+          "it_resource": false,
+          // Optional
           "operating_system": "string",
           "ram": "decimal",
           "storage": "decimal",
           "printable": true,
-          "available": false,
-          "it_resource": false,
+          "available": false
         },
         //...
       ]
     },
     //...
   ],
-  "available": true
+  "available": true // Optional
 }
 ```
 
@@ -836,6 +844,7 @@ id | The id of the room to delete
 
 ```json
 {
+  // Epoch time
   "date_start": "date_string",
   "date_end": "date_string",
   "room_id": "int",
@@ -854,7 +863,7 @@ id | The id of the room to delete
 ```json
 {
   "message": "Successfully reserved the room.",
-  "failed": ["int", ]
+  "failed": ["int", ] // resource_id that failed to reserve
 }
 ```
 
@@ -888,8 +897,7 @@ Pass a reservation id (or list) to cancel.
 
 ```json
 {
-  "message": "Successfully reserved the room.",
-  "failed": ["int", ]
+  "message": "Successfully reserved the room."
 }
 ```
 
@@ -923,9 +931,10 @@ id | The id of the reservation to cancel
     {
       "reservation_id": "int",
       "user_id": "int",
+      // Epoch time
       "date_start": "datestring",
       "date_end": "datestring",
-      // optional
+      // optional (one or both)
       "room_id": "int",
       "resource_id": "int"
     },
@@ -958,9 +967,10 @@ resource_id | null | the resource id of the reservations to return
   "reservation": {
     "reservation_id": "int",
     "user_id": "int",
+    // epoch time
     "start_date": "datestring",
     "end_date": "datestring",
-    //optional
+    //optional (one or both)
     "room_id": "int",
     "resource_id": "int"
   }
