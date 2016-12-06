@@ -40,3 +40,4 @@ index.js.orig
 *.orig
 .env
 /.env
+./.env
