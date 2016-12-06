@@ -167,7 +167,7 @@ function userLogin(username,password){
           is_admin: user.isAdmin,
           type: user.UserType.typeName,
           status: true,
-          User_id: user.userId
+          user_id: user.userId
         }
         return mappedUser;
       }
