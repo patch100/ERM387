@@ -143,6 +143,16 @@ module.exports = function(app, router, db) {
                     res.json({ status: false, body: { error: "There was an error in modifying the Resource." } });
                 }
             });
+        }).delete(function(req, res) {
+            db.removeResource(req.params.resource_id)
+                .then(resp => {
+                    if (resp.status) {
+                        res.json({ status: true, body: { message: "Successfully deleted the Resouce." } });
+                    } else {
+                        res.json({status: false, body: { error: "Deleting resource failed." } });
+                    }
+                });
+        });
 
     router.route('/inventory/reserve')
         .post(function(req, res) {
