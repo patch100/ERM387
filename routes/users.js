@@ -137,12 +137,16 @@ module.exports = function(app, router, db) {
                 if (result) {
                     res.json({
                         status: true,
-                        body: "User successfully deleted."
+                        body: {
+                            "message": "User was successfully deleted!"
+                        }
                     });
                 } else {
                     res.json({
                         status: false,
-                        body: "Unable to delete user."
+                        body: {
+                            "message": "Were sorry the user could not be deleted"
+                        }
                     });
                 }
 
