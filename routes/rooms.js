@@ -17,17 +17,50 @@ module.exports = function(app, router, db) {
 
             // db.getRooms(filters).then(rooms => res.json({status: true, body: rooms}));
             db.getRooms( /* filters, */ )
-                .then(rooms => res.json({
-                    status: true,
-                    body: rooms
-                }));
+                .then(rooms => {
+                    if (rooms.status) {
+                        var result = {};
+                        result["status"] = true;
+                        result["body"] = {
+                            "rooms": []
+                        }
+                        for (var room of rooms.body) {
+                            //massage variables to match doc
+
+                            if (room.reservations) {
+                                for (var resource of room.reservations) {
+                                    if (resource.start_time) {
+                                        resource["date_start"] = Date.parse(resource.start_time);
+                                        delete resource.start_time;
+                                    }
+                                    if (resource.end_time) {
+                                        resource["date_end"] = Date.parse(resource.end_time);
+                                        delete resource.end_time;
+                                    }
+                                }
+                            }
+                            result.body.rooms.push(room);
+                        }
+                        res.json(result)
+                    } else {
+                        res.json({
+                            status: false,
+                            body: {
+                                error: "No match found."
+                            }
+                        })
+                    }
+                })
         })
         .post(function(req, res) {
             //add item to DB with req.params.room_type and req.params.room_id
             // check the body for all the parameter. Needs to be sanitized.
             // check for Resources in the room.
             db.addResource(req.body.room)
-                .then(resp => res.json({ status: true, body: "Room created" }))
+                .then(resp => res.json({
+                    status: true,
+                    body: "Room created"
+                }))
         });
 
     router.route('/rooms/:room_type')
@@ -45,10 +78,33 @@ module.exports = function(app, router, db) {
             }
 
             db.getRoomsByType( /* filters, */ req.params.room_type)
-                .then(aa => res.json({
-                    status: true,
-                    body: aa
-                }))
+                .then(rooms => {
+                    if (rooms.status) {
+                        var result = {};
+                        result["status"] = true;
+                        result["body"] = {
+                            "rooms": []
+                        }
+                        for (var room of rooms.body) {
+                            //massage variables to match doc
+
+                            if (room.reservations) {
+                                for (var resource of room.reservations) {
+                                    if (resource.start_time) {
+                                        resource["date_start"] = Date.parse(resource.start_time);
+                                        delete resource.start_time;
+                                    }
+                                    if (resource.end_time) {
+                                        resource["date_end"] = Date.parse(resource.end_time);
+                                        delete resource.end_time;
+                                    }
+                                }
+                            }
+                            result.body.rooms.push(room);
+                        }
+                        res.json(result)
+                    }
+                })
         });
 
     router.route('/rooms/items/:room_id') // REFACTOR: we want consistency, :room_id should come after items
@@ -87,9 +143,15 @@ module.exports = function(app, router, db) {
             db.updateResource(req.params.room_id, req.body.room).then(result => {
                 if (result) {
 
-                    res.json({ status: true, body: "Successfully modified Room." });
+                    res.json({
+                        status: true,
+                        body: "Successfully modified Room."
+                    });
                 } else {
-                    res.json({ status: false, body: "There was an error in modifiying Room." });
+                    res.json({
+                        status: false,
+                        body: "There was an error in modifiying Room."
+                    });
                 }
             })
         })
@@ -127,7 +189,9 @@ module.exports = function(app, router, db) {
 
     router.route('/rooms/reserve')
         .post(function(req, res) {
-            result = { "equipments": []}
+            result = {
+                "equipments": []
+            }
 
             db.addReservation(req.body)
                 .then(rooms => result["reserve_id"] = rooms.reserveId).then(() => {
@@ -141,15 +205,16 @@ module.exports = function(app, router, db) {
                         }
                     }
                     return Promise.all(equipments); //crash if one fails
-                }).then(  equipments => {
-                    for(var equip in equipments) {
+                }).then(equipments => {
+                    for (var equip in equipments) {
                         if (!equip.status) {
                             //TODO
                         }
                     }
                     res.json({
                         status: true,
-                        body: result})
+                        body: result
+                    })
                 });
 
         });

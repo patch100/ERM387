@@ -11,34 +11,44 @@ module.exports = function(app, router, db) {
 
             db.getUsers( /*filters*/ )
                 .then(users => {
-                    var result = {};
 
-                    console.log(users);
-                    result["status"] = true;
-                    result["body"] = {
-                        "users": []
-                    }
-                    for (var user of users.body) {
-                        //massage variables to match doc
-                        if (user.phone_number) {
-                            user["phone"] = user.phone_number;
-                            delete user.phone_number;
+                    if (users.status) {
+                        var result = {};
+
+                        console.log(users);
+                        result["status"] = true;
+                        result["body"] = {
+                            "users": []
                         }
-                        if (user.reservations) {
-                            for (var resource of user.reservations) {
-                                if (resource.start_time) {
-                                    resource["date_start"] = Date.parse(resource.start_time);
-                                    delete resource.start_time;
-                                }
-                                if (resource.end_time) {
-                                    resource["date_end"] = Date.parse(resource.end_time);
-                                    delete resource.end_time;
+                        for (var user of users.body) {
+                            //massage variables to match doc
+                            if (user.phone_number) {
+                                user["phone"] = user.phone_number;
+                                delete user.phone_number;
+                            }
+                            if (user.reservations) {
+                                for (var resource of user.reservations) {
+                                    if (resource.start_time) {
+                                        resource["date_start"] = Date.parse(resource.start_time);
+                                        delete resource.start_time;
+                                    }
+                                    if (resource.end_time) {
+                                        resource["date_end"] = Date.parse(resource.end_time);
+                                        delete resource.end_time;
+                                    }
                                 }
                             }
+                            result.body.users.push(user);
                         }
-                        result.body.users.push(user);
+                        res.json(result)
+                    } else {
+                        res.json({
+                            status: false,
+                            body: {
+                                error: "No match found."
+                            }
+                        })
                     }
-                    res.json(result)
                 })
         })
         .post(function(req, res) {
@@ -81,24 +91,34 @@ module.exports = function(app, router, db) {
 
             db.getUserById( /*filters, */ req.params.user_id)
                 .then(user => {
+
                     //massage variables to match doc
-                    if (user.body.phone_number) {
-                        user.body["phone"] = user.body.phone_number;
-                        delete user.body.phone_number;
-                    }
-                    if (user.body.reservations) {
-                        for (var resource of user.body.reservations) {
-                            if (resource.start_time) {
-                                resource["date_start"] = Date.parse(resource.start_time);
-                                delete resource.start_time;
-                            }
-                            if (resource.end_time) {
-                                resource["date_end"] = Date.parse(resource.end_time);
-                                delete resource.end_time;
+                    if (user.status) {
+                        if (user.body.phone_number) {
+                            user.body["phone"] = user.body.phone_number;
+                            delete user.body.phone_number;
+                        }
+                        if (user.body.reservations) {
+                            for (var resource of user.body.reservations) {
+                                if (resource.start_time) {
+                                    resource["date_start"] = Date.parse(resource.start_time);
+                                    delete resource.start_time;
+                                }
+                                if (resource.end_time) {
+                                    resource["date_end"] = Date.parse(resource.end_time);
+                                    delete resource.end_time;
+                                }
                             }
                         }
+                        res.json(user)
+                    } else {
+                        res.json({
+                            status: false,
+                            body: {
+                                error: "No match found."
+                            }
+                        })
                     }
-                    res.json(user)
                 })
 
         })
