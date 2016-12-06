@@ -12,26 +12,20 @@ module.exports = function(app, router, db) {
             db.getUsers( /*filters*/ )
                 .then(users => {
                     var result = {};
+
+                    console.log(users);
                     result["status"] = true;
                     result["body"] = {
                         "users": []
                     }
-                    for (var user of users) {
+                    for (var user of users.body) {
                         //massage variables to match doc
-                        if (user.userId) {
-                            user["id"] = user.userId;
-                            delete user.userId;
-                        }
                         if (user.phone_number) {
                             user["phone"] = user.phone_number;
                             delete user.phone_number;
                         }
                         if (user.reservations) {
                             for (var resource of user.reservations) {
-                                if (resource.id) {
-                                    resource["resource_id"] = resource.id;
-                                    delete resource.id;
-                                }
                                 if (resource.start_time) {
                                     resource["date_start"] = Date.parse(resource.start_time);
                                     delete resource.start_time;
@@ -87,26 +81,13 @@ module.exports = function(app, router, db) {
 
             db.getUserById( /*filters, */ req.params.user_id)
                 .then(user => {
-                    var result = {};
-                    result["status"] = true;
-                    result["body"] = {
-                            "user": {}
-                        }
-                        //massage variables to match doc
-
-
-                    user["id"] = req.params.user_id;
-
-                    if (user.phone_number) {
-                        user["phone"] = user.phone_number;
-                        delete user.phone_number;
+                    //massage variables to match doc
+                    if (user.body.phone_number) {
+                        user.body["phone"] = user.body.phone_number;
+                        delete user.body.phone_number;
                     }
-                    if (user.reservations) {
-                        for (var resource of user.reservations) {
-                            if (resource.id) {
-                                resource["resource_id"] = resource.id;
-                                delete resource.id;
-                            }
+                    if (user.body.reservations) {
+                        for (var resource of user.body.reservations) {
                             if (resource.start_time) {
                                 resource["date_start"] = Date.parse(resource.start_time);
                                 delete resource.start_time;
@@ -117,8 +98,7 @@ module.exports = function(app, router, db) {
                             }
                         }
                     }
-                    result.body.user = user;
-                    res.json(result)
+                    res.json(user)
                 })
 
         })
