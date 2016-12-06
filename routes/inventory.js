@@ -166,12 +166,28 @@ module.exports = function(app, router, db) {
 
     router.route('/inventory/cancel')
         .post(function(req, res) {
-            //return all inventory items
-
-            db.cancelReservation(req.body)
-                .then(resp => res.json({
-                    status: true,
-                    body: resp
-                }));
+            var creation = {
+                reservationId: req.body.reservation_id
+            }
+            db.cancelReservation(creation).then(
+                resp => {
+                    if (resp.status) {
+                        res.json({
+                            status: true,
+                            body: {
+                                reservation_id: resp.body.reservationId,
+                                resource_id: resp.body.resourceId,
+                                message: "Successfully cancelled the reservation.",
+                                failed: []
+                            }
+                        });
+                    } else {
+                        res.json({status: false, body: {
+                            resource_id: resp.body.resourceId,
+                            failed: [resp.body.reservationId],
+                            error: "Reservation cancellation failed"
+                        } });
+                    }
+                });
         });
 }
