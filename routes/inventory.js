@@ -19,12 +19,11 @@ module.exports = function(app, router, db) {
 
             db.getResources( /*filters*/ )
                 .then(resources => {
-                    result = {}
-                    return res.json({ status: true, body: { resources: resources } })
-                    if (resources.status) {
-                        result.status = true
-                        for (var resource of resources.body.resources) {
-                            for (var reservation of resource.reservation) {
+                    result = { "body": { "resources": [] } }
+                    if (resources.status && resources.body) {
+                        result.status = true;
+                        for (var resource of resources.body) {
+                            for (var reservation of resource.reservations) {
                                 reservation.date_start = Date.parse(reservation.start_time);
                                 reservation.date_end = Date.parse(reservation.end_time);
                                 delete reservation.start_time;
@@ -32,16 +31,13 @@ module.exports = function(app, router, db) {
                             }
                             resource.it_resource = resource.is_it;
                             delete resource.is_it;
-                            resource.reservations = resource.reservation;
-                            delete resource.reservation;
                             result.body.resources.push(resource);
                         }
                         res.json(result);
                     } else {
-                        res.json({ status: false, body: { error: "No match found." } })
+                        res.json({ status: false, body: { error: "No match found." } });
                     }
                 })
-        })
         .post(function(req, res) {
             try {
                 db.addResource(req.body.resource).then(
