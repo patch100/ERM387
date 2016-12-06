@@ -156,7 +156,7 @@ module.exports = function(app, router, db) {
 
     router.route('/inventory/reserve')
         .post(function(req, res) {
-            //return all inventory items
+
             db.addResourceReservation(req.body, null)
                 .then(resp => res.json({
                     status: true,
