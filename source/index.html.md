@@ -627,40 +627,45 @@ id | The id of the reservation to cancel
 
 ```json
 {
-  "rooms": [
-    {
-      "room_id": "int",
-      "type": "string",
-      "height": "decimal",
-      "width": "decimal",
-      "length": "decimal",
-      "capacity": "int",
-      "room_number": "int",
-      "reservations": [
-        {
-          "reservation_id": "int",
-          "user_id": "int",
-          "date_start": "date_string",
-          "date_end": "date_string",
-          "equipments": [
+    "status": true,
+    "body": {
+        "rooms": [
             {
+              "id": "int",
               "type": "string",
-              "resource_id": "int",
-              "operating_system": "string",
-              "ram": "decimal",
-              "storage": "decimal",
-              "printable": true,
-              "it_resource": false,
+              "height": "decimal",
+              "width": "decimal",
+              "length": "decimal",
+              "capacity": "int",
+              "room_number": "int",
+              "reservations": [
+                {
+                  "reservation_id": "int",
+                  "user_id": "int",
+                  "room_id": "int",
+                  "date_start": "date_string",
+                  "date_end": "date_string",
+                  "equipments": [
+                    {
+                      "type": "string",
+                      "resource_id": "int",
+                      "operating_system": "string",
+                      "ram": "decimal",
+                      "storage": "decimal",
+                      "printable": true,
+                      "available": false,
+                      "it_resource": false,
+                    },
+                    //...
+                  ]
+                },
+                //...
+              ],
+              "available": true
             },
             //...
           ]
-        },
-        //...
-      ],
-      "available": true // Optional
-    },
-    //...
-  ]
+    }
 }
 ```
 
@@ -697,37 +702,42 @@ room_number | null | Prefix of the room number
 
 ```json
 {
-  "room_id": "int",
-  "type": "string",
-  "height": "decimal",
-  "width": "decimal",
-  "length": "decimal",
-  "capacity": "int",
-  "room_number": "int",
-  "reservations": [
-    {
-      "reservation_id": "int",
-      "user_id": "int",
-      "date_start": "date_string",
-      "date_end": "date_string",
-      "equipments": [
-        {
+    "status": true,
+    "body": {
+        "room": {
+          "id": "int",
           "type": "string",
-          "resource_id": "int",
-          "it_resource": false,
-          // Optional
-          "operating_system": "string",
-          "ram": "decimal",
-          "storage": "decimal",
-          "printable": true,
-          "available": false
-        },
-        //...
-      ]
-    },
-    //...
-  ],
-  "available": true // Optional
+          "height": "decimal",
+          "width": "decimal",
+          "length": "decimal",
+          "capacity": "int",
+          "room_number": "int",
+          "reservations": [
+            {
+              "reservation_id": "int",
+              "user_id": "int",
+              "room_id": "int",
+              "date_start": "date_string",
+              "date_end": "date_string",
+              "equipments": [
+                {
+                  "type": "string",
+                  "resource_id": "int",
+                  "operating_system": "string",
+                  "ram": "decimal",
+                  "storage": "decimal",
+                  "printable": true,
+                  "available": false,
+                  "it_resource": false,
+                },
+                //...
+              ]
+            },
+            //...
+          ],
+          "available": true
+        }
+    }
 }
 ```
 
