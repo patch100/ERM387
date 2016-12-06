@@ -98,11 +98,10 @@ module.exports = function(app, router, db) {
             }
         });
 
-
-    router.route('/inventory/:resource_type/:resource_id')
+    router.route('/inventory/:type/:resource_id')
         .get(function(req, res) {
             //return item with req.params.resource_type and req.params.resource_id
-            var filters = req.query;
+            /*var filters = req.query;
             if (filters.date_start || filters.date_end) {
                 filters.date_start = {
                     $gt: filters.date_start
@@ -110,15 +109,30 @@ module.exports = function(app, router, db) {
                 filters.date_end = {
                     $lt: filters.date_end
                 };
-            }
+            }*/
 
-            db.getResourceById( /* filters, */ req.params.resource_id)
-                .then(resource => res.json({
-                    status: true,
-                    body: resource
-                }))
-        })
-        .post(function(req, res) {
+            if (resource_types.indexOf(req.params.type) > -1) {
+                db.getResourceById(req.params.resource_id) // filters,
+                    .then(resource => {
+                        if (resource.status && resource.body) {
+                            result = { status: true, body: { resource: {} } };
+                            resource.body.it_resource = resource.body.is_it;
+                            delete resource.body.is_it;
+                            for (r of resource.body.reservations) {
+                                r.date_start = Date.parse(r.start_time);
+                                r.date_end = Date.parse(r.end_time);
+                                delete r.start_time;
+                                delete r.end_time;
+                            }
+                            result.body.resource = resource.body;
+                            res.json(result);
+                        } else {
+                            res.json({ status: false, body: { error: "Resource not found." } });
+                        }
+                    });
+            } else {
+                res.json({ status: false, body: { error: "Invalid Resource Type" } });
+            }
             // checks if the resource has an ID.
             //if(db.getResourceById(req.params.resource_id) == req.body.resource_id){
             db.updateResource(req.params.resource_id, req.body.resource).then(resp => {
