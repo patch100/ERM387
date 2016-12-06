@@ -38,3 +38,4 @@ jspm_packages
 /db-master/test.db
 index.js.orig
 *.orig
+.env
