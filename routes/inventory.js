@@ -146,9 +146,9 @@ module.exports = function(app, router, db) {
             db.removeResource(req.params.resource_id)
                 .then(resp => {
                     if (resp.status) {
-                        res.json({ status: true, body: { message: "Successfully deleted the Resouce." } });
+                        res.json({ status: true, body: { message: "Successfully deleted the Resource." } });
                     } else {
-                        res.json({ status: false, body: { error: "Deleting resource failed." } });
+                        res.json({ status: false, body: { error: "Deleting Resource failed." } });
                     }
                 });
         });
