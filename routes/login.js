@@ -23,7 +23,6 @@ module.exports = function(app, router, db, jwt) {
                                 });
 
                                 sess["isadmin"] = responseObject.body.is_admin ? true : false;
-
                                 res.cookie('token', userToken)
                                 res.json({
                                     status: true,

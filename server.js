@@ -30,6 +30,8 @@ app.use(session({
     })
 }));
 
+sessq.sync();
+
 // Allow origins
 app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', "http://localhost:8080/");
@@ -55,14 +57,10 @@ const db = require('./db-master/endpoint/index');
 require('./routes')(app, router, db, jwt);
 
 
-
 models.sequelize.sync().then(function() {
     app.listen(port)
     console.log('Magic happens on port ' + port);
 })
-
-
-
 
 
 exports = module.exports = app;
