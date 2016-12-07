@@ -206,7 +206,7 @@ function initTable(getRes) {
 				},
 				error: function(xhr, resp, text) {
 					console.log(xhr, resp, text);
-					// TODO: flash prompt for pass again
+					alert("Error: Item not found");
 				}
 			})
 			$("#viewRoomTypeGroup").hide();
@@ -270,7 +270,7 @@ function initTable(getRes) {
 				},
 				error: function(xhr, resp, text) {
 					console.log(xhr, resp, text);
-					// TODO: flash prompt for pass again
+					alert("Error: Item not found");
 				}
 			})
         } else {
@@ -307,6 +307,40 @@ function initTable(getRes) {
 		}
     }));
 
+    function roomNotMissingFields(created) {
+    	if(created.room.room_type != "" 
+    		&& created.room.room_number != "" 
+    		&& created.room.capacity != "" 
+    		&& created.room.height != "" 
+    		&& created.room.width != "" 
+    		&& created.room.length != "" 
+    		&& created.room.room_type != null 
+    		&& created.room.room_number != null 
+    		&& created.room.capacity != null 
+    		&& created.room.height != null 
+    		&& created.room.width != null 
+    		&& created.room.length != null) {
+    		return true;
+    	}
+    	return false;
+    }
+
+    function computerNotMissingFields(created, type) {
+    	if(type == "Computer" 
+    		&& (created.resource.ram != "" 
+    			&& created.resource.storage != "" 
+    			&& created.resource.operating_system != "" 
+    			&& created.resource.ram != null 
+    			&& created.resource.storage != null 
+    			&& created.resource.operating_system != null) 
+    		|| type == "WhiteBoard" 
+    		&&(created.resource.isPrintable != "" 
+    		&& created.resource.isPrintable != null)) {
+    		return true;
+    	}
+    	return false;
+    }
+
     $('#createRecord').click(function() {
         var type = $("#createType").val();
 		var created = {};
@@ -323,8 +357,10 @@ function initTable(getRes) {
 				created.room.status = "true";
 			else
 				created.room.status = "false";
-			created = JSON.stringify(created);
-			$.ajax({
+
+			if(roomNotMissingFields(created), type) {
+				created = JSON.stringify(created);
+				$.ajax({
 					url: '/rooms', 
 					headers: {
 						'Content-Type':'application/json'
@@ -337,12 +373,15 @@ function initTable(getRes) {
 						location.reload();
 					}
 					console.log(result);
+					createModalValidateSuccess();
 				},
 				error: function(xhr, resp, text) {
 					console.log(xhr, resp, text);
-					// TODO: flash prompt for pass again
-				}
-			})
+				}});
+			}
+			else{
+				createModalValidateErrors(type, created);
+			}
 		} else {
 			created.resource = {};
 			created.resource.it_resource = true;
@@ -360,26 +399,32 @@ function initTable(getRes) {
 				created.resource.status = "true";
 			else
 				created.resource.status = "false";
-			created = JSON.stringify(created);
-			$.ajax({
-					url: '/inventory', 
-					headers: {
-						'Content-Type':'application/json'
+
+			if(computerNotMissingFields(created)) {
+				created = JSON.stringify(created);
+				$.ajax({
+						url: '/inventory', 
+						headers: {
+							'Content-Type':'application/json'
+						},
+						dataType: "json",
+						type : "POST",
+						data : created, 
+						success : function(result) {
+						if (result.status) {
+							location.reload();
+						}
+						console.log(result);
+						createModalValidateSuccess();
 					},
-					dataType: "json",
-					type : "POST",
-					data : created, 
-					success : function(result) {
-					if (result.status) {
-						location.reload();
+					error: function(xhr, resp, text) {
+						console.log(xhr, resp, text);
+						// TODO: flash prompt for pass again
 					}
-					console.log(result);
-				},
-				error: function(xhr, resp, text) {
-					console.log(xhr, resp, text);
-					// TODO: flash prompt for pass again
-				}
-			})
+				});
+			} else {
+				createModalValidateErrors(type, created);
+			}
 		}
     });
 
@@ -403,26 +448,34 @@ function initTable(getRes) {
 			else
 				created.room.status = "false";
 
-			created = JSON.stringify(created);
-			$.ajax({
-					url: '/rooms/' + roomtype + '/' + id, 
-					headers: {
-						'Content-Type':'application/json'
+			if(roomNotMissingFields(created)) {
+				created = JSON.stringify(created);
+				$.ajax({
+						url: '/rooms/' + roomtype + '/' + id, 
+						headers: {
+							'Content-Type':'application/json'
+						},
+						dataType: "json",
+						type : "POST",
+						data : created, 
+						success : function(result) {
+						if (result.status) {
+							location.reload();
+						}
+						console.log(result);
+						editModalValidateSuccess();
 					},
-					dataType: "json",
-					type : "POST",
-					data : created, 
-					success : function(result) {
-					if (result.status) {
-						location.reload();
+					error: function(xhr, resp, text) {
+						console.log(xhr, resp, text);
+						// TODO: flash prompt for pass again
 					}
-					console.log(result);
-				},
-				error: function(xhr, resp, text) {
-					console.log(xhr, resp, text);
-					// TODO: flash prompt for pass again
-				}
-			})
+				});	
+			}
+			else {
+				editModalValidateErrors(type, created);
+			}
+
+			
 		} else {
 			created.resource = {};
 			created.resource.is_it = true;
@@ -440,26 +493,32 @@ function initTable(getRes) {
 				created.resource.status = "true";
 			else
 				created.resource.status = "false";
-			created = JSON.stringify(created);
-			$.ajax({
-					url: '/inventory/' + type + '/' + id, 
-					headers: {
-						'Content-Type':'application/json'
+
+			if(computerNotMissingFields(created)) {
+				created = JSON.stringify(created);
+				$.ajax({
+						url: '/inventory/' + type + '/' + id, 
+						headers: {
+							'Content-Type':'application/json'
+						},
+						dataType: "json",
+						type : "POST",
+						data : created, 
+						success : function(result) {
+						if (result.status) {
+							location.reload();
+						}
+						console.log(result);
+						editModalValidateSuccess();
 					},
-					dataType: "json",
-					type : "POST",
-					data : created, 
-					success : function(result) {
-					if (result.status) {
-						location.reload();
+					error: function(xhr, resp, text) {
+						console.log(xhr, resp, text);
+						// TODO: flash prompt for pass again
 					}
-					console.log(result);
-				},
-				error: function(xhr, resp, text) {
-					console.log(xhr, resp, text);
-					// TODO: flash prompt for pass again
-				}
-			})
+				});	
+			} else {
+				editModalValidateErrors(type, created);
+			}
 		}
     });
 
@@ -673,6 +732,200 @@ function checkIfCurrentlyReserved(reservations) {
 	else {
 		return false;
 	}
+}
+
+function editModalValidateErrors(type, created) {
+	$("#editAlert").removeClass("hidden");
+
+	if(type == "Room") {
+		if(created.room.room_number == "" || created.room.room_number == null) {
+			$("#editRoomNumberGroup").addClass("has-error has-feedback");
+			$("#editRoomNumberIcon").removeClass("hidden");
+		} else {
+			$("#editRoomNumberGroup").removeClass("has-error has-feedback");
+			$("#editRoomNumberIcon").addClass("hidden");
+		}
+		
+		if(created.room.capacity == "" || created.room.capacity == null) {
+			$("#editCapacityGroup").addClass("has-error has-feedback");
+			$("#editCapacityIcon").removeClass("hidden");
+		} else {
+			$("#editCapacityGroup").removeClass("has-error has-feedback");
+			$("#editCapacityIcon").addClass("hidden");
+		}
+
+		if(created.room.height == "" || created.room.height == null) {
+			$("#editHeightGroup").addClass("has-error has-feedback");
+			$("#editHeightIcon").removeClass("hidden");
+		} else {
+			$("#editHeightGroup").removeClass("has-error has-feedback");
+			$("#editHeightIcon").addClass("hidden");
+		}
+
+		if(created.room.width == "" || created.room.width == null) {
+			$("#editWidthGroup").addClass("has-error has-feedback");
+			$("#editWidthIcon").removeClass("hidden");
+		} else {
+			$("#editWidthGroup").removeClass("has-error has-feedback");
+			$("#editWidthIcon").addClass("hidden");
+		}
+
+		if(created.room.length == "" || created.room.length == null) {
+			$("#editLengthGroup").addClass("has-error has-feedback");
+			$("#editLengthIcon").removeClass("hidden");
+		} else {
+			$("#editLengthGroup").removeClass("has-error has-feedback");
+			$("#editLengthIcon").addClass("hidden");
+		}
+	} else if(type == "Computer") {
+		if(created.resource.ram == "" || created.resource.ram == null) {
+			$("#editRamGroup").addClass("has-error has-feedback");
+			$("#editRamIcon").removeClass("hidden");
+		} else {
+			$("#editRamGroup").removeClass("has-error has-feedback");
+			$("#editRamIcon").addClass("hidden");
+		}
+
+		if(created.resource.storage == "" || created.resource.storage == null) {
+			$("#editStorageGroup").addClass("has-error has-feedback");
+			$("#editStorageIcon").removeClass("hidden");
+		} else {
+			$("#editStorageGroup").removeClass("has-error has-feedback");
+			$("#editStorageIcon").addClass("hidden");
+		}
+
+		if(created.resource.operating_system == "" || created.resource.operating_system == null) {
+			$("#editOperatingSystemGroup").addClass("has-error has-feedback");
+			$("#editOperatingSystemIcon").removeClass("hidden");
+		} else {
+			$("#editOperatingSystemGroup").removeClass("has-error has-feedback");
+			$("#editOperatingSystemIcon").addClass("hidden");
+		}
+	}
+}
+
+function editModalValidateSuccess() {
+	$("#editAlert").addClass("hidden");
+
+	$("#editRoomNumberGroup").removeClass("has-error has-feedback");
+	$("#editRoomNumberIcon").addClass("hidden");
+
+	$("#editCapacityGroup").removeClass("has-error has-feedback");
+	$("#editCapacityIcon").addClass("hidden");
+
+	$("#editHeightGroup").removeClass("has-error has-feedback");
+	$("#editHeightIcon").addClass("hidden");
+
+	$("#editWidthGroup").removeClass("has-error has-feedback");
+	$("#editWidthIcon").addClass("hidden");
+
+	$("#editLengthGroup").removeClass("has-error has-feedback");
+	$("#editLengthIcon").addClass("hidden");
+
+	$("#editRamGroup").removeClass("has-error has-feedback");
+	$("#editRamIcon").addClass("hidden");
+
+	$("#editStorageGroup").removeClass("has-error has-feedback");
+	$("#editStorageIcon").addClass("hidden");
+
+	$("#editOperatingSystemGroup").removeClass("has-error has-feedback");
+	$("#editOperatingSystemIcon").addClass("hidden");
+}
+
+function createModalValidateErrors(type, created) {
+	$("#createAlert").removeClass("hidden");
+
+	if(type == "Room") {
+		if(created.room.room_number == "" || created.room.room_number == null) {
+			$("#createRoomNumberGroup").addClass("has-error has-feedback");
+			$("#createRoomNumberIcon").removeClass("hidden");
+		} else {
+			$("#createRoomNumberGroup").removeClass("has-error has-feedback");
+			$("#createRoomNumberIcon").addClass("hidden");
+		}
+		
+		if(created.room.capacity == "" || created.room.capacity == null) {
+			$("#createCapacityGroup").addClass("has-error has-feedback");
+			$("#createCapacityIcon").removeClass("hidden");
+		} else {
+			$("#createCapacityGroup").removeClass("has-error has-feedback");
+			$("#createCapacityIcon").addClass("hidden");
+		}
+
+		if(created.room.height == "" || created.room.height == null) {
+			$("#createHeightGroup").addClass("has-error has-feedback");
+			$("#createHeightIcon").removeClass("hidden");
+		} else {
+			$("#createHeightGroup").removeClass("has-error has-feedback");
+			$("#createHeightIcon").addClass("hidden");
+		}
+
+		if(created.room.width == "" || created.room.width == null) {
+			$("#createWidthGroup").addClass("has-error has-feedback");
+			$("#createWidthIcon").removeClass("hidden");
+		} else {
+			$("#createWidthGroup").removeClass("has-error has-feedback");
+			$("#createWidthIcon").addClass("hidden");
+		}
+
+		if(created.room.length == "" || created.room.length == null) {
+			$("#createLengthGroup").addClass("has-error has-feedback");
+			$("#createLengthIcon").removeClass("hidden");
+		} else {
+			$("#createLengthGroup").removeClass("has-error has-feedback");
+			$("#createLengthIcon").addClass("hidden");
+		}
+	} else if(type == "Computer") {
+		if(created.resource.ram == "" || created.resource.ram == null) {
+			$("#createRamGroup").addClass("has-error has-feedback");
+			$("#createRamIcon").removeClass("hidden");
+		} else {
+			$("#createRamGroup").removeClass("has-error has-feedback");
+			$("#createRamIcon").addClass("hidden");
+		}
+
+		if(created.resource.storage == "" || created.resource.storage == null) {
+			$("#createStorageGroup").addClass("has-error has-feedback");
+			$("#createStorageIcon").removeClass("hidden");
+		} else {
+			$("#createStorageGroup").removeClass("has-error has-feedback");
+			$("#createStorageIcon").addClass("hidden");
+		}
+
+		if(created.resource.operating_system == "" || created.resource.operating_system == null) {
+			$("#createOperatingSystemGroup").addClass("has-error has-feedback");
+			$("#createOperatingSystemIcon").removeClass("hidden");
+		} else {
+			$("#createOperatingSystemGroup").removeClass("has-error has-feedback");
+			$("#createOperatingSystemIcon").addClass("hidden");
+		}
+	}
+}
+
+function createModalValidateSuccess() {
+	$("#createRoomNumberGroup").removeClass("has-error has-feedback");
+	$("#createRoomNumberIcon").addClass("hidden");
+
+	$("#createCapacityGroup").removeClass("has-error has-feedback");
+	$("#createCapacityIcon").addClass("hidden");
+
+	$("#createHeightGroup").removeClass("has-error has-feedback");
+	$("#createHeightIcon").addClass("hidden");
+
+	$("#createWidthGroup").removeClass("has-error has-feedback");
+	$("#createWidthIcon").addClass("hidden");
+
+	$("#createLengthGroup").removeClass("has-error has-feedback");
+	$("#createLengthIcon").addClass("hidden");
+
+	$("#createRamGroup").removeClass("has-error has-feedback");
+	$("#createRamIcon").addClass("hidden");
+
+	$("#createStorageGroup").removeClass("has-error has-feedback");
+	$("#createStorageIcon").addClass("hidden");
+
+	$("#createOperatingSystemGroup").removeClass("has-error has-feedback");
+	$("#createOperatingSystemIcon").addClass("hidden");
 }
 
 $(document).ready(function(){
