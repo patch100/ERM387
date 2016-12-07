@@ -14,22 +14,22 @@ FROM UserType WHERE typeName = 'End-User';
 
 INSERT INTO User (typeId, firstName, lastName, phoneNumber, email, isAdmin, passwordHash, createdAt, updatedAt)
 SELECT typeId, 'Joe', 'Blo', '15140001234', 'joeblo@gmail.com', 1, '1681db84', NOW(), NOW()
+FROM UserType WHERE typeName = 'IT';
 
 INSERT INTO User (typeId, firstName, lastName, phoneNumber, email, isAdmin, passwordHash, createdAt, updatedAt)
 SELECT typeId, 'MNO', 'PQR', '3334445555', 'mno@pqr.com', 1, '123', NOW(), NOW()
-
 FROM UserType WHERE typeName = 'End-User';
 
 #Resource
-INSERT INTO Resource (resourceType, isIt, createdAt, updatedAt)
-VALUES ('Computer', 1, NOW(), NOW()),
-        ('Computer', 1, NOW(), NOW()),
-        ('Projector', 1, NOW(), NOW()),
-        ('Projector', 1, NOW(), NOW()),
-        ('WhiteBoard', 1, NOW(), NOW()),
-        ('WhiteBoard', 1, NOW(), NOW()),
-        ('Room', 0, NOW(), NOW()),
-        ('Room', 0, NOW(), NOW());
+INSERT INTO Resource (resourceType, isIt, status, createdAt, updatedAt)
+VALUES ('Computer', 1, 1, NOW(), NOW()),
+        ('Computer', 1, 1, NOW(), NOW()),
+        ('Projector', 1, 1, NOW(), NOW()),
+        ('Projector', 1, 1, NOW(), NOW()),
+        ('WhiteBoard', 1, 1, NOW(), NOW()),
+        ('WhiteBoard', 1, 1, NOW(), NOW()),
+        ('Room', 0, 1, NOW(), NOW()),
+        ('Room', 0, 1, NOW(), NOW());
 
 #Computer
 INSERT INTO Computer (resourceId, RAM, storage, operatingSystem, createdAt, updatedAt)

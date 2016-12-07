@@ -77,6 +77,7 @@ function mapResource(resource) {
           resourceObj.type = type;
           resourceObj.resource_id = resource.resourceId;
           resourceObj.is_it = resource.isIt;
+          resourceObj.status = resource.status;
 
           switch(type){
             case "Computer":
@@ -118,6 +119,7 @@ function addRoomProperties(resource, reservations) {
     length: resource.Room.length,
     width: resource.Room.width,
     height: resource.Room.height,
+    status: resource.status,
     reservations: reservations,
   }
 }
