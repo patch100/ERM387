@@ -12,7 +12,7 @@ module.exports = function(app, router, db, jwt) {
                             if (responseObject.status) { // If successful (User exists, and password matches)
                                 // create json web token
                                 var userToken = jwt.sign({
-                                    id: responseObject.id,
+                                    id: responseObject.body.user_id,
                                     timenow: Math.floor(Date.now() / 1000)
                                 }, app.get('superSecret'), {
                                     expiresIn: "1 day" // expires in 24 hours
@@ -22,8 +22,8 @@ module.exports = function(app, router, db, jwt) {
                                     status: true,
                                     body: {
                                         message: "Successful Login!",
-                                        isAdmin: responseObject.is_admin,
-                                        userId: responseObject.user_id
+                                        isAdmin: responseObject.body.is_admin,
+                                        userId: responseObject.body.user_id
                                     } // ***************************************
                                 });
 
