@@ -5,13 +5,14 @@ var SessSequelize = require('sequelize');
 var SequelizeStore = require('connect-session-sequelize')(session.Store);
 var app = express();
 var bodyParser = require('body-parser');
-var jwt = require('jsonwebtoken')
+var jwt = require('jsonwebtoken');
+var env       = process.env.NODE_ENV || 'development';
+var config    = require(__dirname + '/db-master/config/config.json')[env];
 
 var path = require('path');
 app.use(express.static('inventory'));
 
-var sessq = new SessSequelize(
-    "database", "username", "password", { "dialect": "sqlite", "storage": "./session.sqlite", "logging": false });
+var sessq = new SessSequelize(config.database, config.username, config.password, config);
 
 var Session = sessq.define('Session', {
     sid: {
