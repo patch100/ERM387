@@ -285,7 +285,7 @@ function updateModelByType(type, resourceId, updatedModel) {
     return new Promise((resolve, reject) => {
             switch (type) {
                 case "Computer":
-                    resolve(models.Computer.update(updatedModel, { where: { resourceId: resourceId }, logging: true }));
+                    resolve(models.Computer.update(updatedModel, { where: { resourceId: resourceId } }));
                     break;
                 case "WhiteBoard":
                     resolve(models.WhiteBoard.update(updatedModel, { where: { resourceId: resourceId } }));
@@ -301,7 +301,7 @@ function updateModelByType(type, resourceId, updatedModel) {
             }
         })
         .then(() => {
-            return models.Resource.update(updatedModel, {where: {resourceId: resourceId}, logging: true});
+            return models.Resource.update(updatedModel, {where: {resourceId: resourceId}});
         })
         .then(() => {
             return { status: true, body: { resource_id: resourceId } };

@@ -119,6 +119,7 @@ function addRoomProperties(resource, reservations) {
     length: resource.Room.length,
     width: resource.Room.width,
     height: resource.Room.height,
+    status: resource.status,
     reservations: reservations,
   }
 }
