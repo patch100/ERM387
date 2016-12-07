@@ -7,6 +7,8 @@
     },
     "dependencies": {
         "express": "*",
+        "express-session": "*",
+        "connect-session-sequelize": "*",
         "nodemon": "*",
         "body-parser": "*",
         "mysql": "^2.11.1",
