@@ -326,16 +326,7 @@ function initTable(getRes) {
     }
 
     function computerNotMissingFields(created, type) {
-    	if(type == "Computer" 
-    		&& (created.resource.ram != "" 
-    			&& created.resource.storage != "" 
-    			&& created.resource.operating_system != "" 
-    			&& created.resource.ram != null 
-    			&& created.resource.storage != null 
-    			&& created.resource.operating_system != null) 
-    		|| type == "WhiteBoard" 
-    		&&(created.resource.isPrintable != "" 
-    		&& created.resource.isPrintable != null)) {
+    	if(type == "Computer" && (created.resource.ram != "" && created.resource.storage != "" && created.resource.operating_system != "" && created.resource.ram != null && created.resource.storage != null && created.resource.operating_system != null) || type == "WhiteBoard" && (created.resource.isPrintable != "" && created.resource.isPrintable != null)) {
     		return true;
     	}
     	return false;
@@ -400,7 +391,7 @@ function initTable(getRes) {
 			else
 				created.resource.status = "false";
 
-			if(computerNotMissingFields(created)) {
+			if(computerNotMissingFields(created, type)) {
 				created = JSON.stringify(created);
 				$.ajax({
 						url: '/inventory', 
@@ -494,7 +485,7 @@ function initTable(getRes) {
 			else
 				created.resource.status = "false";
 
-			if(computerNotMissingFields(created)) {
+			if(computerNotMissingFields(created, type)) {
 				created = JSON.stringify(created);
 				$.ajax({
 						url: '/inventory/' + type + '/' + id, 
