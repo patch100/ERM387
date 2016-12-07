@@ -23,7 +23,8 @@ module.exports = function(app, router, db, jwt) {
                                     body: {
                                         message: "Successful Login!",
                                         isAdmin: responseObject.body.is_admin,
-                                        userId: responseObject.body.user_id
+                                        userId: responseObject.body.user_id,
+                                        user_type: responseObject.body.type
                                     } // ***************************************
                                 });
 
