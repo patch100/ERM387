@@ -213,11 +213,11 @@ function userLogin(username, password) {
                         status: true,
                         user_id: user.userId
                     }
-                    return mappedUser;
+                    return {status: true, body: mappedUser};
                 } else {
                     return {
                         status: false
-                    };;
+                    };
                 }
             } else {
                 return {
