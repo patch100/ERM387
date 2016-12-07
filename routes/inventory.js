@@ -14,7 +14,7 @@ module.exports = function(app, router, db) {
                     $lt: filters.date_end
                 };
             }*/
-            var retrieve_status = req.session.admin["isadmin"] ? false : true;
+            var retrieve_status = req.session.isAdmin ? false : true;
             db.getResources(retrieve_status /*filters*/ )
                 .then(resources => {
                     result = { "body": { "resources": [] } }
@@ -71,7 +71,7 @@ module.exports = function(app, router, db) {
                 };
             } */
             if (resource_types.indexOf(req.params.type) > -1) {
-                var retrieve_status = req.session.admin["isadmin"] ? false : true;
+                var retrieve_status = req.session.isAdmin ? false : true;
                 db.getResourcesByType(req.params.type, retrieve_status)
                     .then(resources => {
                         if (resources.status && resources.body) {
