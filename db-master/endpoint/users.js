@@ -210,23 +210,24 @@ function userLogin(username, password) {
                     var mappedUser = {
                         is_admin: user.isAdmin,
                         type: user.UserType.typeName,
-                        status: true,
                         user_id: user.userId
                     }
                     return {status: true, body: mappedUser};
                 } else {
                     return {
-                        status: false
+                        status: false,
+                        body: null
                     };
                 }
             } else {
                 return {
-                    status: false
+                    status: false,
+                    body: null
                 };
             }
         })
         .catch(function(err) {
-            return {status: false};
+            return {status: false, body: null};
         })
 }
 
