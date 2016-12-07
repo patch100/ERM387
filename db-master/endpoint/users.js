@@ -226,7 +226,7 @@ function userLogin(username, password) {
             }
         })
         .catch(function(err) {
-            return null;
+            return {status: false};
         })
 }
 
