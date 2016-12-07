@@ -77,6 +77,7 @@ function mapResource(resource) {
           resourceObj.type = type;
           resourceObj.resource_id = resource.resourceId;
           resourceObj.is_it = resource.isIt;
+          resourceObj.status = resource.status;
 
           switch(type){
             case "Computer":

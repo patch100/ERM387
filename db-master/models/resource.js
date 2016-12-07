@@ -4,7 +4,8 @@ module.exports = function(sequelize, DataTypes) {
   var Resource = sequelize.define("Resource", {
     resourceId: {type: DataTypes.INTEGER(), allowNull: false, autoIncrement: true, primaryKey: true},
     resourceType : {type: DataTypes.ENUM('Computer', 'Projector', 'WhiteBoard', 'Room'), allowNull: false},
-    isIt: {type: DataTypes.BOOLEAN(), allowNull: false, defaultValue: false}
+    isIt: {type: DataTypes.BOOLEAN(), allowNull: false, defaultValue: false},
+    status:{type:DataTypes.BOOLEAN(), allowNull:false,defaultValue:true}
   },{
     tableName: 'Resource',
     classMethods: {

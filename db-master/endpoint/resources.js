@@ -140,6 +140,7 @@ function createResourceObj(type, resource) {
     resourceObj[type] = {};
     resourceObj.resourceType = type;
     resourceObj.isIt = resource.is_it || false;
+    resourceObj.status = resource.status;
     switch (type) {
         case "Computer":
             resourceObj[type].operatingSystem = resource.operating_system;
@@ -170,6 +171,7 @@ function addPropertiesByType(resource) {
     res.type = resource.resourceType;
     res.is_it = resource.isIt;
     res.resource_id = resource.resourceId;
+    res.status = resource.status;
     switch (resource.resourceType) {
         case "Computer":
             res.operating_system = resource.Computer.operatingSystem;
@@ -262,9 +264,9 @@ function cancelReservation(reservation) {
         });
 }
 
-
 function update(resourceId, modifyProperties) {
-    return models.Resource.findById(resourceId)
+    return models.Resource.findById(resourceId,{
+        include: { model: models.Resource, required: false }})
         .then(resource => {
             if (resource) {
                 var updatedModel = {};
@@ -277,7 +279,7 @@ function update(resourceId, modifyProperties) {
             } else {
                 return { status: false, body: { id: resourceId } };
             }
-        });
+        })
 }
 
 function updateModelByType(type, resourceId, updatedModel) {
