@@ -13,7 +13,7 @@ $(document).ready(function(){
             type : "POST",
             data : data, 
             success : function(result, status, xhr) {
-            	if(result.body && result.body.error)
+            	if(result.body && result.body.error || result.body.isAdmin === false)
             	{
             	   $('#alertplaceholder').html(
                     '<div class="alert alert-danger fade in"><strong>Login Failed</strong> Email/Password combination incorrect</div>'
@@ -22,7 +22,8 @@ $(document).ready(function(){
             	}
 				else if (result.status) {
 					document.cookie = xhr.getResponseHeader('Set-Cookie');
-					localStorage['userId'] = result.body.userId
+					localStorage['userId'] = result.body.userId;
+					localStorage['isAdmin'] = result.body.isAdmin;
 					window.location.href = "/Resources.html";
 				}
             },

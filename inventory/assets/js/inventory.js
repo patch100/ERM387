@@ -586,6 +586,17 @@ function initTable(getRes) {
 	});
 }
 $(document).ready(function(){
+	$("#logout").on('click', function(){
+		document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
+		localStorage.removeItem("userId");
+		localStorage.removeItem("isAdmin");
+   		window.location="/Login.html";
+    });
+	
+	if (localStorage.getItem("userId") === null || localStorage.getItem("isAdmin") === null || localStorage.getItem("isAdmin") === "false") {
+		$("#logout").click();
+	}
+	
 	$.ajax({
         url: 'inventory', 
         method : "GET", 
@@ -605,11 +616,5 @@ $(document).ready(function(){
             console.log(xhr, resp, text);
             // TODO: flash prompt for pass again
         }
-    });
-    
-    $("#logout").on('click', function(){
-		document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
-		localStorage['userId'] = null;
-   		window.location="/Login.html";
     });
 });
