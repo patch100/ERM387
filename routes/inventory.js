@@ -15,7 +15,7 @@ module.exports = function(app, router, db) {
                 };
             }*/
 
-            db.getResources( /*filters*/ )
+            db.getResources(req.session.admin["isadmin"] /*filters*/ )
                 .then(resources => {
                     result = { "body": { "resources": [] } }
                     if (resources.status && resources.body) {
@@ -71,7 +71,7 @@ module.exports = function(app, router, db) {
                 };
             } */
             if (resource_types.indexOf(req.params.type) > -1) {
-                db.getResourcesByType( /* filters, */ req.params.type)
+                db.getResourcesByType(req.params.type, req.session.admin["isadmin"])
                     .then(resources => {
                         if (resources.status && resources.body) {
                             result = { status: true, body: { resources: [] } }
