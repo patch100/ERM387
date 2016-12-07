@@ -265,8 +265,7 @@ function cancelReservation(reservation) {
 }
 
 function update(resourceId, modifyProperties) {
-    return models.Resource.findById(resourceId,{
-        include: { model: models.Resource, required: false }})
+    return models.Resource.findById(resourceId)
         .then(resource => {
             if (resource) {
                 var updatedModel = {};
@@ -286,7 +285,7 @@ function updateModelByType(type, resourceId, updatedModel) {
     return new Promise((resolve, reject) => {
             switch (type) {
                 case "Computer":
-                    resolve(models.Computer.update(updatedModel, { where: { resourceId: resourceId } }));
+                    resolve(models.Computer.update(updatedModel, { where: { resourceId: resourceId }, logging: true }));
                     break;
                 case "WhiteBoard":
                     resolve(models.WhiteBoard.update(updatedModel, { where: { resourceId: resourceId } }));
@@ -301,8 +300,12 @@ function updateModelByType(type, resourceId, updatedModel) {
                     break;
             }
         })
-        .then(updatedRows => {
-            return { status: true, body: { resource_id: resourceId } }; })
+        .then(() => {
+            return models.Resource.update(updatedModel, {where: {resourceId: resourceId}, logging: true});
+        })
+        .then(() => {
+            return { status: true, body: { resource_id: resourceId } };
+        })
         .catch((err) => {
             return { status: true, body: { resource_id: resourceId } }; });
 }
