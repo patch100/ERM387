@@ -11,7 +11,31 @@ var path = require('path');
 app.use(express.static('inventory'));
 
 var sessq = new SessSequelize(
-    "database", "username", "password", { "dialect": "sqlite", "storage": "./session.sqlite" });
+    "database", "username", "password", { "dialect": "sqlite", "storage": "./session.sqlite", "logging": false });
+
+var Session = sessq.define('Session', {
+    sid: {
+        type: SessSequelize.STRING,
+        primaryKey: true
+    },
+    isAdmin: SessSequelize.BOOLEAN,
+    expires: SessSequelize.DATE,
+    data: SessSequelize.STRING(50000)
+});
+
+function extendDefaultFields(defaults, session) {
+  return {
+    data: defaults.data,
+    expires: defaults.expires,
+    isAdmin: session.isAdmin
+  };
+}
+
+var store = new SequelizeStore({
+    db: sessq,
+    table: 'Session',
+    extendDefaultFields: extendDefaultFields
+});
 
 // configure app to use bodyParser() and session()
 // this will let us get the data from a POST
@@ -23,11 +47,7 @@ app.use(session({
     cookie: { maxAge: 3600000 },
     resave: false,
     saveUninitialized: true,
-    store: new SequelizeStore({
-        db: sessq,
-        checkExpirationInterval: 15*60*1000,
-        expiration: 24*60*60*1000
-    })
+    store: store
 }));
 
 sessq.sync();
