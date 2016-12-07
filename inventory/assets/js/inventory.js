@@ -41,16 +41,16 @@ function initTable(getRes) {
 			},
 			{ 
 				title: "Status", 
-				data: "reservations",
+				data: "status",
 				render: function (data, type, row) {
-					if(data.length > 0) {
+					if(data == true && !checkIfCurrentlyReserved(row.reservations)) {
 						return "Available";
 					} else {
 						return "Unavailable";
 					}
 				},
 				createdCell: function(td, cellData, rowData, row, col) {
-					if(cellData.length > 0){
+					if(cellData == true && !checkIfCurrentlyReserved(rowData.reservations)){
 						$(td).css('background-color', "#dff0d8");
 					}
 					else {
@@ -152,7 +152,6 @@ function initTable(getRes) {
 					url: '/rooms/' + row.room_type + '/' + row.resource_id, 
 					type : "GET", 
 					success : function(result) {
-					$("#viewAvailability").val("false").trigger("change");
 					if (result.status) {
 						$("#viewRoomType").val(result.body.room_type).trigger("change");
 						$("#viewRoomNumber").val(result.body.room_number);
@@ -160,6 +159,13 @@ function initTable(getRes) {
 						$("#viewHeight").val(result.body.height);
 						$("#viewWidth").val(result.body.width);
 						$("#viewLength").val(result.body.length);
+						var data = result.body.resource;
+						if(data.status == true && !checkIfCurrentlyReserved(data.reservations)) {
+							$("#viewAvailability").val("true").trigger("change");	
+						}
+						else {
+							$("#viewAvailability").val("false").trigger("change");
+						}
 					}
 					console.log(result);
 				},
@@ -180,7 +186,13 @@ function initTable(getRes) {
 				type : "GET",
 				success : function(result) {
 					if (result.status) {
-						$("#viewAvailability").val(result.body.resource.it_resource.toString()).trigger("change");
+						var data = result.body.resource;
+						if(data.status == true && !checkIfCurrentlyReserved(data.reservations)) {
+							$("#viewAvailability").val("true").trigger("change");	
+						}
+						else {
+							$("#viewAvailability").val("false").trigger("change");
+						}
 						if (result.body.resource.type === "WhiteBoard") {
 							$("#viewPrintableType").val(result.body.resource.is_printable.toString()).trigger("change");
 						}
@@ -236,10 +248,16 @@ function initTable(getRes) {
 					url: '/rooms/' + rowData.room_type + '/' + rowData.resource_id, 
 					type : "GET", 
 					success : function(result) {
-					$("#editStatus").val("false").trigger("change");
 					if (result.status) {
-						if (result.body.reservations.length > 0) {
-							$("#editStatus").attr('disabled', true);
+
+						var data = result.body;
+						if(data.status == true && !checkIfCurrentlyReserved(data.reservations)) {
+							$("#editStatus").val("true").trigger("change");	
+							if(data.reservations.length > 0)
+								$("#editStatus").attr('disabled', false);
+						}
+						else {
+							$("#editStatus").val("false").trigger("change");
 						}
 						$("#editRoomType").val(result.body.room_type).trigger("change");
 						$("#editRoomNumber").val(result.body.room_number);
@@ -261,8 +279,14 @@ function initTable(getRes) {
 				type : "GET",
 				success : function(result) {
 					if (result.status) {
-						$("#editStatus").attr('disabled', false);
-						$("#editStatus").val(result.body.resource.it_resource.toString()).trigger("change");
+						if(data.status == true && !checkIfCurrentlyReserved(data.reservations)) {
+							$("#editStatus").val("true").trigger("change");	
+							if(data.reservations.length > 0)
+								$("#editStatus").attr('disabled', false);
+						}
+						else {
+							$("#editStatus").val("false").trigger("change");
+						}
 						if (result.body.resource.type === "WhiteBoard") {
 							$("#editPrintableType").val(result.body.resource.is_printable.toString()).trigger("change");
 						}
@@ -294,6 +318,10 @@ function initTable(getRes) {
 			created.room.height = $("#createHeight").val();
 			created.room.width = $("#createWidth").val();
 			created.room.length = $("#createLength").val();
+			if($("#newStatus").val() == "Available")
+				created.room.status = "true";
+			else
+				created.room.status = "false";
 			created = JSON.stringify(created);
 			$.ajax({
 					url: '/rooms', 
@@ -327,6 +355,10 @@ function initTable(getRes) {
 				created.resource.storage = $("#createStorage").val();
 				created.resource.operating_system = $("#createOperatingSystem").val();
 			}
+			if($("#newStatus").val() == "Available")
+				created.resource.status = "true";
+			else
+				created.resource.status = "false";
 			created = JSON.stringify(created);
 			$.ajax({
 					url: '/inventory', 
@@ -364,6 +396,12 @@ function initTable(getRes) {
 			created.room.height = $("#editHeight").val();
 			created.room.width = $("#editWidth").val();
 			created.room.length = $("#editLength").val();
+
+			if($("#editStatus").val() == "true")
+				created.room.status = "true";
+			else
+				created.room.status = "false";
+
 			created = JSON.stringify(created);
 			$.ajax({
 					url: '/rooms/' + roomtype + '/' + id, 
@@ -396,6 +434,11 @@ function initTable(getRes) {
 				created.resource.storage = $("#editStorage").val();
 				created.resource.operating_system = $("#editOperatingSystem").val();
 			}
+
+			if($("#editStatus").val() == "Available")
+				created.resource.status = "true";
+			else
+				created.resource.status = "false";
 			created = JSON.stringify(created);
 			$.ajax({
 					url: '/inventory/' + type + '/' + id, 
@@ -457,58 +500,71 @@ function initTable(getRes) {
     });
 
     $('#quickAvailable').click(function() {
-        // get all ids of checked items
-        var ids = new Array();
-
         $(".quickEditCB:checked").each(function() { 
-            ids.push(this.value);
             var row = table.row($(this).parents('tr'));
+            var id = row.data().resource_id;
+            var type = row.data().type;
             rowData = row.data();
 
-            var created = { 
-                "resource_id": rowData.resource_id, 
-                "type":  rowData.type, 
-                "status": "Available" 
-            };
+			var url = ""
+			if (type === "Room") {
+				var roomType = row.data().room_type;
+				url = '/rooms/' + roomType + '/' + id;
+			}
+			else {
+				url = '/inventory/' + type + '/' + id;
+			}
 
-            table.row(row).remove();
-            table.row.add(created).draw();
-        });
-
-        // $.ajax({
-        //     url: '/inventory/', 
-        //     type : "DELETE", 
-        //     dataType : 'json', 
-        //     data : ids, 
-        //     success : function(result) {
-                
-        //         // TODO: refresh results? or use javascript to update table?
-        //         console.log(result);
-        //     },
-        //     error: function(xhr, resp, text) {
-        //         console.log(xhr, resp, text);
-        //     }
-        // });        
+			$.ajax({
+				url: url, 
+				type: "POST",
+				data: {"resource":{"status":"true"}},
+				success : function(result) {
+					if (result.status) {
+						location.reload();
+					}
+					console.log(result);
+				},
+				error: function(xhr, resp, text) {
+					console.log(xhr, resp, text);
+				}
+			});
+        });     
     });
 
     $('#quickUnavailable').click(function() {
-        // get all ids of checked items
-        var ids = new Array();
-
         $(".quickEditCB:checked").each(function() { 
-            ids.push(this.value);
             var row = table.row($(this).parents('tr'));
+            var id = row.data().resource_id;
+            var type = row.data().type;
             rowData = row.data();
 
-            var created = { 
-                "resource_id": rowData.resource_id, 
-                "type":  rowData.type, 
-                "status": "Unavailable" 
-            };
+            if (rowData.reservations != null && rowData.reservations == 0) {
+            	var url = ""
+				if (type === "Room") {
+					var roomType = row.data().room_type;
+					url = '/rooms/' + roomType + '/' + id;
+				}
+				else {
+					url = '/inventory/' + type + '/' + id;
+				}
 
-            table.row(row).remove();
-            table.row.add(created).draw();
-        });     
+				$.ajax({
+					url: url, 
+					type: "POST",
+					data: {"resource":{"status":"false"}},
+					success : function(result) {
+						if (result.status) {
+							location.reload();
+						}
+						console.log(result);
+					},
+					error: function(xhr, resp, text) {
+						console.log(xhr, resp, text);
+					}
+				});
+            }
+        });  
     });
 	
 	$('#editType').on('change', function (e) {
@@ -585,6 +641,22 @@ function initTable(getRes) {
         }
 	});
 }
+
+function checkIfCurrentlyReserved(reservations) {
+	if (reservations != null && reservations.length > 0) {
+		var now = (new Date).getTime();
+		for(var i = 0; i < reservations.length; i++) {
+			if (now < reservations.date_end && now > reservations.date_start) {
+				return true;
+			}
+		return false;
+		}
+	}
+	else {
+		return false;
+	}
+}
+
 $(document).ready(function(){
 	$("#logout").on('click', function(){
 		document.cookie = 'token=; expires=Thu, 01 Jan 1970 00:00:01 GMT;';
