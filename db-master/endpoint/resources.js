@@ -32,13 +32,19 @@ function getResourceTypes() {
     // })
 }
 
-function getResourcesByType(type) {
+function getResourcesByType(type, status) {
     type = type.charAt(0).toUpperCase() + type.slice(1);
-    return getResources(type);
+    return getResources(status, type);
 }
 
-function getResources(type) {
-    var typeFilter = type ? { resourceType: type } : {};
+function getResources(status, type) {
+    var typeFilter = {};
+    if(status){
+      typeFilter["status"] = true;
+    }
+    if(type){
+      typeFilter[resourceType] = type
+    }
     var includeObj = getIncludeByType(type);
     return models.Resource.findAll({
         where: typeFilter,
@@ -58,6 +64,7 @@ function getResources(type) {
             return { status: true, body: [] };
         }
     }).catch(err => {
+      console.log(err);
         return { status: false, body: null };
     });
 }

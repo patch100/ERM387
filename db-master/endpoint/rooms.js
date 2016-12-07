@@ -12,13 +12,14 @@ module.exports = {
   cancelReservation: cancelReservation
 }
 
-function getRooms(type, filters) {
-  var roomFilters = filters || {}
-  var typeFilter = type ? { roomType: type } : {};
+function getRooms(status, type) {
+  var typeFilter = {};
+  var resFilter = {resourceType: "Room"};
+  if(type) typeFilter["roomType"] = type;
+  if(status) resFilter["status"] = true;
+
   return models.Resource.findAll({
-    where: {
-      resourceType: 'Room'
-    },
+    where: resFilter,
     include: [
       {
         model: models.Room,
@@ -45,9 +46,9 @@ function getRooms(type, filters) {
           }
         ],
         where: {
-          endtime: {
-            $gte: new Date()
-          }
+          // endtime: {
+          //   $gte: new Date()
+          // }
         },
         required: false
       }]
@@ -62,7 +63,7 @@ function getRooms(type, filters) {
       return {status: true, body: []}
     }
   }).catch(err => {
-    return null;
+    return {status: false, body: null};
   });
 }
 
@@ -214,9 +215,9 @@ function getRoomTypes() {
   })
 }
 
-function getRoomsByType(type) {
+function getRoomsByType(type, status) {
   type = type.charAt(0).toLowerCase() + type.slice(1);
-  return getRooms(type);
+  return getRooms(status, type);
 }
 
 // function addRoomItem(roomId, resourceId) {
