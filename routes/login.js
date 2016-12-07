@@ -2,7 +2,6 @@ module.exports = function(app, router, db, jwt) {
 
     router.route('/login')
         .post(function(req, res) {
-
             // clean input ?
             // for example: check for no spaces (simplified version)
             try {
@@ -10,6 +9,11 @@ module.exports = function(app, router, db, jwt) {
                     .then(
                         responseObject => {
                             if (responseObject.status) { // If successful (User exists, and password matches)
+                                // create session
+                                var sess = req.session.admin
+                                if (!sess) {
+                                    sess = req.session.admin = {}
+                                }
                                 // create json web token
                                 var userToken = jwt.sign({
                                     id: responseObject.body.user_id,
@@ -17,6 +21,9 @@ module.exports = function(app, router, db, jwt) {
                                 }, app.get('superSecret'), {
                                     expiresIn: "1 day" // expires in 24 hours
                                 });
+
+                                sess["isadmin"] = responseObject.body.is_admin ? true : false;
+
                                 res.cookie('token', userToken)
                                 res.json({
                                     status: true,
