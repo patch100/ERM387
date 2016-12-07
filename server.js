@@ -22,7 +22,7 @@ app.use(session({
     secret: 'soen387secret',
     cookie: { maxAge: 3600000 },
     resave: false,
-    saveUninitialized: false,
+    saveUninitialized: true,
     store: new SequelizeStore({
         db: sessq,
         checkExpirationInterval: 15*60*1000,
@@ -49,6 +49,27 @@ app.use(function(req, res, next) {
 var port = process.env.PORT || 8080; // set our port
 
 var router = express.Router();
+
+//check for db concurrency issues
+app.use(function(err, req, res, next) {
+    if (req.path.match('/users*') || req.path.match('/inventory*') || req.path.match('/rooms*') || req.path.match('/reservations*')) {
+        res.status(409);
+        console.log("Error : " + err.message);
+        res.json({
+            status: false,
+            body: {
+                message: "Could not process request"
+            }
+        })
+    } else {
+        res.status(err.message || 500);
+        console.log("Error : " + err.message);
+        res.render('error', {
+            message: err.message,
+            error: {}
+        });
+    }
+});
 
 // Where you call other files such as controllers and routings. next to "app" add any other packages you import that are required in the controllers
 // // DB testing
