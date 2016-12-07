@@ -435,9 +435,9 @@ function initTable(getRes) {
 			created.room.length = $("#editLength").val();
 
 			if($("#editStatus").val() == "true")
-				created.room.status = "true";
+				created.room.status = true;
 			else
-				created.room.status = "false";
+				created.room.status = false;
 
 			if(roomNotMissingFields(created)) {
 				created = JSON.stringify(created);
