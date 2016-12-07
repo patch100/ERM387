@@ -1,5 +1,8 @@
 'use strict';
 var express = require('express');
+var session = require('express-session');
+var SessSequelize = require('sequelize');
+var SequelizeStore = require('connect-session-sequelize')(session.Store);
 var app = express();
 var bodyParser = require('body-parser');
 var jwt = require('jsonwebtoken')
@@ -7,13 +10,26 @@ var jwt = require('jsonwebtoken')
 var path = require('path');
 app.use(express.static('inventory'));
 
-// configure app to use bodyParser()
+var sessq = new SessSequelize(
+    "database", "username", "password", { "dialect": "sqlite", "storage": "./session.sqlite" });
+
+// configure app to use bodyParser() and session()
 // this will let us get the data from a POST
 app.set('superSecret', 'thisprojectisawesome')
-app.use(bodyParser.urlencoded({
-    extended: true
-}));
+app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+app.use(session({
+    secret: 'soen387secret',
+    cookie: { maxAge: 3600000 },
+    resave: false,
+    saveUninitialized: false,
+    store: new SequelizeStore({
+        db: sessq,
+        checkExpirationInterval: 15*60*1000,
+        expiration: 24*60*60*1000
+    })
+}));
+
 // Allow origins
 app.use(function(req, res, next) {
     res.header('Access-Control-Allow-Origin', "http://localhost:8080/");
