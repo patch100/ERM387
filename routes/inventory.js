@@ -186,9 +186,10 @@ module.exports = function(app, router, db) {
 
     router.route('/inventory/cancel').post(function(req, res) {
         var creation = {
-            reservationId: req.body.reservation_id
+            reservationId: req.body.reservation_id,
+            resourceId: req.body.resource_id
         }
-        db.cancelReservation(creation).then(
+        db.cancelResourceReservation(creation).then(
             resp => {
                 if (resp.status) {
                     res.json({
