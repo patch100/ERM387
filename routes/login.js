@@ -10,9 +10,8 @@ module.exports = function(app, router, db, jwt) {
                         responseObject => {
                             if (responseObject.status) { // If successful (User exists, and password matches)
                                 // create session
-                                var sess = req.session.admin
-                                if (!sess) {
-                                    sess = req.session.admin = {}
+                                if (!req.session) {
+                                    req.session.isAdmin = false;
                                 }
                                 // create json web token
                                 var userToken = jwt.sign({
@@ -22,7 +21,8 @@ module.exports = function(app, router, db, jwt) {
                                     expiresIn: "1 day" // expires in 24 hours
                                 });
 
-                                sess["isadmin"] = responseObject.body.is_admin ? true : false;
+                                req.session.isAdmin = responseObject.body.is_admin ? true : false;
+
                                 res.cookie('token', userToken)
                                 res.json({
                                     status: true,
