@@ -16,7 +16,7 @@ module.exports = function(app, router, db) {
             }
 
             // db.getRooms(filters).then(rooms => res.json({status: true, body: rooms}));
-            db.getRooms( /* filters, */ )
+            db.getRooms(req.session.admin["isadmin"] /* filters, */ )
                 .then(rooms => {
                     if (rooms.status) {
                         var result = {};
@@ -92,7 +92,7 @@ module.exports = function(app, router, db) {
                 };
             }
 
-            db.getRoomsByType( /* filters, */ req.params.room_type)
+            db.getRoomsByType(req.params.room_type, req.session.admin["isadmin"])
                 .then(rooms => {
                     if (rooms.status) {
                         var result = {};
