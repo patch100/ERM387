@@ -149,30 +149,30 @@ function initTable(getRes) {
 
         if(row.type == "Room") {
 			$.ajax({
-					url: '/rooms/' + row.room_type + '/' + row.resource_id, 
-					type : "GET", 
-					success : function(result) {
-					if (result.status) {
-						$("#viewRoomType").val(result.body.room_type).trigger("change");
-						$("#viewRoomNumber").val(result.body.room_number);
-						$("#viewCapacity").val(result.body.capacity);
-						$("#viewHeight").val(result.body.height);
-						$("#viewWidth").val(result.body.width);
-						$("#viewLength").val(result.body.length);
-						var data = result.body.resource;
-						if(data.status == true && !checkIfCurrentlyReserved(data.reservations)) {
-							$("#viewAvailability").val("true").trigger("change");	
-						}
-						else {
-							$("#viewAvailability").val("false").trigger("change");
-						}
+				url: '/rooms/' + row.room_type + '/' + row.resource_id, 
+				type : "GET", 
+				success : function(result) {
+				if (result.status) {
+					$("#viewRoomType").val(result.body.room_type).trigger("change");
+					$("#viewRoomNumber").val(result.body.room_number);
+					$("#viewCapacity").val(result.body.capacity);
+					$("#viewHeight").val(result.body.height);
+					$("#viewWidth").val(result.body.width);
+					$("#viewLength").val(result.body.length);
+					var data = result.body;
+					if(data.status == true && !checkIfCurrentlyReserved(data.reservations)) {
+						$("#viewAvailability").val("true").trigger("change");	
 					}
-					console.log(result);
-				},
-				error: function(xhr, resp, text) {
-					console.log(xhr, resp, text);
-					// TODO: flash prompt for pass again
+					else {
+						$("#viewAvailability").val("false").trigger("change");
+					}
 				}
+				console.log(result);
+			},
+			error: function(xhr, resp, text) {
+				console.log(xhr, resp, text);
+				// TODO: flash prompt for pass again
+			}
 			})
 			$("#viewRoomTypeGroup").show();
 			$("#viewRoomNumberGroup").show();
@@ -279,6 +279,7 @@ function initTable(getRes) {
 				type : "GET",
 				success : function(result) {
 					if (result.status) {
+						var data = result.body.resource;
 						if(data.status == true && !checkIfCurrentlyReserved(data.reservations)) {
 							$("#editStatus").val("true").trigger("change");	
 							if(data.reservations.length > 0)
@@ -318,7 +319,7 @@ function initTable(getRes) {
 			created.room.height = $("#createHeight").val();
 			created.room.width = $("#createWidth").val();
 			created.room.length = $("#createLength").val();
-			if($("#newStatus").val() == "Available")
+			if($("#newStatus").val() == "true")
 				created.room.status = "true";
 			else
 				created.room.status = "false";
@@ -355,7 +356,7 @@ function initTable(getRes) {
 				created.resource.storage = $("#createStorage").val();
 				created.resource.operating_system = $("#createOperatingSystem").val();
 			}
-			if($("#newStatus").val() == "Available")
+			if($("#newStatus").val() == "true")
 				created.resource.status = "true";
 			else
 				created.resource.status = "false";
@@ -435,7 +436,7 @@ function initTable(getRes) {
 				created.resource.operating_system = $("#editOperatingSystem").val();
 			}
 
-			if($("#editStatus").val() == "Available")
+			if($("#editStatus").val() == "true")
 				created.resource.status = "true";
 			else
 				created.resource.status = "false";
@@ -507,18 +508,27 @@ function initTable(getRes) {
             rowData = row.data();
 
 			var url = ""
+			var data = {};
 			if (type === "Room") {
 				var roomType = row.data().room_type;
 				url = '/rooms/' + roomType + '/' + id;
+				data.room = {};
+				data.room.status = "true";
 			}
 			else {
 				url = '/inventory/' + type + '/' + id;
+				data = {"resource":{"status":"true"}};
+				data.resource = {};
+				data.resource.status = "true";
 			}
-
+			var resource = JSON.stringify(data)
 			$.ajax({
 				url: url, 
 				type: "POST",
-				data: {"resource":{"status":"true"}},
+				data: resource,
+				headers: {
+						'Content-Type':'application/json'
+					},
 				success : function(result) {
 					if (result.status) {
 						location.reload();
@@ -541,18 +551,26 @@ function initTable(getRes) {
 
             if (rowData.reservations != null && rowData.reservations == 0) {
             	var url = ""
+            	var data = {};
 				if (type === "Room") {
 					var roomType = row.data().room_type;
 					url = '/rooms/' + roomType + '/' + id;
+					data.room = {};
+					data.room.status = "false";
 				}
 				else {
 					url = '/inventory/' + type + '/' + id;
+					data.resource = {};
+					data.resource.status = "false";
 				}
-
+				var resource = JSON.stringify(data)
 				$.ajax({
 					url: url, 
 					type: "POST",
-					data: {"resource":{"status":"false"}},
+					headers: {
+						'Content-Type':'application/json'
+					},
+					data: resource,
 					success : function(result) {
 						if (result.status) {
 							location.reload();
